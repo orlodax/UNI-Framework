@@ -1,0 +1,168 @@
+﻿<UserControl
+    x:Class="UNI.Core.UI.Tabs.ListDetail.ListDetail"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UNI.Core.UI.Tabs.ListDetail"
+    xmlns:converters="using:UNI.Core.UI.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    mc:Ignorable="d"
+    xmlns:i="using:Microsoft.Xaml.Interactivity" 
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    d:RequestedTheme="Dark"
+    Background="{ThemeResource SystemChromeMediumColor}">
+
+    <UserControl.Resources>
+        <converters:IsItemSelected x:Key="IsItemSelected"/>
+    </UserControl.Resources>
+
+    <RelativePanel Background="{ThemeResource SystemChromeMediumColor}"
+                   Padding="10">
+
+        <RelativePanel Name="listViewPanel"
+                       RelativePanel.AlignTopWithPanel="True"
+                       RelativePanel.AlignLeftWithPanel="True"
+                       RelativePanel.AlignBottomWithPanel="True">
+
+            <TextBox x:Name="SearchBox"
+                     PlaceholderText="{Binding SearchBoxPlaceHolderText}"
+                     MinWidth="150"
+                     MaxWidth="250"
+                     Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     FontFamily="Malgun"
+                     BorderBrush="Transparent"
+                     Background="{ThemeResource AppBarBackgroundThemeBrush}"
+                     RelativePanel.AlignLeftWithPanel="True"
+                     RelativePanel.AlignTopWithPanel="True">
+                <i:Interaction.Behaviors>
+                    <core:EventTriggerBehavior EventName="KeyDown">
+                        <core:InvokeCommandAction Command="{Binding Search}"/>
+                    </core:EventTriggerBehavior>
+                </i:Interaction.Behaviors>
+            </TextBox>
+
+            <Button x:Name="search" 
+                    Height="32"
+                    Width="32"      
+                    Margin="5,0,0,0"
+                    Padding="-5" 
+                    BorderBrush="Transparent"
+                    Background="{ThemeResource SystemAccentColorDark2}"
+                    Command="{Binding Search}"
+                    RelativePanel.AlignTopWithPanel="True"
+                    RelativePanel.RightOf="SearchBox">
+                <Button.Content>
+                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE11A;" />
+                </Button.Content>
+            </Button>
+
+
+            <!--BUTTON TO ADD NEW ITEM; THE COMMAND JUST DISPLAY EMPTY FIELDS UI, STORING IS DONE IN THE DETAILS PANEL-->
+            <CommandBar Name="addItem"
+                        RelativePanel.RightOf="search"
+                        RelativePanel.AlignRightWithPanel="True"
+                        Margin="10,-5,0,0"
+                        Padding="-10"
+                        OverflowButtonVisibility="Collapsed">
+                <AppBarButton  
+				      Label="New"
+				      Icon="Add"
+				      Command="{Binding CreateItem}"/>
+
+                <AppBarButton  
+				      Label="Refresh"
+				      Icon="Refresh"
+				      Command="{Binding RefreshItems}"/>
+            </CommandBar>
+
+            <!--THE LIST OF ITEMS-->
+            <ListView x:Name="ListView"
+                      MaxWidth="350"
+                      Margin="0,10,0,0"
+                      RelativePanel.Below="SearchBox"
+                      RelativePanel.AlignRightWithPanel="True"
+                      RelativePanel.AlignBottomWithPanel="True"
+                      RelativePanel.AlignLeftWithPanel="True"
+                      Background="{ThemeResource SystemChromeMediumColor}"
+                      ItemsSource="{Binding ItemsSource, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                      SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      ScrollViewer.IsVerticalRailEnabled="True"                   
+                      ItemTemplate="{Binding ItemTemplate}"/>
+
+        </RelativePanel>
+
+        <!--PANEL TO DISPLAY ALL DETAILS OF SELECTED ITEM-->
+        <RelativePanel x:Name="DetailsPaneContainer" 
+                       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                       HorizontalAlignment="Stretch"
+                       ScrollViewer.IsVerticalRailEnabled="True"
+                       Visibility="{Binding SelectedItem, Converter={StaticResource IsItemSelected}}"
+                       RelativePanel.RightOf="listViewPanel"
+                       RelativePanel.AlignTopWithPanel="True"
+                       RelativePanel.AlignBottomWithPanel="True"
+                       RelativePanel.AlignRightWithPanel="True">
+
+            <NavigationView Name="navigationView"
+                            Margin="7"
+                            Background="Transparent"
+                            PaneDisplayMode="Top"
+                            IsBackButtonVisible="Collapsed"
+                            IsSettingsVisible="False"
+                            RelativePanel.AlignLeftWithPanel="True"
+                            MenuItemsSource="{Binding NavigationViewItems}">
+                <i:Interaction.Behaviors>
+                    <core:EventTriggerBehavior EventName="SelectionChanged">
+                        <core:InvokeCommandAction Command="{Binding NavigationViewSelectionChanged}"/>
+                    </core:EventTriggerBehavior>
+                </i:Interaction.Behaviors>
+            </NavigationView>
+
+            <CommandBar Name="itemButtons"
+                        RelativePanel.RightOf="navigationView"
+                        RelativePanel.AlignRightWithPanel="True"
+                        Margin="10,-5,0,0"
+                        Padding="-10"
+                        OverflowButtonVisibility="Collapsed">
+
+                <!--BUTTON TO SAVE CURRENT ITEM-->
+                <AppBarButton 
+				  Label="Save"
+				  Icon="Save"
+				  Command="{Binding UpdateItem}"/>
+
+                <!--BUTTON TO DELETE CURRENT ITEM-->
+                <AppBarButton 
+				  Label="Delete"
+				  Icon="Delete"
+                  IsEnabled="{Binding SelectedItem, Converter={StaticResource IsItemSelected}}"
+				  Command="{Binding DeleteItem}"/>
+
+            </CommandBar>
+
+            <ScrollViewer IsVerticalRailEnabled="True"
+                          Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                          VerticalScrollBarVisibility="Visible"
+                          RelativePanel.AlignLeftWithPanel="True"
+                          RelativePanel.Below="navigationView"
+                          RelativePanel.AlignBottomWithPanel="True"
+                          RelativePanel.AlignRightWithPanel="True">
+
+
+                <UserControl x:Name="DetailsContainer" Margin="10,0,0,0"
+                             Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                             Content="{Binding DetailsPane, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+            </ScrollViewer>
+
+        </RelativePanel>
+
+        <ProgressRing IsActive="{Binding IsLoading}" 
+                      Height="40"
+                      Width="40"
+                      Foreground="{ThemeResource SystemAccentColorDark1}"
+                      RelativePanel.AlignHorizontalCenterWith="DetailsPaneContainer"
+                      RelativePanel.AlignVerticalCenterWithPanel="True"/>
+
+    </RelativePanel>
+
+</UserControl>

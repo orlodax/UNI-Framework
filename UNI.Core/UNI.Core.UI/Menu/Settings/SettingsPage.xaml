@@ -1,0 +1,53 @@
+﻿<Page
+    x:Class="UNI.Core.UI.Menu.Settings.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UNI.Core.UI.Menu.Settings"
+    xmlns:ld="using:UNI.Core.UI.Tabs.ListDetail"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:RequestedTheme="Dark"
+    d:DataContext="{d:DesignInstance local:SettingsPageVM}"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Pivot>
+
+        <PivotItem Visibility="{Binding IsUserAdmin}">
+            <PivotItem.Header>
+                <TextBlock d:Text="Admin tools" Text="{Binding AdminToolsHeader}" FontSize="18"/>
+            </PivotItem.Header>
+            <ld:ListDetail DataContext="{Binding UserManagerVM}"/>
+        </PivotItem>
+
+        <PivotItem>
+            <PivotItem.Header>
+                <TextBlock d:Text="User data" Text="{Binding UserDataHeader}" FontSize="18"/>
+            </PivotItem.Header>
+
+            <RelativePanel>
+
+                <TextBox x:Name="username"
+                         d:Text="username"
+                         d:Header ="User"
+                         Text="{Binding UNIUser.Username}"
+                         Header="{Binding UserLabel}"
+                         IsReadOnly="True"
+                         Margin="0,20"
+                         HorizontalAlignment="Left"
+                         RelativePanel.AlignTopWithPanel="True"
+                         RelativePanel.AlignLeftWithPanel="True"/>
+
+                <Button 
+                    RelativePanel.Below="username"
+                    Command="{Binding ChangePassword}"
+                    HorizontalAlignment="Left"
+                    Content="{Binding ChangePasswordLabel}"
+                    d:Content="Change my password..."
+                    Background="{ThemeResource ButtonBackgroundThemeBrush}"/>
+
+            </RelativePanel>
+        </PivotItem>
+    
+    </Pivot>
+</Page>

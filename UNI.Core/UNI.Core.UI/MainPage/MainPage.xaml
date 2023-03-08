@@ -1,0 +1,130 @@
+﻿<Page
+    x:Class="UNI.Core.UI.MainPage.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:menu="using:UNI.Core.UI.Menu"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:local="using:UNI.Core.UI.MainPage" 
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance Type=local:MainPageVM}"
+    d:DesignHeight="1280" 
+    d:DesignWidth="1920" 
+    d:RequestedTheme="Dark">
+
+    <RelativePanel>
+        <!-- EMPTY INVISIBLE ELEMENT TO ALLOW PRINTING-->
+        <Grid x:Name="printContainer" Opacity="0"/>
+
+        <Grid x:Name="AppTitleBar" 
+              Height="32"
+              Background="Transparent" 
+              RelativePanel.AlignLeftWithPanel="True" 
+              RelativePanel.AlignRightWithPanel="True">
+
+            <Grid x:Name="BackgroundElementAppTitleBar" 
+                  Background="{ThemeResource SystemAccentColorDark2}" 
+                  RelativePanel.AlignLeftWithPanel="True" 
+                  RelativePanel.AlignRightWithPanel="True">
+                <!-- Width of the padding columns is set in LayoutMetricsChanged handler. -->
+                <!-- Using padding columns instead of Margin ensures that the background
+                 paints the area under the caption control buttons (for transparent buttons). -->
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition x:Name="LeftPaddingColumn" Width="0"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition x:Name="RightPaddingColumn" Width="0"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- APP ICON -->
+                <Image Source="/Assets/Square44x44Logo.targetsize-24_altform-unplated.png" 
+                       Grid.Column="1" 
+                       HorizontalAlignment="Left" 
+                       Width="20" 
+                       Height="20" 
+                       Margin="10,0"/>
+
+                <!-- APP TITLE -->
+                <TextBlock Text="{Binding MainWindowTitle}" 
+                           VerticalAlignment="Center" 
+                           FontWeight="SemiBold" 
+                           FontSize="15"
+                           Grid.Column="1" 
+                           Style="{StaticResource CaptionTextBlockStyle}" 
+                           Margin="44,0"/>
+
+                <!-- HORIZONTAL MENU -->
+                <MenuBar x:Name="TopMenu" Background="{ThemeResource SystemAccentColorDark2}" Margin="100,0,0,0" Grid.Column="2"/>
+
+            </Grid>
+
+            <!-- EXTRAS -->
+            <Grid Grid.Column="3" Padding="0,0,150,0">
+                <RelativePanel>
+                    <TextBlock Text="{Binding Username}" 
+                               FontWeight="SemiBold" 
+                               FontSize="13"
+                               Name="usernamelabel"
+                               Foreground="{ThemeResource TextBoxForegroundHeaderThemeBrush}"
+                               HorizontalAlignment="Center"
+                               RelativePanel.AlignVerticalCenterWithPanel="True"
+                               RelativePanel.AlignRightWithPanel="True"
+                               Style="{StaticResource CaptionTextBlockStyle}"/>
+                    <Button Name="logout"
+                            ToolTipService.ToolTip="Log out"
+                            FontSize="10"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            RelativePanel.LeftOf="usernamelabel"
+                            RelativePanel.AlignVerticalCenterWithPanel="True"
+                            Command="{Binding LogoutCommand}"
+                            HorizontalAlignment="Center">
+                        <Button.Content>
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE748;"/>
+                        </Button.Content>
+                    </Button>
+                </RelativePanel>
+            </Grid>
+        </Grid>
+
+        <!-- NAVIGATION MENU (THE ONE AND ONLY) -->
+        <muxc:NavigationView x:Name="NavigationMenu"
+                              Background="{ThemeResource SystemControlBackgroundBaseLowBrush }"
+                             MenuItemsSource="{Binding MenuNodes}"
+                             RelativePanel.Below="AppTitleBar"
+                             RelativePanel.AlignLeftWithPanel="True"
+                             RelativePanel.AlignRightWithPanel="True"
+                             RelativePanel.AlignBottomWithPanel="True"
+                             IsBackButtonVisible="Collapsed">
+
+            <muxc:NavigationView.MenuItemTemplate>
+                <DataTemplate x:DataType="menu:MenuNode" >
+                    <muxc:NavigationViewItem Content="{Binding Name}" 
+                                             MenuItemsSource="{Binding Children}" 
+                                             Icon="{Binding Icon}"/>
+                </DataTemplate>
+            </muxc:NavigationView.MenuItemTemplate>
+
+            <i:Interaction.Behaviors>
+                <core:EventTriggerBehavior EventName="ItemInvoked">
+                    <core:InvokeCommandAction Command="{Binding TabViewVM.NavigationMenuItemInvoked}"/>
+                </core:EventTriggerBehavior>
+            </i:Interaction.Behaviors>
+
+            <!-- TABS CONTAINER -->
+            <local:TabView DataContext="{Binding TabViewVM}"
+                           RelativePanel.RightOf="NavigationMenu"
+                           RelativePanel.Below="AppTitleBar"
+                           RelativePanel.AlignBottomWithPanel="True"
+                           RelativePanel.AlignRightWithPanel="True"
+                           RelativePanel.AlignLeftWith="NavigationMenu"/>
+
+        </muxc:NavigationView>
+
+    </RelativePanel>
+
+</Page>

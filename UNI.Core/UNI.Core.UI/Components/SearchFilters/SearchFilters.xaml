@@ -1,0 +1,125 @@
+﻿<UserControl
+    x:Class="UNI.Core.UI.Components.SearchFilters.SearchFilters"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UNI.Core.UI.Components.SearchFilters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:i="using:Microsoft.Xaml.Interactivity" 
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:c="using:UNI.Core.UI.Converters"
+    mc:Ignorable="d"
+    d:RequestedTheme="Dark"
+    d:DataContext="{d:DesignInstance Type=local:SearchFiltersVM`1}">
+
+    <UserControl.Resources>
+        <c:PropertyAttributeNameConverter x:Key="PropertyAttributeNameConverter"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <RelativePanel Grid.Row="0" Grid.Column="0">
+
+            <SymbolIcon x:Name="filterIcon"
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Margin="0,34,10,0"
+                    Symbol="Filter"
+                    RelativePanel.AlignLeftWithPanel="True"/>
+
+            <!-- PROPERTY SELECTION -->
+            <ComboBox x:Name="fieldCombobox"
+                      ItemsSource="{Binding Properties}"
+                      Header="{Binding SearchByLabel}"
+                      d:Header="Search by:"
+                      SelectedItem="{Binding SelectedProperty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      RelativePanel.RightOf="filterIcon"
+                      RelativePanel.AlignBottomWithPanel="True"
+                      HorizontalAlignment="Stretch"
+                      Width="200">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource PropertyAttributeNameConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+                <i:Interaction.Behaviors>
+                    <core:EventTriggerBehavior EventName="SelectionChanged">
+                        <core:InvokeCommandAction Command="{Binding PropertySelectionChanged}"/>
+                    </core:EventTriggerBehavior>
+                </i:Interaction.Behaviors>
+            </ComboBox>
+
+            <!-- DATE OPTIONS -->
+            <DatePicker x:Name="datePicker"
+                        Header="{Binding FilterByDateLabel}"
+                        RelativePanel.RightOf="fieldCombobox"
+                        RelativePanel.AlignBottomWithPanel="True"
+                        Visibility="{Binding DatePickerVisibility}"
+                        Date="{Binding DateInputToSearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        Margin="10,0"/>
+
+            <muxc:RadioButtons x:Name="radioButtons"
+                               Header="{Binding DateOptionsLabel}"
+                               Visibility="{Binding DatePickerVisibility}"
+                               RelativePanel.AlignBottomWithPanel="True"
+                               ItemsSource="{Binding TimeRanges}"
+                               SelectedIndex="{Binding SelectedTimeRangeIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                               Margin="10,0"
+                               RelativePanel.RightOf="datePicker"
+                               RelativePanel.AlignRightWithPanel="True"
+                               MaxColumns="3">
+                <i:Interaction.Behaviors>
+                    <core:EventTriggerBehavior EventName="SelectionChanged">
+                        <core:InvokeCommandAction Command="{Binding TimeRangeSelectionChanged}"/>
+                    </core:EventTriggerBehavior>
+                </i:Interaction.Behaviors>
+                
+            </muxc:RadioButtons>
+
+            <!-- VALUE OPTIONS -->
+            <TextBox x:Name="textBox"
+                     Header="{Binding FilterByValueLabel}"
+                     PlaceholderText="{Binding SearchBoxPlaceHolderText}"
+                     Visibility="{Binding TextBoxVisibility}"
+                     d:Visibility="Collapsed"
+                     Margin="10,0"
+                     Text="{Binding StringInputToSearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     MinWidth="200"
+                     HorizontalAlignment="Stretch"
+                     RelativePanel.AlignBottomWith="fieldCombobox"
+                     RelativePanel.RightOf="fieldCombobox"/>
+
+        </RelativePanel>
+
+        <!-- ADD FILTER EXPRESSION (TAG) TO THE LIST -->
+        <Button x:Name="addFilterButton"
+                Grid.Column="1"
+                Grid.Row="0"
+                Visibility="{Binding ButtonVisibility}"
+                Margin="10,0,0,0"
+                VerticalAlignment="Bottom"
+                d:Content="Search..."
+                Content="{Binding SearchBoxPlaceHolderText}"
+                Command="{Binding AddFilter}"
+                Background="{ThemeResource SystemAccentColorDark2}"/>
+
+
+        <!-- TAGS CONTAINER un domani TODO, cambia visibile-->
+        <GridView x:Name="tagContainer" Visibility="Collapsed"
+                  Grid.Row="1"
+                  Grid.ColumnSpan="2"
+                  ItemsSource="{Binding SearchTags, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  Background="{ThemeResource AppBarBackgroundThemeBrush}"/>
+
+    </Grid>
+
+</UserControl>

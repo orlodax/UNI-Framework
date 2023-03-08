@@ -1,0 +1,51 @@
+﻿<UserControl
+    x:Class="UNI.Core.UI.Components.TagBox.TagBox"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UNI.Core.UI.Components.TagBox"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Height="26"
+    d:Width="100"
+    d:RequestedTheme="Dark">
+
+    <RelativePanel CornerRadius="5" 
+                   HorizontalAlignment="Left"
+                   MaxWidth="200"
+                   Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" 
+                   Padding="5">
+
+        <TextBlock x:Name="propertyName" 
+                   Text="prop" 
+                   FontSize="12"
+                   RelativePanel.AlignLeftWithPanel="True"
+                   RelativePanel.AlignTopWithPanel="True"/>
+        <TextBlock x:Name="operator" 
+                   Text=":" 
+                   FontSize="12"
+                   RelativePanel.RightOf="propertyName"
+                   RelativePanel.AlignTopWithPanel="True"/>
+        <TextBlock x:Name="propertyValue" 
+                   Text="value"
+                   Margin="4,0"
+                   FontSize="12"
+                   RelativePanel.RightOf="operator"
+                   RelativePanel.AlignTopWithPanel="True"/>
+        <Button x:Name="closeButton"
+                Content="X"
+                CornerRadius="10"
+                Padding="-1"
+                BorderThickness="0"
+                Background="{ThemeResource SystemAccentColorDark1}"
+                FontSize="6"
+                FontWeight="Bold"
+                Width="10"
+                Height="10"
+                RelativePanel.RightOf="propertyValue"
+                RelativePanel.AlignRightWithPanel="True"
+                RelativePanel.AlignTopWithPanel="True"/>
+
+    </RelativePanel>
+
+</UserControl>

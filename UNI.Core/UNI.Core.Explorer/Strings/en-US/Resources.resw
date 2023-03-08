@@ -1,0 +1,684 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="cancelButtonLabel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="comboboxItem_Quotation_PrenotationType" xml:space="preserve">
+    <value />
+  </data>
+  <data name="combobox_AddressInfo_Type" xml:space="preserve">
+    <value>Departure, Arrival, Warehouse</value>
+  </data>
+  <data name="combobox_AddressInfo_ZtlResponsibility" xml:space="preserve">
+    <value>Customer, Company</value>
+  </data>
+  <data name="combobox_JobWithPrice_JobState" xml:space="preserve">
+    <value>To schedule, Scheduled, Done, Sospended, Canceled</value>
+  </data>
+  <data name="combobox_JobWithPrice_Type" xml:space="preserve">
+    <value>Impianto FTTH,Impianto OpenFiber, Impianto Rame,Guasto Rame,Linea instabile,Permuta armadio,Permuta centrale,Onucab,Migrazione linea,Cessazione</value>
+  </data>
+  <data name="combobox_Quotation_PrenotationType" xml:space="preserve">
+    <value>Email, Fax</value>
+  </data>
+  <data name="contacts" xml:space="preserve">
+    <value>Contacts</value>
+  </data>
+  <data name="dashbord" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="dateFilter_fromDate_Header" xml:space="preserve">
+    <value>From:</value>
+  </data>
+  <data name="dateFilter_propertySelector_Header" xml:space="preserve">
+    <value>Search in...</value>
+  </data>
+  <data name="dateFilter_propertySelector_Placeholder" xml:space="preserve">
+    <value>Everything</value>
+  </data>
+  <data name="dateFilter_rangeSelector_Header" xml:space="preserve">
+    <value>Time range</value>
+  </data>
+  <data name="dateFilter_rangeSelector_Placeholder" xml:space="preserve">
+    <value>All time</value>
+  </data>
+  <data name="dateFilter_Ranges_0" xml:space="preserve">
+    <value>Today</value>
+  </data>
+  <data name="dateFilter_Ranges_1" xml:space="preserve">
+    <value>Yesterday</value>
+  </data>
+  <data name="dateFilter_Ranges_2" xml:space="preserve">
+    <value>Preious month</value>
+  </data>
+  <data name="dateFilter_Ranges_3" xml:space="preserve">
+    <value>Previous year</value>
+  </data>
+  <data name="dateFilter_Ranges_4" xml:space="preserve">
+    <value>Last month</value>
+  </data>
+  <data name="dateFilter_Ranges_5" xml:space="preserve">
+    <value>Last year</value>
+  </data>
+  <data name="dateFilter_toDate_Header" xml:space="preserve">
+    <value>To:</value>
+  </data>
+  <data name="datepicker_Created" xml:space="preserve">
+    <value>Date of Creation</value>
+  </data>
+  <data name="datepicker_LastModify" xml:space="preserve">
+    <value>Date of Last Modify</value>
+  </data>
+  <data name="detail_item_title" xml:space="preserve">
+    <value>Modify</value>
+  </data>
+  <data name="group_JobWithPrice_JobExecution" xml:space="preserve">
+    <value>Rapporto attività</value>
+  </data>
+  <data name="group_JobWithPrice_JobPlanning" xml:space="preserve">
+    <value>Pianificazione attività</value>
+  </data>
+  <data name="JobConsumablesWithPrice" xml:space="preserve">
+    <value>Materiali utilizzati</value>
+  </data>
+  <data name="JobsExecutedServiceWithPrice" xml:space="preserve">
+    <value>Servizi eseguiti</value>
+  </data>
+  <data name="Offer" xml:space="preserve">
+    <value>Offer</value>
+  </data>
+  <data name="saveButtonLabel" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="textbox_CostAnalysis_AnalysisTotalCost" xml:space="preserve">
+    <value>Totale Offerta</value>
+  </data>
+  <data name="textbox_CostAnalysis_BuildingSiteTotalCost" xml:space="preserve">
+    <value>Totale costi di cantiere</value>
+  </data>
+  <data name="textbox_CostAnalysis_BuildingSiteTotalCostIncidence" xml:space="preserve">
+    <value>Incidenza costi di cantiere</value>
+  </data>
+  <data name="textbox_CostAnalysis_CommissionsContract" xml:space="preserve">
+    <value>Percentuale Provvigioni sul valore del contratto (%)</value>
+  </data>
+  <data name="textbox_CostAnalysis_CommissionsTotal" xml:space="preserve">
+    <value>Provvigioni sul valore del contratto</value>
+  </data>
+  <data name="textbox_CostAnalysis_Date" xml:space="preserve">
+    <value>Data</value>
+  </data>
+  <data name="textbox_CostAnalysis_DesingTotalCost" xml:space="preserve">
+    <value>Totale costi di progettazione</value>
+  </data>
+  <data name="textbox_CostAnalysis_DesingTotalCostIncidence" xml:space="preserve">
+    <value>Incidenza costi di progettazione</value>
+  </data>
+  <data name="textbox_CostAnalysis_Financial" xml:space="preserve">
+    <value>POLIZZE ASSICURATIVE E PROVVIGIONI COMMERCIALI</value>
+  </data>
+  <data name="textbox_CostAnalysis_FinancialCharges" xml:space="preserve">
+    <value>Oneri finanziari</value>
+  </data>
+  <data name="textbox_CostAnalysis_FinancialChargesTotal" xml:space="preserve">
+    <value>Totale Oneri finanziari</value>
+  </data>
+  <data name="textbox_CostAnalysis_GlassesTotalCost" xml:space="preserve">
+    <value>Totale costo vetri</value>
+  </data>
+  <data name="textbox_CostAnalysis_GlassesTotalCostIncidence" xml:space="preserve">
+    <value>Incidenza costo vetri</value>
+  </data>
+  <data name="textbox_CostAnalysis_IncrementalGeneralCosts" xml:space="preserve">
+    <value>Incremento per spese generali</value>
+  </data>
+  <data name="textbox_CostAnalysis_IncrementalGeneralCostsTotal" xml:space="preserve">
+    <value>Totale incremento per spese generali</value>
+  </data>
+  <data name="textbox_CostAnalysis_InsuranceCost" xml:space="preserve">
+    <value>Costo polizza</value>
+  </data>
+  <data name="textbox_CostAnalysis_InsuranceCostTotal" xml:space="preserve">
+    <value>Totale Costo Polizza</value>
+  </data>
+  <data name="textbox_CostAnalysis_MaterialsTotalCost" xml:space="preserve">
+    <value>Totale costo materiali</value>
+  </data>
+  <data name="textbox_CostAnalysis_MaterialsTotalCostIncidence" xml:space="preserve">
+    <value>Incidenza costo materiali</value>
+  </data>
+  <data name="textbox_CostAnalysis_Name" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="textbox_CostAnalysis_Negotiation" xml:space="preserve">
+    <value>Trattativa</value>
+  </data>
+  <data name="textbox_CostAnalysis_NegotiationTotal" xml:space="preserve">
+    <value>Totale Trattativa</value>
+  </data>
+  <data name="textbox_CostAnalysis_Notes" xml:space="preserve">
+    <value>Note</value>
+  </data>
+  <data name="textbox_CostAnalysis_OtherParameters" xml:space="preserve">
+    <value>ALTRI PARAMETRI</value>
+  </data>
+  <data name="textbox_CostAnalysis_ProductionAndFinancialCosts" xml:space="preserve">
+    <value>TOTALE 2 COSTI TOTALI comprese provvigioni, imprevisti e oneri finanziari</value>
+  </data>
+  <data name="textbox_CostAnalysis_ProductionCosts" xml:space="preserve">
+    <value>TOTALE1 COSTI TOTALI di produzione</value>
+  </data>
+  <data name="textbox_CostAnalysis_Profit" xml:space="preserve">
+    <value>Utile previsto</value>
+  </data>
+  <data name="textbox_CostAnalysis_ProfitTotal" xml:space="preserve">
+    <value>Totale provvigioni</value>
+  </data>
+  <data name="textbox_CostAnalysis_RealProfit" xml:space="preserve">
+    <value>Utile sull'importo del contratto</value>
+  </data>
+  <data name="textbox_CostAnalysis_RealProfitTotal" xml:space="preserve">
+    <value>Utile in percentuale sull'importo del contratto</value>
+  </data>
+  <data name="textbox_CostAnalysis_TotalIncrementContractAndCosts" xml:space="preserve">
+    <value>Incremento totale tra contratto e somma dei costi</value>
+  </data>
+  <data name="textbox_CostAnalysis_UnexpectedEvents" xml:space="preserve">
+    <value>Imprevisti</value>
+  </data>
+  <data name="textbox_CostAnalysis_UnexpectedEventsTotal" xml:space="preserve">
+    <value>Totale Imprevisti</value>
+  </data>
+  <data name="textbox_CostAnalysis_WhorkshopManPowerTotalCost" xml:space="preserve">
+    <value>Totale costo mano d'opera</value>
+  </data>
+  <data name="textbox_CostAnalysis_WhorkshopManPowerTotalCostIncidence" xml:space="preserve">
+    <value>Incidenza costo mano d'opera</value>
+  </data>
+  <data name="textbox_JobConsumablesWithPrice_Product" xml:space="preserve">
+    <value>Articolo</value>
+  </data>
+  <data name="textbox_JobConsumablesWithPrice_PurchasePrice" xml:space="preserve">
+    <value>Prezzo acquisto</value>
+  </data>
+  <data name="textbox_JobConsumablesWithPrice_Quantity" xml:space="preserve">
+    <value>Quantità</value>
+  </data>
+  <data name="textbox_JobConsumablesWithPrice_Vat" xml:space="preserve">
+    <value>Iva percentuale</value>
+  </data>
+  <data name="textbox_JobWithPrice_DaChiarire" xml:space="preserve">
+    <value>To clarify</value>
+  </data>
+  <data name="textbox_JobWithPrice_JobPlanning" xml:space="preserve">
+    <value>Job Planning</value>
+  </data>
+  <data name="textbox_JobWithPrice_AddressCustomer" xml:space="preserve">
+    <value>Address</value>
+  </data>
+  <data name="textbox_JobWithPrice_AssignedProducts" xml:space="preserve">
+    <value>Assigned products</value>
+  </data>
+  <data name="textbox_JobWithPrice_CapCustomer" xml:space="preserve">
+    <value>Mailbox</value>
+  </data>
+  <data name="textbox_JobWithPrice_CentralBand" xml:space="preserve">
+    <value>Central Band</value>
+  </data>
+  <data name="textbox_JobWithPrice_CityCustomer" xml:space="preserve">
+    <value>City</value>
+  </data>
+  <data name="textbox_JobWithPrice_CodeActivity" xml:space="preserve">
+    <value>Activity ID</value>
+  </data>
+  <data name="textbox_JobWithPrice_CodeBuilding" xml:space="preserve">
+    <value>Building ID</value>
+  </data>
+  <data name="textbox_JobWithPrice_CodeOds" xml:space="preserve">
+    <value>ODS/NDS Code</value>
+  </data>
+  <data name="textbox_JobWithPrice_CodePfp" xml:space="preserve">
+    <value>PFP Code</value>
+  </data>
+  <data name="textbox_JobWithPrice_CodePfs" xml:space="preserve">
+    <value>PFS Code</value>
+  </data>
+  <data name="textbox_JobWithPrice_CodePt" xml:space="preserve">
+    <value>PT Code</value>
+  </data>
+  <data name="textbox_JobWithPrice_CodeTicket" xml:space="preserve">
+    <value>Ticket ID</value>
+  </data>
+  <data name="textbox_JobWithPrice_CodeWork" xml:space="preserve">
+    <value>Work ID </value>
+  </data>
+  <data name="textbox_JobWithPrice_CodeWr" xml:space="preserve">
+    <value>WR Code</value>
+  </data>
+  <data name="textbox_JobWithPrice_Customer" xml:space="preserve">
+    <value>Customer</value>
+  </data>
+  <data name="textbox_JobWithPrice_DateClock" xml:space="preserve">
+    <value>Time slot</value>
+  </data>
+  <data name="textbox_JobWithPrice_DateExecution" xml:space="preserve">
+    <value>Date of execution</value>
+  </data>
+  <data name="textbox_JobWithPrice_DateFinish" xml:space="preserve">
+    <value>End time</value>
+  </data>
+  <data name="textbox_JobWithPrice_DatePlanned" xml:space="preserve">
+    <value>Date planned</value>
+  </data>
+  <data name="textbox_JobWithPrice_DateSart" xml:space="preserve">
+    <value>Start time</value>
+  </data>
+  <data name="textbox_JobWithPrice_Employee" xml:space="preserve">
+    <value>Team leader</value>
+  </data>
+  <data name="textbox_JobWithPrice_Employees" xml:space="preserve">
+    <value>Employees</value>
+  </data>
+  <data name="textbox_JobWithPrice_ExecutedServices" xml:space="preserve">
+    <value>Services performed</value>
+  </data>
+  <data name="textbox_JobWithPrice_ExecutionNotes" xml:space="preserve">
+    <value>Execution Notes</value>
+  </data>
+  <data name="textbox_JobWithPrice_FinalCustomer" xml:space="preserve">
+    <value>Final Customer Info</value>
+  </data>
+  <data name="textbox_JobWithPrice_IsWarrantyFailure" xml:space="preserve">
+    <value>Warranty Failure</value>
+  </data>
+  <data name="textbox_JobWithPrice_JobConsumableCost" xml:space="preserve">
+    <value>Consumables cost</value>
+  </data>
+  <data name="textbox_JobWithPrice_JobConsumables" xml:space="preserve">
+    <value>Consumables</value>
+  </data>
+  <data name="textbox_JobWithPrice_JobGrossPrice" xml:space="preserve">
+    <value>Total (gross)</value>
+  </data>
+  <data name="textbox_JobWithPrice_JobNetPrice" xml:space="preserve">
+    <value>Total (net)</value>
+  </data>
+  <data name="textbox_JobWithPrice_JobNetVat" xml:space="preserve">
+    <value>Total VAT</value>
+  </data>
+  <data name="textbox_JobWithPrice_JobState" xml:space="preserve">
+    <value>Job state</value>
+  </data>
+  <data name="textbox_JobWithPrice_NameCentral" xml:space="preserve">
+    <value>Name (central)</value>
+  </data>
+  <data name="textbox_JobWithPrice_NameCustomer" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="textbox_JobWithPrice_ProductsSerials" xml:space="preserve">
+    <value>Serial codes</value>
+  </data>
+  <data name="textbox_JobWithPrice_Profit" xml:space="preserve">
+    <value>Profit</value>
+  </data>
+  <data name="textbox_JobWithPrice_Service" xml:space="preserve">
+    <value>Service type</value>
+  </data>
+  <data name="textbox_JobWithPrice_Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="textbox_JobsExecutedServiceWithPrice_Price" xml:space="preserve">
+    <value>Prezzo</value>
+  </data>
+  <data name="textbox_JobsExecutedServiceWithPrice_Product" xml:space="preserve">
+    <value>Servizio</value>
+  </data>
+  <data name="textbox_JobsExecutedServiceWithPrice_Quantity" xml:space="preserve">
+    <value>Quantità</value>
+  </data>
+  <data name="textbox_JobsExecutedServiceWithPrice_Vat" xml:space="preserve">
+    <value>Iva percentuale</value>
+  </data>
+  <data name="view_item_title" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="ServiceColmar" xml:space="preserve">
+    <value>Service</value>
+  </data>
+  <data name="textbox_ServiceColmar_Barcode" xml:space="preserve">
+    <value>Barcode</value>
+  </data>
+  <data name="textbox_ServiceColmar_DefaultGrossPrice" xml:space="preserve">
+    <value>Selling price (gross) (€)</value>
+  </data>
+  <data name="textbox_ServiceColmar_DefaultPurchasePrice" xml:space="preserve">
+    <value>Buying price (net) (€)</value>
+  </data>
+  <data name="textbox_ServiceColmar_DefaultSellPrice" xml:space="preserve">
+    <value>Selling price (net) (€)</value>
+  </data>
+  <data name="textbox_ServiceColmar_DefaultVat" xml:space="preserve">
+    <value>Default VAT (%)</value>
+  </data>
+  <data name="textbox_ServiceColmar_Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="textbox_ServiceColmar_EanCode" xml:space="preserve">
+    <value>EAN Code</value>
+  </data>
+  <data name="textbox_ServiceColmar_IsService" xml:space="preserve">
+    <value>Service</value>
+  </data>
+  <data name="textbox_ServiceColmar_MainCode" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="textbox_ServiceColmar_Notes" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="textbox_ServiceColmar_PriceGroup" xml:space="preserve">
+    <value>Prices</value>
+  </data>
+  <data name="textbox_ServiceColmar_ProductMovements" xml:space="preserve">
+    <value>Movements</value>
+  </data>
+  <data name="textbox_ServiceColmar_ProductSerials" xml:space="preserve">
+    <value>Serials</value>
+  </data>
+  <data name="textbox_ServiceColmar_Quantity" xml:space="preserve">
+    <value>Qty</value>
+  </data>
+  <data name="textbox_ServiceColmar_Um" xml:space="preserve">
+    <value>Unit of measure</value>
+  </data>
+  <data name="textbox_ServiceColmar_Volume" xml:space="preserve">
+    <value>Volume</value>
+  </data>
+  <data name="textbox_ServiceColmar_Weight" xml:space="preserve">
+    <value>Weight(kg)</value>
+  </data>
+  <data name="textbox_Employee_BornCity" xml:space="preserve">
+    <value>Città di nascita</value>
+  </data>
+  <data name="textbox_Employee_BornNation" xml:space="preserve">
+    <value>Nazionalità</value>
+  </data>
+  <data name="textbox_Employee_City" xml:space="preserve">
+    <value>Città</value>
+  </data>
+  <data name="textbox_Employee_Code" xml:space="preserve">
+    <value>Codice</value>
+  </data>
+  <data name="textbox_Employee_DateOfBirth" xml:space="preserve">
+    <value>Data di nascita</value>
+  </data>
+  <data name="textbox_Employee_DisplayName" xml:space="preserve">
+    <value>Nominativo</value>
+  </data>
+  <data name="textbox_Employee_DocumentNumber" xml:space="preserve">
+    <value>Numero di documento</value>
+  </data>
+  <data name="textbox_Employee_DocumentType" xml:space="preserve">
+    <value>Tipo documento</value>
+  </data>
+  <data name="textbox_Employee_Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="textbox_Employee_Firstname" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="textbox_Employee_HireDate" xml:space="preserve">
+    <value>Data di assunzione</value>
+  </data>
+  <data name="textbox_Employee_Iban" xml:space="preserve">
+    <value>Iban</value>
+  </data>
+  <data name="textbox_Employee_Nation" xml:space="preserve">
+    <value>Nazione</value>
+  </data>
+  <data name="textbox_Employee_PhoneNumber" xml:space="preserve">
+    <value>Numero di telefono</value>
+  </data>
+  <data name="textbox_Employee_PostalCode" xml:space="preserve">
+    <value>Codice postale</value>
+  </data>
+  <data name="textbox_Employee_State" xml:space="preserve">
+    <value>Regione</value>
+  </data>
+  <data name="textbox_Employee_Surname" xml:space="preserve">
+    <value>Cognome</value>
+  </data>
+  <data name="textbox_Employee_TaxNumber" xml:space="preserve">
+    <value>Codice fiscale</value>
+  </data>
+  <data name="textbox_Employee_Vehicle" xml:space="preserve">
+    <value>Veicolo assegnato</value>
+  </data>
+  <data name="groupSettings" xml:space="preserve">
+    <value>Groups and Users</value>
+  </data>
+  <data name="no" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="datePicker_SelectADate" xml:space="preserve">
+    <value>Select a date</value>
+  </data>
+  <data name="baseClient_PrivilegeError" xml:space="preserve">
+    <value>Unable to perform request. This users does not have the required privileges.</value>
+  </data>
+  <data name="showBox_SearchBoxPlaceHolderText" xml:space="preserve">
+    <value>Type here to search...</value>
+  </data>
+  <data name="warning" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+  <data name="tabView_privilegesError" xml:space="preserve">
+    <value>Cannot open page. This users does not have the required privileges.</value>
+  </data>
+  <data name="login_connectionFailedError" xml:space="preserve">
+    <value>Server could not be reached. Wrong name/password or internet connection not available.</value>
+  </data>
+  <data name="login_MainPageVMType_missingError" xml:space="preserve">
+    <value>You need to inject the final MainPageVM type using the method in UniCompositionRoot.</value>
+  </data>
+  <data name="search" xml:space="preserve">
+    <value>Search...</value>
+  </data>
+  <data name="day" xml:space="preserve">
+    <value>Day</value>
+  </data>
+  <data name="month" xml:space="preserve">
+    <value>Month</value>
+  </data>
+  <data name="year" xml:space="preserve">
+    <value>Year</value>
+  </data>
+  <data name="searchFilters_FilterByDate" xml:space="preserve">
+    <value>Filter by date</value>
+  </data>
+  <data name="searchFilters_SearchBy" xml:space="preserve">
+    <value>Search by:</value>
+  </data>
+  <data name="searchFilters_TimeRange" xml:space="preserve">
+    <value>Time range</value>
+  </data>
+  <data name="searchFilters_FilterByValue" xml:space="preserve">
+    <value>Filter by value</value>
+  </data>
+  <data name="comboBox_Bordero_Carrier" xml:space="preserve">
+    <value>Carrier - TEST resource</value>
+  </data>
+  <data name="create" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="confirm_Delete" xml:space="preserve">
+    <value>Are you sure you want to delete this element?</value>
+  </data>
+  <data name="baseModel_Commessa" xml:space="preserve">
+    <value>Commessa</value>
+  </data>
+  <data name="settings_userDataHeader" xml:space="preserve">
+    <value>User Data</value>
+  </data>
+  <data name="mainpage_settingsButtonLabel" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="print_printDone" xml:space="preserve">
+    <value>Printing done.</value>
+  </data>
+  <data name="print_printFailed" xml:space="preserve">
+    <value>Printing failed.</value>
+  </data>
+  <data name="settings_changePasswordError" xml:space="preserve">
+    <value>Error changing password, please try again later</value>
+  </data>
+  <data name="settings_changePasswordSuccess" xml:space="preserve">
+    <value>Password changed!</value>
+  </data>
+  <data name="settings_adminToolsLabel" xml:space="preserve">
+    <value>Admin Tools</value>
+  </data>
+  <data name="settings_changePasswordLabel" xml:space="preserve">
+    <value>Change my password...</value>
+  </data>
+  <data name="settings_userLabel" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="settings_changePasswordNewPasswordLabel" xml:space="preserve">
+    <value>New Password</value>
+  </data>
+  <data name="settings_changePasswordOldPasswordLabel" xml:space="preserve">
+    <value>Current Password</value>
+  </data>
+  <data name="login_saveCredentialsLabel" xml:space="preserve">
+    <value>Save credentials</value>
+  </data>
+</root>

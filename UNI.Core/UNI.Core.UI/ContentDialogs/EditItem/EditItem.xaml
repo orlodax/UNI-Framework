@@ -1,0 +1,82 @@
+﻿<ContentDialog
+    x:Class="UNI.Core.UI.EditItem.EditItem"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UNI.Core.UI.NewItem"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:RequestedTheme="Dark"
+    Title="{Binding Title, Mode=OneWay}"
+    FontFamily="Malgun"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    PrimaryButtonText="{Binding SaveButtonLabel}"
+    PrimaryButtonCommand="{Binding Save}"
+    SecondaryButtonText="{Binding CancelButtonLabel}"
+    xmlns:i="using:Microsoft.Xaml.Interactivity" 
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core" 
+    d:DataContext="{d:DesignInstance Type=local:EditItemVM}">
+
+    <RelativePanel>
+
+        <Button x:Name="f1" Style="{StaticResource BaseSquaredButton}"
+                Content="{Binding F1ButtonContent}"
+                Width="Auto"
+                FontFamily="Malgun"
+                Foreground="White"
+                Background="{ThemeResource SystemAccentColorDark1}"
+                Visibility="{Binding F1ButtonVisibility}"
+                Command="{Binding F1}"
+                Margin="5"
+                RelativePanel.AlignTopWithPanel="True"
+                RelativePanel.AlignRightWithPanel="True"/>
+        
+        <NavigationView Name="navigationView"
+                        Background="Transparent"
+                        PaneDisplayMode="Top"
+                        IsBackButtonVisible="Collapsed"
+                        IsSettingsVisible="False"
+                        RelativePanel.LeftOf="f1"
+                        RelativePanel.AlignTopWithPanel="True"
+                        MenuItemsSource="{Binding NavigationViewItems}"
+                        >
+            <i:Interaction.Behaviors>
+                <core:EventTriggerBehavior EventName="SelectionChanged">
+                    <core:InvokeCommandAction Command="{Binding NavigationViewSelectionChanged}"/>
+                </core:EventTriggerBehavior>
+            </i:Interaction.Behaviors>
+        </NavigationView>
+
+        <ScrollViewer IsVerticalRailEnabled="True"
+                      
+                          VerticalScrollBarVisibility="Visible"
+                          RelativePanel.AlignLeftWithPanel="True"
+                          RelativePanel.Below="navigationView"
+                          RelativePanel.AlignBottomWithPanel="True"
+                          RelativePanel.AlignRightWithPanel="True">
+
+            <UserControl x:Name="DetailsContainer"
+                     Margin="20"
+                     RelativePanel.AlignLeftWithPanel="True"
+                     RelativePanel.AlignRightWithPanel="True"
+                     RelativePanel.AlignTopWithPanel="True"
+                     RelativePanel.AlignBottomWithPanel="True"
+                     ScrollViewer.IsVerticalRailEnabled="True"
+                     Content="{Binding Content, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+        </ScrollViewer>
+
+
+
+        <ProgressRing IsActive="{Binding IsLoading}" 
+                      Height="40"
+                      Width="40"
+                      Foreground="{ThemeResource SystemAccentColorDark1}"
+                      RelativePanel.AlignHorizontalCenterWithPanel="True"
+                      RelativePanel.AlignVerticalCenterWithPanel="True"/>
+
+    </RelativePanel>
+
+
+</ContentDialog>
+    

@@ -1,0 +1,41 @@
+﻿<UserControl
+    x:Class="UNI.Core.UI.CustomControls.PropertiesGroup.PropertiesGroup"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UNI.Core.UI.CustomControls.PropertiesGroup"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Loaded="UserControl_Loaded"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <RelativePanel>
+        
+        <TextBlock x:Name="GroupName"
+                   d:Text="Placeholder"
+                   RelativePanel.AlignLeftWithPanel="True"
+                   RelativePanel.AlignTopWithPanel="True"
+                   Foreground="{ThemeResource TextBoxBackgroundThemeBrush}" 
+                   Style="{StaticResource BaseTextBlockStyle}"
+                   FontSize="16" 
+                   Margin="5,5,5,5"/>
+        
+        <Border x:Name="separatorTop"
+                RelativePanel.Below="GroupName" 
+                RelativePanel.AlignLeftWithPanel="True"
+                RelativePanel.AlignRightWithPanel="True"
+                Height="2" 
+                Background="{ThemeResource SystemAccentColorDark1}"/>
+      
+        <UserControl x:Name="DetailsContainer"
+                     RelativePanel.Below="separatorTop"
+                     Margin="0,10"
+                     RelativePanel.AlignLeftWithPanel="True"
+                     RelativePanel.AlignRightWithPanel="True"
+                     RelativePanel.AlignBottomWithPanel="True"
+                     ScrollViewer.IsVerticalRailEnabled="True"/>
+
+    </RelativePanel>
+    
+</UserControl>

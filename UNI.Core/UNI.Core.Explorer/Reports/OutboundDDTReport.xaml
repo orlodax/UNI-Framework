@@ -1,0 +1,133 @@
+﻿<Page
+    x:Class="UNI.Core.Explorer.Reports.OutboundDDTReport"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UNI.Core.Explorer.Reports"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+     Width="800"
+        xmlns:converters="using:UNI.Core.UI.Converters"
+    xmlns:converters2="using:UNI.Core.Library.Converters"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+
+    <Page.Resources>
+        <converters:DateTimeToStringLocalTime x:Key="DateTimeToStringLocalTime" />
+        <converters2:CurrencyConverter x:Key="CurrencyConverter" />
+        <converters2:PercentageConverter x:Key="PercentageConverter" />
+
+        <Style TargetType="TextBlock" x:Name="ReportHeaderTextBlock">
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="10"/>
+        </Style>
+        <Style TargetType="TextBlock" x:Name="ReportValueDescriptorTextBlock">
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="10"/>
+        </Style>
+        <Style TargetType="TextBlock" x:Name="ReportValueTextBlock">
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Margin" Value="0,0,0,0"/>
+        </Style>
+
+    </Page.Resources>
+
+
+    <RichTextBlock x:DefaultBindMode="OneWay" >
+        <Paragraph TextAlignment="Left" Margin="5">
+            <InlineUIContainer>
+                <StackPanel>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Left">
+                        <TextBlock Text="DDT" HorizontalAlignment="Left" FontFamily="Segoe UI" FontWeight="Bold" FontSize="18" Foreground="Black" Margin="0,5,0,0"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="Numero" HorizontalAlignment="Left" Style="{StaticResource ReportHeaderTextBlock}" Margin="0,5,0,0"/>
+                            <TextBlock Text="{Binding Number, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ReportValueTextBlock}" Margin="0,5,0,0"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="Data" HorizontalAlignment="Left" Style="{StaticResource ReportHeaderTextBlock}" Margin="0,5,0,0"/>
+                            <TextBlock Text="{Binding Date, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ReportValueTextBlock}" Margin="0,5,0,0"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="Stato" HorizontalAlignment="Left" Style="{StaticResource ReportHeaderTextBlock}" Margin="0,5,0,0"/>
+                            <TextBlock Text="{Binding State, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ReportValueTextBlock}" Margin="0,5,0,0"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="Dipendente" HorizontalAlignment="Left" Style="{StaticResource ReportHeaderTextBlock}" Margin="0,5,0,0"/>
+                            <StackPanel>
+                                <TextBlock Text="{Binding Employee.Firstname, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ReportValueTextBlock}" Margin="0,5,0,0"/>
+                                <TextBlock Text="{Binding Employee.Surname, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ReportValueTextBlock}" Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </InlineUIContainer>
+        </Paragraph>
+
+        <Paragraph>
+            <InlineUIContainer>
+                <Grid Width="800" Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="Codice" HorizontalAlignment="Left" Style="{StaticResource ReportHeaderTextBlock}" Margin="0,5,0,0"/>
+                    <TextBlock Grid.Column="1" Text="Descrizione" HorizontalAlignment="Left" Style="{StaticResource ReportHeaderTextBlock}" Margin="0,5,0,0"/>
+                    <TextBlock Grid.Column="2" Text="Quantità" HorizontalAlignment="Left" Style="{StaticResource ReportHeaderTextBlock}" Margin="0,5,0,0"/>
+                </Grid>
+            </InlineUIContainer>
+        </Paragraph>
+        <Paragraph Margin="5">
+            <InlineUIContainer>
+                <ItemsControl ItemsSource="{Binding OutboundDDTRows}"
+                              MinHeight="600"
+                              Margin="0">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <RichTextBlock>
+                                <Paragraph>
+                                    <InlineUIContainer>
+                                        <Grid Width="800" Margin="5">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="2*"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Text="{Binding Code}" HorizontalAlignment="Left" Style="{StaticResource ReportValueTextBlock}" Margin="0,5,0,0"/>
+                                            <TextBlock Grid.Column="1" Text="{Binding Description}" HorizontalAlignment="Left" Style="{StaticResource ReportValueTextBlock}" Margin="0,5,0,0"/>
+                                            <TextBlock Grid.Column="2" Text="{Binding Quantity}" HorizontalAlignment="Left" Style="{StaticResource ReportValueTextBlock}" Margin="0,5,0,0"/>
+                                        </Grid>
+                                    </InlineUIContainer>
+                                </Paragraph>
+                            </RichTextBlock>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </InlineUIContainer>
+        </Paragraph>
+        <Paragraph>
+            <InlineUIContainer>
+                <Grid Width="800" Margin="5,50,5,5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="Firma Conducente" HorizontalAlignment="Center" Style="{StaticResource ReportHeaderTextBlock}" Margin="0,5,0,0"/>
+                    <TextBlock Grid.Column="1" Text="Firma Vettore" HorizontalAlignment="Center" Style="{StaticResource ReportHeaderTextBlock}" Margin="0,5,0,0"/>
+                    <TextBlock Grid.Column="2" Text="Firma Destinatario" HorizontalAlignment="Center" Style="{StaticResource ReportHeaderTextBlock}" Margin="0,5,0,0"/>
+                </Grid>
+            </InlineUIContainer>
+        </Paragraph>
+    </RichTextBlock>
+</Page>

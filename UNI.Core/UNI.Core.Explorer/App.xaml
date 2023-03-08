@@ -1,0 +1,23 @@
+﻿<Application
+    x:Class="UNI.Core.Explorer.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UNI.Core.Explorer">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!--Dictionary for different kind of list items-->
+                <ResourceDictionary Source="/Styles/ListDetailD.xaml"/>
+                <ResourceDictionary Source="/Styles/ShowBoxD.xaml"/>
+                <!--Dictionary for common buttons-->
+                <ResourceDictionary Source="ms-appx:///UNI.Core.UI/Styles/ButtonsD.xaml"/>
+                <!--Dictionary for common controls-->
+                <ResourceDictionary Source="ms-appx:///UNI.Core.UI/Styles/ControlsD.xaml"/>
+                <ResourceDictionary Source="ms-appx:///UNI.Core.UI/Styles/ThemeD.xaml"/>
+
+                <!--enter more dictionaries here-->
+                <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

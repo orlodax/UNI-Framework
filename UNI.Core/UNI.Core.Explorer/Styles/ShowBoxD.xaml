@@ -1,0 +1,27 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <DataTemplate x:Key="Vehicle_ShowBox">
+        <Grid AutomationProperties.Name="{Binding Description}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <TextBlock Text="{Binding Brand}" Grid.Column="0" Style="{ThemeResource BaseTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}"/>
+            <TextBlock Text="{Binding Model}" Grid.Column="2" Style="{ThemeResource BaseTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}"/>
+            <TextBlock Text="{Binding LicensePlate}" Grid.Column="4" Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"/>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="Azienda_ShowBox">
+        <TextBlock Text="{Binding RagioneSociale}" Grid.Column="0" Style="{ThemeResource BaseTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}"/>
+    </DataTemplate>
+    <DataTemplate x:Key="Role_ShowBox">
+        <TextBlock Text="{Binding Name}" Style="{ThemeResource BaseTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}"/>
+    </DataTemplate>
+</ResourceDictionary>

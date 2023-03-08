@@ -1,0 +1,47 @@
+﻿<UserControl
+    x:Class="UNI.Core.UI.MainPage.TabView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UNI.Core.UI.MainPage"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance Type=local:TabViewVM}"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <muxc:TabView x:Name="MainTabView"
+                      Visibility="{Binding Visibility}"
+                      AllowDropTabs="True" 
+                      CanDragTabs="True"
+                      CanReorderTabs="True"
+                      VerticalAlignment="Stretch"
+                      HorizontalAlignment="Stretch"
+                      IsAddTabButtonVisible="False"
+                      TabItemsSource="{Binding Tabs, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      SelectedItem="{Binding SelectedTab, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      FontFamily="Malgun">
+
+        <i:Interaction.Behaviors>
+            <core:EventTriggerBehavior EventName="TabCloseRequested">
+                <core:InvokeCommandAction Command="{Binding TabCloseRequested}"/>
+            </core:EventTriggerBehavior>
+            <core:EventTriggerBehavior EventName="TabDroppedOutside">
+                <core:InvokeCommandAction Command="{Binding TabDroppedOutside}"/>
+            </core:EventTriggerBehavior>
+            <core:EventTriggerBehavior EventName="TabDragStarting">
+                <core:InvokeCommandAction Command="{Binding TabDragStarting}"/>
+            </core:EventTriggerBehavior>
+            <core:EventTriggerBehavior EventName="TabDragCompleted">
+                <core:InvokeCommandAction Command="{Binding TabDragCompleted}"/>
+            </core:EventTriggerBehavior>
+            <core:EventTriggerBehavior EventName="TabStripDragOver">
+                <core:InvokeCommandAction Command="{Binding TabStripDragOver}"/>
+            </core:EventTriggerBehavior>
+        </i:Interaction.Behaviors>
+
+    </muxc:TabView>
+</UserControl>

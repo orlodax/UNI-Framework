@@ -1,0 +1,53 @@
+﻿<UserControl
+    x:Class="UNI.Core.UI.CustomControls.DocumentBox"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UNI.Core.UI.CustomControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <RelativePanel>
+
+        <TextBlock x:Name="tag" Margin="0,0,0,4"
+                   Text="{Binding MemberName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                   RelativePanel.AlignLeftWithPanel="True"
+                   RelativePanel.AlignTopWithPanel="True"
+                   />
+
+        <TextBox x:Name="showBox"
+                 Height="32"
+                 FontFamily="Malgun"
+                 Text="{Binding Name, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                 RelativePanel.AlignLeftWithPanel="True"
+                 RelativePanel.LeftOf="viewbutton"
+                 RelativePanel.Below="tag"
+                 IsReadOnly="True"/>
+
+        <Button x:Name="viewbutton" 
+                Margin="5,0,0,0"
+                RelativePanel.LeftOf="addbutton"
+                RelativePanel.Below="tag"
+                Background="{ThemeResource SystemAccentColor}"
+                Style="{StaticResource SquaredBoxViewButton}"
+                Command="{Binding OpenDocumentViewer}"/>
+
+        <Button x:Name="addbutton" 
+                Margin="5,0,0,0"
+                RelativePanel.LeftOf="deletebutton"
+                RelativePanel.Below="tag"
+                Background="{ThemeResource SystemAccentColor}"
+                Style="{StaticResource SquaredBoxNewButton}"
+                Command="{Binding AddDocument}"/>
+        <Button x:Name="deletebutton" 
+                Margin="5,0,0,0"
+                RelativePanel.AlignRightWithPanel="True"
+                RelativePanel.Below="tag"
+                Background="{ThemeResource SystemAccentColor}"
+                Style="{StaticResource SquaredBoxDeleteButton}"
+                Command="{Binding DeleteDocument}"/>
+
+    </RelativePanel>
+</UserControl>

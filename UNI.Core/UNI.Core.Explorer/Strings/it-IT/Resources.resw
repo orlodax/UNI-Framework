@@ -1,0 +1,1335 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="cancelButtonLabel" xml:space="preserve">
+    <value>Annulla</value>
+  </data>
+  <data name="combobox_AddressInfo_Type" xml:space="preserve">
+    <value>Partenza, Arrivo, Magazzino</value>
+  </data>
+  <data name="combobox_AddressInfo_ZtlResponsibility" xml:space="preserve">
+    <value>Cliente, Azienda</value>
+  </data>
+  <data name="combobox_Company_CountryAdvantage" xml:space="preserve">
+    <value>Avvantaggiata,Svantaggiata</value>
+  </data>
+  <data name="combobox_Employee_School" xml:space="preserve">
+    <value>Laurea,Dottorato,Diploma,Altro</value>
+  </data>
+  <data name="combobox_InboundDDT_State" xml:space="preserve">
+    <value>Bozza,Evaso</value>
+  </data>
+  <data name="combobox_Job_JobState" xml:space="preserve">
+    <value>Da Programmare,Programmata,Eseguita,Sospesa,Annullata</value>
+  </data>
+  <data name="combobox_Job_Type" xml:space="preserve">
+    <value>Impianto FTTH,Impianto OpenFiber, Impianto Rame,Guasto Rame,Linea instabile,Permuta armadio,Permuta centrale,Onucab,Migrazione linea,Cessazione</value>
+  </data>
+  <data name="combobox_OutboundDDT_State" xml:space="preserve">
+    <value>Bozza,Evaso</value>
+  </data>
+  <data name="contacts" xml:space="preserve">
+    <value>Contatti</value>
+  </data>
+  <data name="CostAnalysesTotalRentsCosts" xml:space="preserve">
+    <value />
+  </data>
+  <data name="CostAnalysis" xml:space="preserve">
+    <value>Analisi Costi</value>
+  </data>
+  <data name="Customer" xml:space="preserve">
+    <value>Committente</value>
+  </data>
+  <data name="dashbord" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="dateFilter_fromDate_Header" xml:space="preserve">
+    <value>From:</value>
+  </data>
+  <data name="dateFilter_propertySelector_Header" xml:space="preserve">
+    <value>Search in...</value>
+  </data>
+  <data name="dateFilter_propertySelector_Placeholder" xml:space="preserve">
+    <value>Everything</value>
+  </data>
+  <data name="dateFilter_rangeSelector_Header" xml:space="preserve">
+    <value>Intervallo di Tempo</value>
+  </data>
+  <data name="dateFilter_rangeSelector_Placeholder" xml:space="preserve">
+    <value>Tutti i periodi</value>
+  </data>
+  <data name="dateFilter_Ranges_0" xml:space="preserve">
+    <value>Oggi</value>
+  </data>
+  <data name="dateFilter_Ranges_1" xml:space="preserve">
+    <value>Ieri</value>
+  </data>
+  <data name="dateFilter_Ranges_2" xml:space="preserve">
+    <value>Scorso Mese</value>
+  </data>
+  <data name="dateFilter_Ranges_3" xml:space="preserve">
+    <value>Scorso Anno</value>
+  </data>
+  <data name="dateFilter_Ranges_4" xml:space="preserve">
+    <value>Questo Mese</value>
+  </data>
+  <data name="dateFilter_Ranges_5" xml:space="preserve">
+    <value>Questo Anno</value>
+  </data>
+  <data name="dateFilter_toDate_Header" xml:space="preserve">
+    <value>Fino:</value>
+  </data>
+  <data name="datepicker_Created" xml:space="preserve">
+    <value>Date of Creation</value>
+  </data>
+  <data name="datepicker_LastModify" xml:space="preserve">
+    <value>Date of Last Modify</value>
+  </data>
+  <data name="detail_item_title" xml:space="preserve">
+    <value>Modifica</value>
+  </data>
+  <data name="Employee" xml:space="preserve">
+    <value>Dipendente</value>
+  </data>
+  <data name="group_Company_Auditor" xml:space="preserve">
+    <value>Revirore contabile</value>
+  </data>
+  <data name="group_Company_Employees" xml:space="preserve">
+    <value>Dipendenti</value>
+  </data>
+  <data name="group_Company_LocalUnit" xml:space="preserve">
+    <value>Unià locale interessata al progetto</value>
+  </data>
+  <data name="group_InboundDDTRow_Serials" xml:space="preserve">
+    <value>Seriali</value>
+  </data>
+  <data name="group_Job_JobExecution" xml:space="preserve">
+    <value>Rapporto attività</value>
+  </data>
+  <data name="group_Job_JobPlanning" xml:space="preserve">
+    <value>Pianificazione attività</value>
+  </data>
+  <data name="group_Offer_BuildingSiteAdvisory" xml:space="preserve">
+    <value>Consuntivo Cantiere</value>
+  </data>
+  <data name="group_OutboundDDTRow_Serials" xml:space="preserve">
+    <value>Seriali</value>
+  </data>
+  <data name="group_Product_Movements" xml:space="preserve">
+    <value>Movimenti</value>
+  </data>
+  <data name="group_Product_Serials" xml:space="preserve">
+    <value>Codici Seriali</value>
+  </data>
+  <data name="InboundDDT" xml:space="preserve">
+    <value>DDT in entrata</value>
+  </data>
+  <data name="InboundDDTRow" xml:space="preserve">
+    <value>Riga</value>
+  </data>
+  <data name="InboundProductSerial" xml:space="preserve">
+    <value>Seriale</value>
+  </data>
+  <data name="Job" xml:space="preserve">
+    <value>Pratica</value>
+  </data>
+  <data name="JobConsumables" xml:space="preserve">
+    <value>Materiali utilizzati</value>
+  </data>
+  <data name="JobConsumablesWithPrice" xml:space="preserve">
+    <value>Materiali utilizzati</value>
+  </data>
+  <data name="JobWithPrice" xml:space="preserve">
+    <value>Pratica</value>
+  </data>
+  <data name="JobsExecutedService" xml:space="preserve">
+    <value>Servizi eseguiti</value>
+  </data>
+  <data name="JobsExecutedServiceWithPrice" xml:space="preserve">
+    <value>Servizi eseguiti</value>
+  </data>
+  <data name="Offer" xml:space="preserve">
+    <value>Offerta</value>
+  </data>
+  <data name="OutboundDDT" xml:space="preserve">
+    <value>DDT in uscita</value>
+  </data>
+  <data name="OutboundDDTRow" xml:space="preserve">
+    <value>Riga</value>
+  </data>
+  <data name="OutboundProductSerial" xml:space="preserve">
+    <value>Seriale</value>
+  </data>
+  <data name="Product" xml:space="preserve">
+    <value>Articolo</value>
+  </data>
+  <data name="ProductMovement" xml:space="preserve">
+    <value>Movimento</value>
+  </data>
+  <data name="ProductSerial" xml:space="preserve">
+    <value>Seriale</value>
+  </data>
+  <data name="saveButtonLabel" xml:space="preserve">
+    <value>Salva</value>
+  </data>
+  <data name="settings" xml:space="preserve">
+    <value>Impostazioni</value>
+  </data>
+  <data name="textbox_Customer_Address" xml:space="preserve">
+    <value>Indirizzo</value>
+  </data>
+  <data name="textbox_Customer_AddressGroup" xml:space="preserve">
+    <value>Informazioni indirizzo</value>
+  </data>
+  <data name="textbox_Customer_AtecoCode" xml:space="preserve">
+    <value>Codice ATECO</value>
+  </data>
+  <data name="textbox_Customer_City" xml:space="preserve">
+    <value>Città</value>
+  </data>
+  <data name="textbox_Customer_Code" xml:space="preserve">
+    <value>Codice Cliente</value>
+  </data>
+  <data name="textbox_Customer_CompanyRegistryNumber" xml:space="preserve">
+    <value>Codice registro delle impresa</value>
+  </data>
+  <data name="textbox_Customer_ContactsGroup" xml:space="preserve">
+    <value>Contatti</value>
+  </data>
+  <data name="textbox_Customer_Denomination" xml:space="preserve">
+    <value>Denominazione sociale</value>
+  </data>
+  <data name="textbox_Customer_Description" xml:space="preserve">
+    <value>Descrizione</value>
+  </data>
+  <data name="textbox_Customer_Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="textbox_Customer_Fax" xml:space="preserve">
+    <value>Fax</value>
+  </data>
+  <data name="textbox_Customer_FirstName" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="textbox_Customer_IBAN" xml:space="preserve">
+    <value>IBAN</value>
+  </data>
+  <data name="textbox_Customer_Landline" xml:space="preserve">
+    <value>Numero fisso</value>
+  </data>
+  <data name="textbox_Customer_LastName" xml:space="preserve">
+    <value>Cognome</value>
+  </data>
+  <data name="textbox_Customer_LegalMail" xml:space="preserve">
+    <value>Pec</value>
+  </data>
+  <data name="textbox_Customer_Mobile" xml:space="preserve">
+    <value>Numero mobile</value>
+  </data>
+  <data name="textbox_Customer_Nation" xml:space="preserve">
+    <value>Nazione</value>
+  </data>
+  <data name="textbox_Customer_Notes" xml:space="preserve">
+    <value>Note</value>
+  </data>
+  <data name="textbox_Customer_PostalCode" xml:space="preserve">
+    <value>CAP</value>
+  </data>
+  <data name="textbox_Customer_PotalCode" xml:space="preserve">
+    <value>Codice Postale</value>
+  </data>
+  <data name="textbox_Customer_ReaCode" xml:space="preserve">
+    <value>Codice REA</value>
+  </data>
+  <data name="textbox_Customer_SDICode" xml:space="preserve">
+    <value>Codice SDI</value>
+  </data>
+  <data name="textbox_Customer_State" xml:space="preserve">
+    <value>Regione</value>
+  </data>
+  <data name="textbox_Customer_TaxNumber" xml:space="preserve">
+    <value>Codice Fiscale</value>
+  </data>
+  <data name="textbox_Customer_Type" xml:space="preserve">
+    <value>Tipo</value>
+  </data>
+  <data name="textbox_Customer_VatNumber" xml:space="preserve">
+    <value>P.IVA</value>
+  </data>
+  <data name="textbox_Customer_Website" xml:space="preserve">
+    <value>Sito web</value>
+  </data>
+  <data name="textbox_Employee_Address" xml:space="preserve">
+    <value>Indirizzo</value>
+  </data>
+  <data name="textbox_Employee_AddressGroup" xml:space="preserve">
+    <value>Informazioni indirizzo</value>
+  </data>
+  <data name="textbox_Employee_BornCity" xml:space="preserve">
+    <value>Città di nascita</value>
+  </data>
+  <data name="textbox_Employee_BornNation" xml:space="preserve">
+    <value>Nazionalità</value>
+  </data>
+  <data name="textbox_Employee_City" xml:space="preserve">
+    <value>Città</value>
+  </data>
+  <data name="textbox_Employee_Code" xml:space="preserve">
+    <value>Codice</value>
+  </data>
+  <data name="textbox_Employee_DateOfBirth" xml:space="preserve">
+    <value>Data di nascita</value>
+  </data>
+  <data name="textbox_Employee_DisplayName" xml:space="preserve">
+    <value>Nominativo</value>
+  </data>
+  <data name="textbox_Employee_DocumentNumber" xml:space="preserve">
+    <value>Numero di documento</value>
+  </data>
+  <data name="textbox_Employee_DocumentType" xml:space="preserve">
+    <value>Tipo documento</value>
+  </data>
+  <data name="textbox_Employee_Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="textbox_Employee_Firstname" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="textbox_Employee_HireDate" xml:space="preserve">
+    <value>Data di assunzione</value>
+  </data>
+  <data name="textbox_Employee_Iban" xml:space="preserve">
+    <value>Iban</value>
+  </data>
+  <data name="textbox_Employee_Nation" xml:space="preserve">
+    <value>Nazione</value>
+  </data>
+  <data name="textbox_Employee_PhoneNumber" xml:space="preserve">
+    <value>Numero di telefono</value>
+  </data>
+  <data name="textbox_Employee_PostalCode" xml:space="preserve">
+    <value>Codice postale</value>
+  </data>
+  <data name="textbox_Employee_State" xml:space="preserve">
+    <value>Regione</value>
+  </data>
+  <data name="textbox_Employee_Surname" xml:space="preserve">
+    <value>Cognome</value>
+  </data>
+  <data name="textbox_Employee_TaxNumber" xml:space="preserve">
+    <value>Codice fiscale</value>
+  </data>
+  <data name="textbox_Employee_Vehicle" xml:space="preserve">
+    <value>Veicolo assegnato</value>
+  </data>
+  <data name="textbox_InboundDDTRow_Description" xml:space="preserve">
+    <value>Descrizione</value>
+  </data>
+  <data name="textbox_InboundDDTRow_GrossPrice" xml:space="preserve">
+    <value>Prezzo lordo</value>
+  </data>
+  <data name="textbox_InboundDDTRow_InboundProductSerials" xml:space="preserve">
+    <value>Seriali</value>
+  </data>
+  <data name="textbox_InboundDDTRow_MissingSerialsQuantity" xml:space="preserve">
+    <value>Seriali Mancanti</value>
+  </data>
+  <data name="textbox_InboundDDTRow_Product" xml:space="preserve">
+    <value>Prodotto associato</value>
+  </data>
+  <data name="textbox_InboundDDTRow_ProductSerials" xml:space="preserve">
+    <value>Codici seriali</value>
+  </data>
+  <data name="textbox_InboundDDTRow_ProductSerialsString" xml:space="preserve">
+    <value>Codici seriali</value>
+  </data>
+  <data name="textbox_InboundDDTRow_Quantity" xml:space="preserve">
+    <value>Quantità</value>
+  </data>
+  <data name="textbox_InboundDDTRow_UnitGrossPrice" xml:space="preserve">
+    <value>Prezzo lordo unitario</value>
+  </data>
+  <data name="textbox_InboundDDTRow_UnitNetPrice" xml:space="preserve">
+    <value>Prezzo netto unitario</value>
+  </data>
+  <data name="textbox_InboundDDTRow_UnitPurchaseNetPrice" xml:space="preserve">
+    <value>Prezzo di acquisto unitario</value>
+  </data>
+  <data name="textbox_InboundDDTRow_UnitVat" xml:space="preserve">
+    <value>Iva unità</value>
+  </data>
+  <data name="textbox_InboundDDTRow_VatPercentage" xml:space="preserve">
+    <value>Percentuale Iva</value>
+  </data>
+  <data name="textbox_InboundDDT_Appereance" xml:space="preserve">
+    <value>Aspetto merce</value>
+  </data>
+  <data name="textbox_InboundDDT_Carrier" xml:space="preserve">
+    <value>Vettore</value>
+  </data>
+  <data name="textbox_InboundDDT_Causal" xml:space="preserve">
+    <value>Causale</value>
+  </data>
+  <data name="textbox_InboundDDT_Date" xml:space="preserve">
+    <value>Data</value>
+  </data>
+  <data name="textbox_InboundDDT_Departure" xml:space="preserve">
+    <value>Indirizzo di partenza</value>
+  </data>
+  <data name="textbox_InboundDDT_Destination" xml:space="preserve">
+    <value>Indirizzo di arrivo</value>
+  </data>
+  <data name="textbox_InboundDDT_Employee" xml:space="preserve">
+    <value>Squadra</value>
+  </data>
+  <data name="textbox_InboundDDT_ExpeditionType" xml:space="preserve">
+    <value>Tipo di spedizione</value>
+  </data>
+  <data name="textbox_InboundDDT_GrossPrice" xml:space="preserve">
+    <value>Prezzo Lordo</value>
+  </data>
+  <data name="textbox_InboundDDT_InboundDDTRows" xml:space="preserve">
+    <value>Righe</value>
+  </data>
+  <data name="textbox_InboundDDT_NetPrice" xml:space="preserve">
+    <value>Prezzo Netto</value>
+  </data>
+  <data name="textbox_InboundDDT_Notes" xml:space="preserve">
+    <value>Note</value>
+  </data>
+  <data name="textbox_InboundDDT_Number" xml:space="preserve">
+    <value>Numero</value>
+  </data>
+  <data name="textbox_InboundDDT_PackagesNumber" xml:space="preserve">
+    <value>Numero colli</value>
+  </data>
+  <data name="textbox_InboundDDT_PaymentMethod" xml:space="preserve">
+    <value>Pagamento</value>
+  </data>
+  <data name="textbox_InboundDDT_Port" xml:space="preserve">
+    <value>Porto</value>
+  </data>
+  <data name="textbox_InboundDDT_Rows" xml:space="preserve">
+    <value>Articoli</value>
+  </data>
+  <data name="textbox_InboundDDT_Sender" xml:space="preserve">
+    <value>Mittente</value>
+  </data>
+  <data name="textbox_InboundDDT_State" xml:space="preserve">
+    <value>Stato</value>
+  </data>
+  <data name="textbox_InboundDDT_TransportDate" xml:space="preserve">
+    <value>Data trasporto</value>
+  </data>
+  <data name="textbox_InboundDDT_VatPrice" xml:space="preserve">
+    <value>Iva</value>
+  </data>
+  <data name="textbox_InboundProductSerial_SerialCode" xml:space="preserve">
+    <value>Codice Seriale</value>
+  </data>
+  <data name="textbox_JobConsumablesWithPrice_Product" xml:space="preserve">
+    <value>Articolo</value>
+  </data>
+  <data name="textbox_JobConsumablesWithPrice_PurchasePrice" xml:space="preserve">
+    <value>Prezzo acquisto</value>
+  </data>
+  <data name="textbox_JobConsumablesWithPrice_Quantity" xml:space="preserve">
+    <value>Quantità</value>
+  </data>
+  <data name="textbox_JobConsumablesWithPrice_Vat" xml:space="preserve">
+    <value>Iva percentuale</value>
+  </data>
+  <data name="textbox_JobConsumables_Product" xml:space="preserve">
+    <value>Articolo</value>
+  </data>
+  <data name="textbox_JobConsumables_PurchasePrice" xml:space="preserve">
+    <value>Prezzo acquisto</value>
+  </data>
+  <data name="textbox_JobConsumables_Quantity" xml:space="preserve">
+    <value>Quantità</value>
+  </data>
+  <data name="textbox_JobConsumables_Vat" xml:space="preserve">
+    <value>Iva percentuale</value>
+  </data>
+  <data name="textbox_JobWithPrice_	&#xD;&#xA;DaChiarire" xml:space="preserve">
+    <value>Da Chiarire</value>
+  </data>
+  <data name="textbox_JobWithPrice_&#xD;&#xA;JobPlanning" xml:space="preserve">
+    <value>Programmazione pratica</value>
+  </data>
+  <data name="textbox_JobWithPrice_AddressCustomer" xml:space="preserve">
+    <value>Indirizzo</value>
+  </data>
+  <data name="textbox_JobWithPrice_AssignedProducts" xml:space="preserve">
+    <value>Prodotti assegnati</value>
+  </data>
+  <data name="textbox_JobWithPrice_CapCustomer" xml:space="preserve">
+    <value>Recapito</value>
+  </data>
+  <data name="textbox_JobWithPrice_CentralBand" xml:space="preserve">
+    <value>Fascia Centrale</value>
+  </data>
+  <data name="textbox_JobWithPrice_CityCustomer" xml:space="preserve">
+    <value>Città</value>
+  </data>
+  <data name="textbox_JobWithPrice_CodeActivity" xml:space="preserve">
+    <value>ID Attivita</value>
+  </data>
+  <data name="textbox_JobWithPrice_CodeBuilding" xml:space="preserve">
+    <value>Building</value>
+  </data>
+  <data name="textbox_JobWithPrice_CodeOds" xml:space="preserve">
+    <value>ID ODS/NDS</value>
+  </data>
+  <data name="textbox_JobWithPrice_CodePfp" xml:space="preserve">
+    <value>Pfp</value>
+  </data>
+  <data name="textbox_JobWithPrice_CodePfs" xml:space="preserve">
+    <value>Pfs</value>
+  </data>
+  <data name="textbox_JobWithPrice_CodePt" xml:space="preserve">
+    <value>Pt</value>
+  </data>
+  <data name="textbox_JobWithPrice_CodeTicket" xml:space="preserve">
+    <value>ID Ticket</value>
+  </data>
+  <data name="textbox_JobWithPrice_CodeWork" xml:space="preserve">
+    <value>ID Lavorazione</value>
+  </data>
+  <data name="textbox_JobWithPrice_CodeWr" xml:space="preserve">
+    <value>Wr</value>
+  </data>
+  <data name="textbox_JobWithPrice_Customer" xml:space="preserve">
+    <value>Committente</value>
+  </data>
+  <data name="textbox_JobWithPrice_DateClock" xml:space="preserve">
+    <value>Fascia oraria</value>
+  </data>
+  <data name="textbox_JobWithPrice_DateExecution" xml:space="preserve">
+    <value>Data esecuzione attività</value>
+  </data>
+  <data name="textbox_JobWithPrice_DateFinish" xml:space="preserve">
+    <value>Orario fine</value>
+  </data>
+  <data name="textbox_JobWithPrice_DatePlanned" xml:space="preserve">
+    <value>Data pianificata</value>
+  </data>
+  <data name="textbox_JobWithPrice_DateSart" xml:space="preserve">
+    <value>Orario inizio</value>
+  </data>
+  <data name="textbox_JobWithPrice_Employee" xml:space="preserve">
+    <value>Capo squadra</value>
+  </data>
+  <data name="textbox_JobWithPrice_Employees" xml:space="preserve">
+    <value>Altri impiegati in squadra</value>
+  </data>
+  <data name="textbox_JobWithPrice_ExecutedServices" xml:space="preserve">
+    <value>Servizi eseguiti</value>
+  </data>
+  <data name="textbox_JobWithPrice_ExecutionNotes" xml:space="preserve">
+    <value>Note esecuzione attività</value>
+  </data>
+  <data name="textbox_JobWithPrice_FinalCustomer" xml:space="preserve">
+    <value>Informazioni Cliente Finale</value>
+  </data>
+  <data name="textbox_JobWithPrice_IsWarrantyFailure" xml:space="preserve">
+    <value>Guasto in Garanzia</value>
+  </data>
+  <data name="textbox_JobWithPrice_JobConsumableCost" xml:space="preserve">
+    <value>Costi materiali</value>
+  </data>
+  <data name="textbox_JobWithPrice_JobConsumables" xml:space="preserve">
+    <value>Materiali utilizzati</value>
+  </data>
+  <data name="textbox_JobWithPrice_JobGrossPrice" xml:space="preserve">
+    <value>Totale Lordo</value>
+  </data>
+  <data name="textbox_JobWithPrice_JobNetPrice" xml:space="preserve">
+    <value>Imponibile</value>
+  </data>
+  <data name="textbox_JobWithPrice_JobNetVat" xml:space="preserve">
+    <value>Totale Ìva</value>
+  </data>
+  <data name="textbox_JobWithPrice_JobState" xml:space="preserve">
+    <value>Stato pratica</value>
+  </data>
+  <data name="textbox_JobWithPrice_NameCentral" xml:space="preserve">
+    <value>Nome centrale</value>
+  </data>
+  <data name="textbox_JobWithPrice_NameCustomer" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="textbox_JobWithPrice_ProductsSerials" xml:space="preserve">
+    <value>Codici seriali consegnati</value>
+  </data>
+  <data name="textbox_JobWithPrice_Profit" xml:space="preserve">
+    <value>Utile</value>
+  </data>
+  <data name="textbox_JobWithPrice_Service" xml:space="preserve">
+    <value>Tipologia pratica</value>
+  </data>
+  <data name="textbox_JobWithPrice_Type" xml:space="preserve">
+    <value>Tipologia</value>
+  </data>
+  <data name="textbox_JobsExecutedServiceWithPrice_Price" xml:space="preserve">
+    <value>Prezzo</value>
+  </data>
+  <data name="textbox_JobsExecutedServiceWithPrice_Product" xml:space="preserve">
+    <value>Servizio</value>
+  </data>
+  <data name="textbox_JobsExecutedServiceWithPrice_Quantity" xml:space="preserve">
+    <value>Quantità</value>
+  </data>
+  <data name="textbox_JobsExecutedServiceWithPrice_Vat" xml:space="preserve">
+    <value>Iva percentuale</value>
+  </data>
+  <data name="textbox_JobsExecutedService_Price" xml:space="preserve">
+    <value>Prezzo</value>
+  </data>
+  <data name="textbox_JobsExecutedService_Product" xml:space="preserve">
+    <value>Servizio</value>
+  </data>
+  <data name="textbox_JobsExecutedService_Quantity" xml:space="preserve">
+    <value>Quantità</value>
+  </data>
+  <data name="textbox_JobsExecutedService_Vat" xml:space="preserve">
+    <value>Iva percentuale</value>
+  </data>
+  <data name="textbox_Job_	&#xD;&#xA;DaChiarire" xml:space="preserve">
+    <value>Da Chiarire</value>
+  </data>
+  <data name="textbox_Job_&#xD;&#xA;JobPlanning" xml:space="preserve">
+    <value>Programmazione pratica</value>
+  </data>
+  <data name="textbox_Job_AddressCustomer" xml:space="preserve">
+    <value>Indirizzo</value>
+  </data>
+  <data name="textbox_Job_AssignedProducts" xml:space="preserve">
+    <value>Prodotti assegnati</value>
+  </data>
+  <data name="textbox_Job_CapCustomer" xml:space="preserve">
+    <value>Recapito</value>
+  </data>
+  <data name="textbox_Job_CentralBand" xml:space="preserve">
+    <value>Fascia Centrale</value>
+  </data>
+  <data name="textbox_Job_CityCustomer" xml:space="preserve">
+    <value>Città</value>
+  </data>
+  <data name="textbox_Job_CodeActivity" xml:space="preserve">
+    <value>ID Attivita</value>
+  </data>
+  <data name="textbox_Job_CodeBuilding" xml:space="preserve">
+    <value>Building</value>
+  </data>
+  <data name="textbox_Job_CodeOds" xml:space="preserve">
+    <value>ID ODS/NDS</value>
+  </data>
+  <data name="textbox_Job_CodePfp" xml:space="preserve">
+    <value>Pfp</value>
+  </data>
+  <data name="textbox_Job_CodePfs" xml:space="preserve">
+    <value>Pfs</value>
+  </data>
+  <data name="textbox_Job_CodePt" xml:space="preserve">
+    <value>Pt</value>
+  </data>
+  <data name="textbox_Job_CodeTicket" xml:space="preserve">
+    <value>ID Ticket</value>
+  </data>
+  <data name="textbox_Job_CodeWork" xml:space="preserve">
+    <value>ID Lavorazione</value>
+  </data>
+  <data name="textbox_Job_CodeWr" xml:space="preserve">
+    <value>Wr</value>
+  </data>
+  <data name="textbox_Job_Customer" xml:space="preserve">
+    <value>Committente</value>
+  </data>
+  <data name="textbox_Job_DateClock" xml:space="preserve">
+    <value>Fascia oraria</value>
+  </data>
+  <data name="textbox_Job_DateExecution" xml:space="preserve">
+    <value>Data esecuzione attività</value>
+  </data>
+  <data name="textbox_Job_DateFinish" xml:space="preserve">
+    <value>Orario fine</value>
+  </data>
+  <data name="textbox_Job_DatePlanned" xml:space="preserve">
+    <value>Data pianificata</value>
+  </data>
+  <data name="textbox_Job_DateSart" xml:space="preserve">
+    <value>Orario inizio</value>
+  </data>
+  <data name="textbox_Job_Employee" xml:space="preserve">
+    <value>Capo squadra</value>
+  </data>
+  <data name="textbox_Job_Employees" xml:space="preserve">
+    <value>Altri impiegati in squadra</value>
+  </data>
+  <data name="textbox_Job_ExecutedServices" xml:space="preserve">
+    <value>Servizi eseguiti</value>
+  </data>
+  <data name="textbox_Job_ExecutionNotes" xml:space="preserve">
+    <value>Note esecuzione attività</value>
+  </data>
+  <data name="textbox_Job_FinalCustomer" xml:space="preserve">
+    <value>Informazioni Cliente Finale</value>
+  </data>
+  <data name="textbox_Job_IsWarrantyFailure" xml:space="preserve">
+    <value>Guasto in Garanzia</value>
+  </data>
+  <data name="textbox_Job_JobConsumableCost" xml:space="preserve">
+    <value>Costi materiali</value>
+  </data>
+  <data name="textbox_Job_JobConsumables" xml:space="preserve">
+    <value>Materiali utilizzati</value>
+  </data>
+  <data name="textbox_Job_JobGrossPrice" xml:space="preserve">
+    <value>Totale Lordo</value>
+  </data>
+  <data name="textbox_Job_JobNetPrice" xml:space="preserve">
+    <value>Imponibile</value>
+  </data>
+  <data name="textbox_Job_JobNetVat" xml:space="preserve">
+    <value>Totale Ìva</value>
+  </data>
+  <data name="textbox_Job_JobState" xml:space="preserve">
+    <value>Stato pratica</value>
+  </data>
+  <data name="textbox_Job_NameCentral" xml:space="preserve">
+    <value>Nome centrale</value>
+  </data>
+  <data name="textbox_Job_NameCustomer" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="textbox_Job_ProductsSerials" xml:space="preserve">
+    <value>Codici seriali consegnati</value>
+  </data>
+  <data name="textbox_Job_Profit" xml:space="preserve">
+    <value>Utile</value>
+  </data>
+  <data name="textbox_Job_Service" xml:space="preserve">
+    <value>Tipologia pratica</value>
+  </data>
+  <data name="textbox_Job_Type" xml:space="preserve">
+    <value>Tipologia</value>
+  </data>
+  <data name="textbox_OutboundDDTRow_Description" xml:space="preserve">
+    <value>Descrizione</value>
+  </data>
+  <data name="textbox_OutboundDDTRow_GrossPrice" xml:space="preserve">
+    <value>Prezzo lordo</value>
+  </data>
+  <data name="textbox_OutboundDDTRow_MissingSerialsQuantity" xml:space="preserve">
+    <value>Seriali Mancanti</value>
+  </data>
+  <data name="textbox_OutboundDDTRow_NominalQuantity" xml:space="preserve">
+    <value>Quantità</value>
+  </data>
+  <data name="textbox_OutboundDDTRow_OutboundProductSerials" xml:space="preserve">
+    <value>Seriali</value>
+  </data>
+  <data name="textbox_OutboundDDTRow_Product" xml:space="preserve">
+    <value>Prodotto associato</value>
+  </data>
+  <data name="textbox_OutboundDDTRow_ProductSerials" xml:space="preserve">
+    <value>Codici seriali</value>
+  </data>
+  <data name="textbox_OutboundDDTRow_ProductSerialsString" xml:space="preserve">
+    <value>Codici seriali</value>
+  </data>
+  <data name="textbox_OutboundDDTRow_Quantity" xml:space="preserve">
+    <value>Quantità</value>
+  </data>
+  <data name="textbox_OutboundDDTRow_UnitGrossPrice" xml:space="preserve">
+    <value>Prezzo di vendita lordo unitario</value>
+  </data>
+  <data name="textbox_OutboundDDTRow_UnitNetPrice" xml:space="preserve">
+    <value>Prezzo di vendita netto unitario</value>
+  </data>
+  <data name="textbox_OutboundDDTRow_UnitPurchaseNetPrice" xml:space="preserve">
+    <value>Prezzo di acquisto unitario</value>
+  </data>
+  <data name="textbox_OutboundDDTRow_UnitVat" xml:space="preserve">
+    <value>Iva unità</value>
+  </data>
+  <data name="textbox_OutboundDDTRow_VatPercentage" xml:space="preserve">
+    <value>Percentuale Iva</value>
+  </data>
+  <data name="textbox_OutboundDDT_Appereance" xml:space="preserve">
+    <value>Aspetto merce</value>
+  </data>
+  <data name="textbox_OutboundDDT_Carrier" xml:space="preserve">
+    <value>Vettore</value>
+  </data>
+  <data name="textbox_OutboundDDT_Causal" xml:space="preserve">
+    <value>Causale</value>
+  </data>
+  <data name="textbox_OutboundDDT_Date" xml:space="preserve">
+    <value>Data</value>
+  </data>
+  <data name="textbox_OutboundDDT_Departure" xml:space="preserve">
+    <value>Indirizzo di partenza</value>
+  </data>
+  <data name="textbox_OutboundDDT_Destination" xml:space="preserve">
+    <value>Indirizzo di arrivo</value>
+  </data>
+  <data name="textbox_OutboundDDT_Employee" xml:space="preserve">
+    <value>Squadra</value>
+  </data>
+  <data name="textbox_OutboundDDT_ExpeditionType" xml:space="preserve">
+    <value>Tipo di spedizione</value>
+  </data>
+  <data name="textbox_OutboundDDT_GrossPrice" xml:space="preserve">
+    <value>Prezzo Lordo</value>
+  </data>
+  <data name="textbox_OutboundDDT_NetPrice" xml:space="preserve">
+    <value>Prezzo Netto</value>
+  </data>
+  <data name="textbox_OutboundDDT_Notes" xml:space="preserve">
+    <value>Note</value>
+  </data>
+  <data name="textbox_OutboundDDT_Number" xml:space="preserve">
+    <value>Numero</value>
+  </data>
+  <data name="textbox_OutboundDDT_OutboundDDTRows" xml:space="preserve">
+    <value>Righe</value>
+  </data>
+  <data name="textbox_OutboundDDT_PackagesNumber" xml:space="preserve">
+    <value>Numero colli</value>
+  </data>
+  <data name="textbox_OutboundDDT_PaymentMethod" xml:space="preserve">
+    <value>Pagamento</value>
+  </data>
+  <data name="textbox_OutboundDDT_Port" xml:space="preserve">
+    <value>Porto</value>
+  </data>
+  <data name="textbox_OutboundDDT_Rows" xml:space="preserve">
+    <value>Articoli</value>
+  </data>
+  <data name="textbox_OutboundDDT_Sender" xml:space="preserve">
+    <value>Mittente</value>
+  </data>
+  <data name="textbox_OutboundDDT_State" xml:space="preserve">
+    <value>Stato</value>
+  </data>
+  <data name="textbox_OutboundDDT_TransportDate" xml:space="preserve">
+    <value>Data trasporto</value>
+  </data>
+  <data name="textbox_OutboundDDT_VatPrice" xml:space="preserve">
+    <value>Iva</value>
+  </data>
+  <data name="textbox_OutboundProductSerial_SerialCode" xml:space="preserve">
+    <value>Codice Seriale</value>
+  </data>
+  <data name="textbox_ProductMovement_Date" xml:space="preserve">
+    <value>Data</value>
+  </data>
+  <data name="textbox_ProductMovement_Description" xml:space="preserve">
+    <value>Descrizione</value>
+  </data>
+  <data name="textbox_ProductMovement_DocumentReference" xml:space="preserve">
+    <value>Numero DDT</value>
+  </data>
+  <data name="textbox_ProductMovement_GrossPrice" xml:space="preserve">
+    <value>Prezzo lordo</value>
+  </data>
+  <data name="textbox_ProductMovement_InboundDDT" xml:space="preserve">
+    <value>DDT in ingresso</value>
+  </data>
+  <data name="textbox_ProductMovement_ProductSerials" xml:space="preserve">
+    <value>Codici Seriali</value>
+  </data>
+  <data name="textbox_ProductMovement_ProductSerialsString" xml:space="preserve">
+    <value>Codici Seriali</value>
+  </data>
+  <data name="textbox_ProductMovement_Quantity" xml:space="preserve">
+    <value>Quantità</value>
+  </data>
+  <data name="textbox_ProductMovement_UnitGrossPrice" xml:space="preserve">
+    <value>Prezzo lordo unità</value>
+  </data>
+  <data name="textbox_ProductMovement_UnitNetPrice" xml:space="preserve">
+    <value>Prezzo netto unità</value>
+  </data>
+  <data name="textbox_ProductMovement_UnitVat" xml:space="preserve">
+    <value>Iva unità</value>
+  </data>
+  <data name="textbox_ProductMovement_VatPercentage" xml:space="preserve">
+    <value>Iva percentuale</value>
+  </data>
+  <data name="textbox_ProductSerial_SerialCode" xml:space="preserve">
+    <value>Codice Seriale</value>
+  </data>
+  <data name="textbox_Product_Barcode" xml:space="preserve">
+    <value>Barcode</value>
+  </data>
+  <data name="textbox_Product_DefaultGrossPrice" xml:space="preserve">
+    <value>Prezzo di vendita lordo (€)</value>
+  </data>
+  <data name="textbox_Product_DefaultPurchasePrice" xml:space="preserve">
+    <value>Prezzo di acquisto netto (€)</value>
+  </data>
+  <data name="textbox_Product_DefaultSellPrice" xml:space="preserve">
+    <value>Prezzo di vendita netto (€)</value>
+  </data>
+  <data name="textbox_Product_DefaultVat" xml:space="preserve">
+    <value>Iva Predefinita (%)</value>
+  </data>
+  <data name="textbox_Product_Description" xml:space="preserve">
+    <value>Descrizione</value>
+  </data>
+  <data name="textbox_Product_EanCode" xml:space="preserve">
+    <value>Codice Ean</value>
+  </data>
+  <data name="textbox_Product_IsService" xml:space="preserve">
+    <value>Servizio</value>
+  </data>
+  <data name="textbox_Product_MainCode" xml:space="preserve">
+    <value>Codice</value>
+  </data>
+  <data name="textbox_Product_Notes" xml:space="preserve">
+    <value>Note</value>
+  </data>
+  <data name="textbox_Product_PriceGroup" xml:space="preserve">
+    <value>Prezzi</value>
+  </data>
+  <data name="textbox_Product_ProductMovements" xml:space="preserve">
+    <value>Movimenti</value>
+  </data>
+  <data name="textbox_Product_ProductSerials" xml:space="preserve">
+    <value>Seriali</value>
+  </data>
+  <data name="textbox_Product_Quantity" xml:space="preserve">
+    <value>Quantità</value>
+  </data>
+  <data name="textbox_Product_Um" xml:space="preserve">
+    <value>Unità di misura</value>
+  </data>
+  <data name="textbox_Product_Volume" xml:space="preserve">
+    <value>Volume</value>
+  </data>
+  <data name="textbox_Product_Weight" xml:space="preserve">
+    <value>Peso(kg)</value>
+  </data>
+  <data name="textbox_Vehicle_Brand" xml:space="preserve">
+    <value>Marca</value>
+  </data>
+  <data name="textbox_Vehicle_Description" xml:space="preserve">
+    <value>Descrizione</value>
+  </data>
+  <data name="textbox_Vehicle_EuroClass" xml:space="preserve">
+    <value>Classe Euro</value>
+  </data>
+  <data name="textbox_Vehicle_FireExtinguisherSerial" xml:space="preserve">
+    <value>Seriale estintore</value>
+  </data>
+  <data name="textbox_Vehicle_FuelType" xml:space="preserve">
+    <value>Tipo di alimentazione</value>
+  </data>
+  <data name="textbox_Vehicle_HasFireExtinguisher" xml:space="preserve">
+    <value>Presenza estintore</value>
+  </data>
+  <data name="textbox_Vehicle_HasSatellite" xml:space="preserve">
+    <value>Assicurazione satellitare</value>
+  </data>
+  <data name="textbox_Vehicle_HasWasteCer" xml:space="preserve">
+    <value>Certificazione rifiuti</value>
+  </data>
+  <data name="textbox_Vehicle_InsuranceCompany" xml:space="preserve">
+    <value>Compagnia assicurativa</value>
+  </data>
+  <data name="textbox_Vehicle_InsuranceDeadline" xml:space="preserve">
+    <value>Scadenza assicurazione</value>
+  </data>
+  <data name="textbox_Vehicle_InsuranceGroup" xml:space="preserve">
+    <value>Informazioni assicurazione</value>
+  </data>
+  <data name="textbox_Vehicle_InsuranceNumber" xml:space="preserve">
+    <value>Numero assicurazione</value>
+  </data>
+  <data name="textbox_Vehicle_LastRevision" xml:space="preserve">
+    <value>Ultima revisione</value>
+  </data>
+  <data name="textbox_Vehicle_LicensePlate" xml:space="preserve">
+    <value>Targa</value>
+  </data>
+  <data name="textbox_Vehicle_Model" xml:space="preserve">
+    <value>Modello</value>
+  </data>
+  <data name="textbox_Vehicle_PurchaseDate" xml:space="preserve">
+    <value>Data di acquisto</value>
+  </data>
+  <data name="textbox_Vehicle_RevisioneDeadline" xml:space="preserve">
+    <value>Scadenza revisione</value>
+  </data>
+  <data name="textbox_Vehicle_Type" xml:space="preserve">
+    <value>Tipologia</value>
+  </data>
+  <data name="Vehicle" xml:space="preserve">
+    <value>Veicolo</value>
+  </data>
+  <data name="view_item_title" xml:space="preserve">
+    <value>Visualizza</value>
+  </data>
+  <data name="ServiceColmar" xml:space="preserve">
+    <value>Servizio</value>
+  </data>
+  <data name="textbox_ServiceColmar_Barcode" xml:space="preserve">
+    <value>Barcode</value>
+  </data>
+  <data name="textbox_ServiceColmar_DefaultGrossPrice" xml:space="preserve">
+    <value>Prezzo di vendita lordo (€)</value>
+  </data>
+  <data name="textbox_ServiceColmar_DefaultPurchasePrice" xml:space="preserve">
+    <value>Prezzo di acquisto netto (€)</value>
+  </data>
+  <data name="textbox_ServiceColmar_DefaultSellPrice" xml:space="preserve">
+    <value>Prezzo di vendita netto (€)</value>
+  </data>
+  <data name="textbox_ServiceColmar_DefaultVat" xml:space="preserve">
+    <value>Iva Predefinita (%)</value>
+  </data>
+  <data name="textbox_ServiceColmar_Description" xml:space="preserve">
+    <value>Descrizione</value>
+  </data>
+  <data name="textbox_ServiceColmar_EanCode" xml:space="preserve">
+    <value>Codice Ean</value>
+  </data>
+  <data name="textbox_ServiceColmar_IsService" xml:space="preserve">
+    <value>Servizio</value>
+  </data>
+  <data name="textbox_ServiceColmar_MainCode" xml:space="preserve">
+    <value>Codice</value>
+  </data>
+  <data name="textbox_ServiceColmar_Notes" xml:space="preserve">
+    <value>Note</value>
+  </data>
+  <data name="textbox_ServiceColmar_PriceGroup" xml:space="preserve">
+    <value>Prezzi</value>
+  </data>
+  <data name="textbox_ServiceColmar_ProductMovements" xml:space="preserve">
+    <value>Movimenti</value>
+  </data>
+  <data name="textbox_ServiceColmar_ProductSerials" xml:space="preserve">
+    <value>Seriali</value>
+  </data>
+  <data name="textbox_ServiceColmar_Quantity" xml:space="preserve">
+    <value>Quantità</value>
+  </data>
+  <data name="textbox_ServiceColmar_Um" xml:space="preserve">
+    <value>Unità di misura</value>
+  </data>
+  <data name="textbox_ServiceColmar_Volume" xml:space="preserve">
+    <value>Volume</value>
+  </data>
+  <data name="textbox_ServiceColmar_Weight" xml:space="preserve">
+    <value>Peso(kg)</value>
+  </data>
+  <data name="EmployeeColmar" xml:space="preserve">
+    <value>Dipendente</value>
+  </data>
+  <data name="textbox_EmployeeColmar_Address" xml:space="preserve">
+    <value>Indirizzo</value>
+  </data>
+  <data name="textbox_EmployeeColmar_AddressGroup" xml:space="preserve">
+    <value>Indirizzo</value>
+  </data>
+  <data name="textbox_EmployeeColmar_BornCity" xml:space="preserve">
+    <value>Città di nascita</value>
+  </data>
+  <data name="textbox_EmployeeColmar_BornNation" xml:space="preserve">
+    <value>Nazionalità</value>
+  </data>
+  <data name="textbox_EmployeeColmar_City" xml:space="preserve">
+    <value>Città</value>
+  </data>
+  <data name="textbox_EmployeeColmar_Code" xml:space="preserve">
+    <value>Codice</value>
+  </data>
+  <data name="textbox_EmployeeColmar_DateOfBirth" xml:space="preserve">
+    <value>Data di nascita</value>
+  </data>
+  <data name="textbox_EmployeeColmar_DisplayName" xml:space="preserve">
+    <value>Nominativo</value>
+  </data>
+  <data name="textbox_EmployeeColmar_DocumentNumber" xml:space="preserve">
+    <value>Numero di documento</value>
+  </data>
+  <data name="textbox_EmployeeColmar_DocumentType" xml:space="preserve">
+    <value>Tipo documento</value>
+  </data>
+  <data name="textbox_EmployeeColmar_Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="textbox_EmployeeColmar_Firstname" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="textbox_EmployeeColmar_HireDate" xml:space="preserve">
+    <value>Data di assunzione</value>
+  </data>
+  <data name="textbox_EmployeeColmar_Iban" xml:space="preserve">
+    <value>Iban</value>
+  </data>
+  <data name="textbox_EmployeeColmar_InboundDDTs" xml:space="preserve">
+    <value>DDT di restituzione</value>
+  </data>
+  <data name="textbox_EmployeeColmar_Jobs" xml:space="preserve">
+    <value>Lavori assegnati</value>
+  </data>
+  <data name="textbox_EmployeeColmar_Nation" xml:space="preserve">
+    <value>Nazione</value>
+  </data>
+  <data name="textbox_EmployeeColmar_OutboundDDTs" xml:space="preserve">
+    <value>DDT assegnati</value>
+  </data>
+  <data name="textbox_EmployeeColmar_PhoneNumber" xml:space="preserve">
+    <value>Numero di telefono</value>
+  </data>
+  <data name="textbox_EmployeeColmar_PostalCode" xml:space="preserve">
+    <value>Codice postale</value>
+  </data>
+  <data name="textbox_EmployeeColmar_Products" xml:space="preserve">
+    <value>Articoli</value>
+  </data>
+  <data name="textbox_EmployeeColmar_State" xml:space="preserve">
+    <value>Regione</value>
+  </data>
+  <data name="textbox_EmployeeColmar_Surname" xml:space="preserve">
+    <value>Cognome</value>
+  </data>
+  <data name="textbox_EmployeeColmar_TaxNumber" xml:space="preserve">
+    <value>Codice fiscale</value>
+  </data>
+  <data name="textbox_EmployeeColmar_Vehicle" xml:space="preserve">
+    <value>Veicolo assegnato</value>
+  </data>
+  <data name="groupSettings" xml:space="preserve">
+    <value>Gruppi e Utenti</value>
+  </data>
+  <data name="no" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="yes" xml:space="preserve">
+    <value>Sì</value>
+  </data>
+  <data name="datePicker_SelectADate" xml:space="preserve">
+    <value>Seleziona una data</value>
+  </data>
+  <data name="baseClient_PrivilegeError" xml:space="preserve">
+    <value>Impossibile eseguire operazione, non si hanno i privilegi</value>
+  </data>
+  <data name="showBox_SearchBoxPlaceHolderText" xml:space="preserve">
+    <value>Cerca...</value>
+  </data>
+  <data name="warning" xml:space="preserve">
+    <value>Attenzione</value>
+  </data>
+  <data name="tabView_privilegesError" xml:space="preserve">
+    <value>Impossibile aprire la pagina richiesta. L'utente corrente non dispone dei privilegi necessari.</value>
+  </data>
+  <data name="login_connectionFailedError" xml:space="preserve">
+    <value>Impossibile collegarsi al server, nome utente e password errati o connessione internet assente</value>
+  </data>
+  <data name="login_MainPageVMType_missingError" xml:space="preserve">
+    <value>È necessario iniettare il tipo del VM finale di MainPage tramite il metodo in UniCompositionRoot.</value>
+  </data>
+  <data name="search" xml:space="preserve">
+    <value>Cerca...</value>
+  </data>
+  <data name="day" xml:space="preserve">
+    <value>Giorno</value>
+  </data>
+  <data name="month" xml:space="preserve">
+    <value>Mese</value>
+  </data>
+  <data name="year" xml:space="preserve">
+    <value>Anno</value>
+  </data>
+  <data name="searchFilters_FilterByDate" xml:space="preserve">
+    <value>Filtra per data</value>
+  </data>
+  <data name="searchFilters_SearchBy" xml:space="preserve">
+    <value>Cerca in:</value>
+  </data>
+  <data name="searchFilters_TimeRange" xml:space="preserve">
+    <value>Intervallo temporale</value>
+  </data>
+  <data name="searchFilters_FilterByValue" xml:space="preserve">
+    <value>Filtra per valore</value>
+  </data>
+  <data name="create" xml:space="preserve">
+    <value>Crea</value>
+  </data>
+  <data name="universalSearch_Search" xml:space="preserve">
+    <value>Cerca</value>
+  </data>
+  <data name="universalSearch_UniversalSearch" xml:space="preserve">
+    <value>Ricerca universale</value>
+  </data>
+  <data name="baseModel_Commessa" xml:space="preserve">
+    <value>Commessa</value>
+  </data>
+  <data name="cancel" xml:space="preserve">
+    <value>Annulla</value>
+  </data>
+  <data name="confirm" xml:space="preserve">
+    <value>Conferma</value>
+  </data>
+  <data name="confirm_Delete" xml:space="preserve">
+    <value>Sei sicuro di voler eliminare questo elemento?</value>
+  </data>
+  <data name="settings_userDataHeader" xml:space="preserve">
+    <value>Dati Utente</value>
+  </data>
+  <data name="mainpage_settingsButtonLabel" xml:space="preserve">
+    <value>Impostazioni</value>
+  </data>
+  <data name="settings_changePasswordError" xml:space="preserve">
+    <value>Impossibile cambiare la password</value>
+  </data>
+  <data name="settings_changePasswordSuccess" xml:space="preserve">
+    <value>Password cambiata con successo</value>
+  </data>
+  <data name="print_printDone" xml:space="preserve">
+    <value>Stampa effettuata</value>
+  </data>
+  <data name="print_printFailed" xml:space="preserve">
+    <value>Errore di stampa</value>
+  </data>
+  <data name="settings_adminToolsLabel" xml:space="preserve">
+    <value>Strumenti admin</value>
+  </data>
+  <data name="settings_changePasswordLabel" xml:space="preserve">
+    <value>Cambia password...</value>
+  </data>
+  <data name="settings_userLabel" xml:space="preserve">
+    <value>Utente</value>
+  </data>
+  <data name="settings_changePasswordNewPasswordLabel" xml:space="preserve">
+    <value>Nuova password</value>
+  </data>
+  <data name="settings_changePasswordOldPasswordLabel" xml:space="preserve">
+    <value>Password attuale</value>
+  </data>
+  <data name="login_saveCredentialsLabel" xml:space="preserve">
+    <value>Salva credenziali</value>
+  </data>
+</root>

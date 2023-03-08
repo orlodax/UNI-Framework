@@ -1,0 +1,191 @@
+﻿<UserControl
+    x:Class="UNI.Core.UI.CustomControls.GridBox.GridBox"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UNI.Core.UI.CustomControls.GridBox"
+    xmlns:fh="using:UNI.Core.UI.Misc"
+    xmlns:s="using:UNI.Core.UI.CustomControls.ShowBox"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:i="using:Microsoft.Xaml.Interactivity" 
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    d:RequestedTheme="Dark"
+    MinHeight="300"
+    d:DesignHeight="300"
+    d:DesignWidth="500" 
+    d:DataContext="{d:DesignInstance local:GridBoxVM`1}"
+    Margin="0,0,0,20">
+
+    <RelativePanel  Padding="5" Background="{ThemeResource PivotNavButtonBackgroundThemeBrush}" CornerRadius="5">
+        <TextBlock x:Name="textBlock"
+                       Margin="7,0,0,0"
+                       Text="{Binding GridBoxName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                       Style="{StaticResource BaseTextBlockStyle}"
+                       FontSize="16"
+                       RelativePanel.AlignLeftWithPanel="True"
+                       RelativePanel.AlignVerticalCenterWith="CommandBar"
+                       Width="Auto"/>
+
+        <CommandBar x:Name="CommandBar" 
+                    OverflowButtonVisibility="Collapsed"
+		            
+		            RelativePanel.AlignRightWithPanel="True">
+
+            <CommandBar.Content>
+                <RelativePanel>
+
+                    <TextBox x:Name="searchTextBox"
+                             Width="200" 
+                             PlaceholderText="{Binding PlaceholderText}"
+                             Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             FontFamily="Malgun"
+                             BorderBrush="Transparent"
+                             Background="{ThemeResource AppBarBackgroundThemeBrush}"
+                             Margin="0,9,0,0"
+                             RelativePanel.LeftOf="searchbutton">
+                        <i:Interaction.Behaviors>
+                            <core:EventTriggerBehavior EventName="KeyDown">
+                                <core:InvokeCommandAction Command="{Binding Search}"/>
+                            </core:EventTriggerBehavior>
+                        </i:Interaction.Behaviors>
+                    </TextBox>
+
+                    <AppBarButton Width="40" 
+                                  IsCompact="True"
+                                  x:Name="searchbutton"
+                                  RelativePanel.AlignTopWithPanel="True"
+                                  RelativePanel.LeftOf="appbarSeparator"
+				                  Label="New"
+				                  Command="{Binding Search}">
+                        <AppBarButton.Icon>
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE11A;"/>
+                        </AppBarButton.Icon>
+                    </AppBarButton>
+
+                    <AppBarSeparator RelativePanel.AlignTopWithPanel="True"
+                                     RelativePanel.AlignBottomWithPanel="True"
+                                     RelativePanel.LeftOf="newButton"
+                                     x:Name="appbarSeparator"/>
+
+                    <!--BUTTON TO SAVE GRID ITEMS-->
+                    <AppBarButton Width="40" 
+                                  IsCompact="True"
+                                  x:Name="newButton"
+                                  RelativePanel.AlignTopWithPanel="True"
+                                  RelativePanel.LeftOf="saveButton"
+				                  Label="New"
+				                  Icon="Add"
+                                  Visibility="{Binding CreateItemVisibility}"
+				                  Command="{Binding CreateItem}"/>
+
+                    <!--BUTTON TO SAVE GRID ITEMS-->
+                    <AppBarButton Width="40" 
+                                  IsCompact="True"
+                                  x:Name="saveButton"
+                                  RelativePanel.AlignTopWithPanel="True"
+                                  RelativePanel.LeftOf="editButton"
+				                  Label="Save"
+				                  Icon="Save"
+                                  Visibility="{Binding SaveItemVisibility}"
+				                  Command="{Binding SaveGridItems}"/>
+
+                    <!--BUTTON TO EDIT SELECTED ITEM-->
+                    <AppBarButton Width="40" 
+                                  IsCompact="True"
+                                  x:Name="editButton"
+                                  RelativePanel.AlignTopWithPanel="True"
+                                  RelativePanel.LeftOf="deleteButton"
+				                  Label="Edit"
+				                  Icon="Edit" 
+                                  Visibility="{Binding EditItemVisibility}"
+				                  Command="{Binding EditItem}"/>
+
+                    <!--BUTTON TO DELETE SELECTED ITEM-->
+                    <AppBarButton Width="40" 
+                                  IsCompact="True"
+                                  x:Name="deleteButton"
+                                  RelativePanel.AlignRightWithPanel="True"
+                                  RelativePanel.AlignTopWithPanel="True"
+				                  Label="Delete"
+				                  Icon="Delete"
+                                  Visibility="{Binding DeleteItemVisibility}"
+				                  Command="{Binding DeleteItem}"/>
+                </RelativePanel>
+            </CommandBar.Content>
+        </CommandBar>
+
+        <!-- MAIN CONTENT; MTM has column with ShowBox-->
+        <Grid RelativePanel.AlignLeftWithPanel="True"
+              RelativePanel.Below="CommandBar"
+              RelativePanel.Above="navButtons"
+              RelativePanel.AlignRightWithPanel="True">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <ScrollViewer Name="scrollViewer" Grid.Column="0"
+                          IsVerticalRailEnabled="True"
+                          Margin="0,5,0,0"
+                          VerticalScrollBarVisibility="Visible">
+                <UserControl x:Name="DetailsContainer"
+                         ScrollViewer.IsVerticalRailEnabled="True"
+                         Content="{Binding MainGrid, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </ScrollViewer>
+
+            <Grid Grid.Column="1" 
+                  Padding="5" 
+                  Visibility="{Binding ShowBoxVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <s:ShowBox x:Name="mtmShowbox"
+                            AllowFocusOnInteraction="True"
+                            DataContext="{Binding ShowBoxVM}"
+                            Width="300"/>
+            </Grid>
+        </Grid>
+
+
+        <StackPanel Name="navButtons"
+                    Visibility="{Binding NavButtonsVisibility}"
+                    Orientation="Horizontal"
+                    RelativePanel.AlignBottomWithPanel="True"
+                    RelativePanel.AlignHorizontalCenterWithPanel="True">
+            <Button x:Name="previous" 
+                    Style="{StaticResource BaseSquaredButton}"
+                    Background="Transparent"
+                    Content="&#xE0A6;"
+                    Command="{Binding PrevItems}"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"/>
+            <TextBlock Style="{ThemeResource BaseTextBlockStyle}"
+                       Text="{Binding SelectedDataBlockNumber}"
+                       FontSize="20"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"/>
+            <TextBlock Style="{ThemeResource BaseTextBlockStyle}"
+                       Text="-"
+                       FontSize="20"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"/>
+            <TextBlock Style="{ThemeResource BaseTextBlockStyle}"
+                       Text="{Binding DataBlocksNumber}"
+                       FontSize="20"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"/>
+            <Button x:Name="following" 
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Background="Transparent"
+                    Content="&#xE0AE;"
+                    Style="{StaticResource BaseSquaredButton}"
+                    Command="{Binding NextItems}"/>
+        </StackPanel>
+
+        <ProgressRing IsActive="{Binding IsLoading}" 
+                      Height="40"
+                      Width="40"
+                      Foreground="{ThemeResource SystemAccentColorDark1}"
+                      RelativePanel.AlignHorizontalCenterWithPanel="True"
+                      RelativePanel.AlignVerticalCenterWithPanel="True"/>
+    </RelativePanel>
+</UserControl>

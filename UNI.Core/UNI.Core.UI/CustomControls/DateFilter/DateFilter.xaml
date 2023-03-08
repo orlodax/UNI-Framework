@@ -1,0 +1,53 @@
+﻿<UserControl
+    x:Class="UNI.Core.UI.CustomControls.DateFilter.DateFilter"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UNI.Core.UI.CustomControls.DateFilter"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    HorizontalAlignment="Stretch"
+    VerticalAlignment="Stretch"
+    d:RequestedTheme="Dark"
+    Margin="0,14,0,0">
+
+    <RelativePanel>
+        
+        <ComboBox x:Name="rangeSelector"
+                  Width="160"
+                  Header="{Binding RangeSelector_Header}"
+                  PlaceholderText="{Binding RangeSelector_Placeholder}"
+                  ItemsSource="{Binding TimeRanges}"
+                  SelectedItem="{Binding SelectedRange, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        
+        <!--<ComboBox x:Name="propertySelector" 
+                  Width="160"
+                  Header="{Binding PropertySelector_Header}"
+                  PlaceholderText="{Binding PropertySelector_Placeholder}"
+                  RelativePanel.Below="rangeSelector"
+                  Margin="0,20,0,0"
+                  ItemsSource="{Binding DateProperties}"
+                  SelectedItem="{Binding SelectedDateProperty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  DisplayMemberPath="{Binding Path=PropertyName}"/>-->
+        
+        <DatePicker x:Name="from"
+                    Visibility="{Binding IsDatePickerEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    Header="{Binding FromDate_Header}"
+                    RelativePanel.RightOf="rangeSelector"
+                    RelativePanel.AlignVerticalCenterWith="rangeSelector"
+                    Margin="20,0,0,0"
+                    IsEnabled="{Binding DatesEnabled}"
+                    SelectedDate="{Binding FromDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        
+        <DatePicker x:Name="to"
+                    Visibility="{Binding IsDatePickerEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    Header="{Binding ToDate_Header}"
+                    RelativePanel.Below="from"
+                    RelativePanel.AlignLeftWith="from"
+                    Margin="20,20,0,0"
+                    IsEnabled="{Binding DatesEnabled}"
+                    SelectedDate="{Binding ToDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            
+    </RelativePanel>
+    
+</UserControl>

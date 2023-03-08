@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>UNI.Core.UI</id>
+    <version>2.2.6</version>
+    <authors>Dario Orlovich</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Libreria UWP per applicazioni UNI</description>
+    <releaseNotes>Bugfix</releaseNotes>
+    <copyright>2022</copyright>
+    <tags>UWP UNI core XAML views viewmodels</tags>
+    <dependencies>
+      <group targetFramework="uap10.0">
+        <dependency id="Microsoft.NETCore.UniversalWindowsPlatform" version="6.2.14"/>
+        <dependency id="Microsoft.SourceLink.AzureRepos.Git" version="1.1.1"/>
+        <dependency id="Microsoft.Toolkit.Uwp.Notifications" version="7.1.3"/>
+        <dependency id="Microsoft.Toolkit.Uwp.UI" version="7.1.3"/>
+        <dependency id="Microsoft.Toolkit.Uwp.UI.Controls" version="7.1.3"/>
+        <dependency id="Microsoft.Toolkit.Uwp.UI.Controls.DataGrid" version="7.1.3"/>
+        <dependency id="Microsoft.UI.Xaml" version="2.8.2"/>
+        <dependency id="Microsoft.Xaml.Behaviors.Uwp.Managed" version="2.0.1"/>
+        <dependency id="NuGet.Build.Tasks.Pack" version="6.4.0"/>
+        <dependency id="System.IdentityModel.Tokens.Jwt" version="6.25.1"/>
+        <dependency id="UNI.API.Contracts" version="2.2.0"/>
+        <dependency id="UNI.Core.Client" version="2.2.1"/>
+        <dependency id="UNI.Core.Library" version="2.2.0"/>
+      </group>
+    </dependencies>
+  </metadata>
+
+  <files>
+
+    <!-- It would be nice to add dlls instead of selfinstall the nugets in the core.ui project. Dependencies do not carry across. I want to die... -->
+    <!-- <file src="C:\Users\orlod\source\repos\UNI.Core\UNI.Core.Library\bin\Release\netstandard2.0\UNI.Core.Library.dll" target="ref\uap10.0" />
+    <file src="C:\Users\orlod\source\repos\UNI.Core\UNI.Core.Client\bin\Release\netstandard2.0\UNI.Core.Client.dll" target="ref\uap10.0" /> -->
+
+    <!-- base files -->
+    <file src="..\bin\x64\Release\UNI.Core.UI.dll" target="runtimes\win10-x64\lib\uap10.0" />
+    <file src="..\bin\x64\Release\UNI.Core.UI.dll" target="ref\uap10.0" />
+    <file src="..\bin\x64\Release\UNI.Core.UI.pri" target="ref\uap10.0" />
+    <file src="..\bin\x64\Release\UNI.Core.UI\UNI.Core.UI.xr.xml" target="ref\uap10.0\UNI.Core.UI" />
+
+    <!-- string resources files (just to have a automated comparison strategy)-->
+    <file src="..\Strings\en-US\Resources.resw" target="ref\uap10.0\UNI.Core.UI\Strings\en-US" />
+    <file src="..\Strings\it-IT\Resources.resw" target="ref\uap10.0\UNI.Core.UI\Strings\it-IT" />
+    
+    <!-- XBFs one for each XAML view -->
+    <file src="..\bin\x64\Debug\UNI.Core.UI\Components\Searcher\Searcher.xbf" target="ref\uap10.0\UNI.Core.UI\Components\Searcher" />
+    <file src="..\bin\x64\Debug\UNI.Core.UI\Components\SearchFilters\SearchFilters.xbf" target="ref\uap10.0\UNI.Core.UI\Components\SearchFilters" />
+    <file src="..\bin\x64\Debug\UNI.Core.UI\Components\SearchFilters\SearchTag.xbf" target="ref\uap10.0\UNI.Core.UI\Components\SearchFilters" />
+    <file src="..\bin\x64\Debug\UNI.Core.UI\Components\UniversalSearch\UniversalSearch.xbf" target="ref\uap10.0\UNI.Core.UI\Components\UniversalSearch" />
+
+    <file src="..\bin\x64\Debug\UNI.Core.UI\ContentDialogs\EditItem\EditItem.xbf" target="ref\uap10.0\UNI.Core.UI\ContentDialogs\EditItem" />
+    <file src="..\bin\x64\Debug\UNI.Core.UI\ContentDialogs\LogDialog\LogDialog.xbf" target="ref\uap10.0\UNI.Core.UI\ContentDialogs\LogDialog" />
+    <file src="..\bin\x64\Debug\UNI.Core.UI\ContentDialogs\NewItem\NewItem.xbf" target="ref\uap10.0\UNI.Core.UI\ContentDialogs\NewItem" />
+
+    <file src="..\bin\x64\Debug\UNI.Core.UI\CustomControls\DateFilter\DateFilter.xbf" target="ref\uap10.0\UNI.Core.UI\CustomControls\DateFilter" />
+    <file src="..\bin\x64\Debug\UNI.Core.UI\CustomControls\DocumentBox\DocumentBox.xbf" target="ref\uap10.0\UNI.Core.UI\CustomControls\DocumentBox" />
+    <file src="..\bin\x64\Debug\UNI.Core.UI\CustomControls\GridBox\GridBox.xbf" target="ref\uap10.0\UNI.Core.UI\CustomControls\GridBox" />
+    <file src="..\bin\x64\Debug\UNI.Core.UI\CustomControls\ImageBox\ImageBox.xbf" target="ref\uap10.0\UNI.Core.UI\CustomControls\ImageBox" />
+    <file src="..\bin\x64\Debug\UNI.Core.UI\CustomControls\PdfViewer\PdfViewer.xbf" target="ref\uap10.0\UNI.Core.UI\CustomControls\PdfViewer" />
+    <file src="..\bin\x64\Debug\UNI.Core.UI\CustomControls\PropertiesGroup\PropertiesGroup.xbf" target="ref\uap10.0\UNI.Core.UI\CustomControls\PropertiesGroup" />
+    <file src="..\bin\x64\Debug\UNI.Core.UI\CustomControls\SelectorBox\SelectorBox.xbf" target="ref\uap10.0\UNI.Core.UI\CustomControls\SelectorBox" />
+    <file src="..\bin\x64\Debug\UNI.Core.UI\CustomControls\ShowBox\ShowBox.xbf" target="ref\uap10.0\UNI.Core.UI\CustomControls\ShowBox" />
+    <file src="..\bin\x64\Debug\UNI.Core.UI\CustomControls\UniTextBox\UniTextBox.xbf" target="ref\uap10.0\UNI.Core.UI\CustomControls\UniTextBox" />
+    
+    <file src="..\bin\x64\Debug\UNI.Core.UI\MainPage\MainPage.xbf" target="ref\uap10.0\UNI.Core.UI\MainPage" />
+    <file src="..\bin\x64\Debug\UNI.Core.UI\MainPage\TabView.xbf" target="ref\uap10.0\UNI.Core.UI\MainPage" />
+
+    <file src="..\bin\x64\Debug\UNI.Core.UI\Menu\Settings\SettingsPage.xbf" target="ref\uap10.0\UNI.Core.UI\Menu\Settings" />
+    
+    <file src="..\bin\x64\Debug\UNI.Core.UI\Services\Privileges\LoginPage.xbf" target="ref\uap10.0\UNI.Core.UI\Services\Privileges" />
+    <file src="..\bin\x64\Debug\UNI.Core.UI\Services\Printing\PrintedField.xbf" target="ref\uap10.0\UNI.Core.UI\Services\Printing" />
+
+    <file src="..\bin\x64\Debug\UNI.Core.UI\Styles\ButtonsD.xbf" target="ref\uap10.0\UNI.Core.UI\Styles" />
+    <file src="..\bin\x64\Debug\UNI.Core.UI\Styles\ControlsD.xbf" target="ref\uap10.0\UNI.Core.UI\Styles" />
+    <file src="..\bin\x64\Debug\UNI.Core.UI\Styles\ThemeD.xbf" target="ref\uap10.0\UNI.Core.UI\Styles" />
+    <file src="..\bin\x64\Debug\UNI.Core.UI\Styles\ListDetailD.xbf" target="ref\uap10.0\UNI.Core.UI\Styles" />
+    <file src="..\bin\x64\Debug\UNI.Core.UI\Styles\ShowBoxD.xbf" target="ref\uap10.0\UNI.Core.UI\Styles" />
+    
+    <file src="..\bin\x64\Debug\UNI.Core.UI\Tabs\DetailItem\DetailItem.xbf" target="ref\uap10.0\UNI.Core.UI\Tabs\DetailItem" />
+    <file src="..\bin\x64\Debug\UNI.Core.UI\Tabs\ListDetail\ListDetail.xbf" target="ref\uap10.0\UNI.Core.UI\Tabs\ListDetail" />
+    <file src="..\bin\x64\Debug\UNI.Core.UI\Tabs\ListGrid\ListGrid.xbf" target="ref\uap10.0\UNI.Core.UI\Tabs\ListGrid" />
+    
+  </files>
+</package>

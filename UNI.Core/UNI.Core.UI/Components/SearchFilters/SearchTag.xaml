@@ -1,0 +1,52 @@
+﻿<UserControl
+    x:Class="UNI.Core.UI.Components.SearchFilters.SearchTag"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UNI.Core.UI.Components.SearchFilters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Height="26"
+    d:Width="100"
+    d:RequestedTheme="Dark">
+
+    <RelativePanel CornerRadius="5" 
+                   HorizontalAlignment="Left"
+                   MaxWidth="200"
+                   Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" 
+                   Padding="5">
+
+        <TextBlock Name="propertyName" 
+                   Text="{x:Bind FilterExpression.PropertyName}" 
+                   FontSize="12"
+                   RelativePanel.AlignLeftWithPanel="True"
+                   RelativePanel.AlignTopWithPanel="True"/>
+        <TextBlock Name="separator" 
+                   Text=":" 
+                   FontSize="12"
+                   RelativePanel.RightOf="propertyName"
+                   RelativePanel.AlignTopWithPanel="True"/>
+        <TextBlock Name="propertyValue" 
+                   Text="{x:Bind FilterExpression.PropertyValue}"
+                   Margin="4,0"
+                   FontSize="12"
+                   RelativePanel.RightOf="separator"
+                   RelativePanel.AlignTopWithPanel="True"/>
+        <Button Name="closeButton"
+                Click="CloseButton_Click"
+                Content="X"
+                CornerRadius="10"
+                Padding="-1"
+                BorderThickness="0"
+                Background="{ThemeResource SystemAccentColorDark1}"
+                FontSize="6"
+                FontWeight="Bold"
+                Width="10"
+                Height="10"
+                RelativePanel.RightOf="propertyValue"
+                RelativePanel.AlignRightWithPanel="True"
+                RelativePanel.AlignTopWithPanel="True"/>
+
+    </RelativePanel>
+
+</UserControl>

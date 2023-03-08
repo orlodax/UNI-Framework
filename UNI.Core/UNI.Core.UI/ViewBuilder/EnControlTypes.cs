@@ -1,0 +1,33 @@
+﻿namespace UNI.Core.UI.ViewBuilder
+{
+    public enum EnControlTypes
+    {
+        Null,
+        GridBox,
+        GridBoxView,
+        GridBoxMtM,
+        GridBoxDataSet,
+        ImageBox,
+        DocumentBox,
+        ShowBox,
+        ComboBox,
+        ToggleSwitch,
+        TextBox,
+        DatePicker,
+        UniTextBox,
+        Searcher,
+        SearchFilters,
+        SearchTag,
+        EditItem,
+        LogDialog,
+        NewItem,
+        DateFilter,
+        PdfViewer,
+        PropertiesGroup,
+        SelectorBox,
+        LoginPage,
+        DetailItem,
+        ListDetail,
+        ListGrid
+    }
+}

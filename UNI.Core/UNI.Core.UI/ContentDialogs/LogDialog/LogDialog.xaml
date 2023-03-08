@@ -1,0 +1,17 @@
+﻿<ContentDialog
+    x:Class="UNI.Core.UI.ContentDialogs.LogDialog.LogDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UNI.Core.UI.ContentDialogs.LogDialog"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="Operazione in corso..."
+    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+    SecondaryButtonClick="ContentDialog_SecondaryButtonClick"
+    >
+
+    <ScrollViewer Height="200">
+        <TextBlock x:Name="Log"/>
+    </ScrollViewer>
+</ContentDialog>
