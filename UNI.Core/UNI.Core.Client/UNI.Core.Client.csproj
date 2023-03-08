@@ -18,7 +18,7 @@
   </PropertyGroup>
   <!-- Source link -->
   <PropertyGroup>
-    <RepositoryUrl>https://teksoftware@dev.azure.com/teksoftware/UNI%20Framework/_git/UNI.Core</RepositoryUrl>
+    <RepositoryUrl>https://teksoftware@dev.azure.com/teksoftware/UNI%20Framework/_git/UNI.Framework</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 

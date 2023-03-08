@@ -17,14 +17,13 @@
     <IncludeSymbols>true</IncludeSymbols>
     <DebugType>embedded</DebugType>
 
-    <!-- WHY CANT GENERATE PACKAGE??? -->
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 
   <!-- Source link -->
 
-    <RepositoryUrl>https://teksoftware@dev.azure.com/teksoftware/UNI%20Framework/_git/UNI.Core</RepositoryUrl>
+    <RepositoryUrl>https://teksoftware@dev.azure.com/teksoftware/UNI%20Framework/_git/UNI.Framework</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
 
   <!-- Deterministic build -->
