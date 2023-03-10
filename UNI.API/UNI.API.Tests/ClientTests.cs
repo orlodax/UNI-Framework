@@ -1,8 +1,4 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using UNI.API.Client;
-using UNI.API.Contracts.RequestsDTO;
-
-namespace UNI.API.Tests;
+﻿namespace UNI.API.Tests;
 
 [TestClass]
 public class ClientTests

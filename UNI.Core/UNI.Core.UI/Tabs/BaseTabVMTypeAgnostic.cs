@@ -1,7 +1,6 @@
 ﻿using System;
 using UNI.Core.Library;
 using UNI.Core.UI.CustomEventArgs;
-using UNI.Core.UI.MainPage;
 using Windows.UI.Xaml;
 
 namespace UNI.Core.UI.Tabs

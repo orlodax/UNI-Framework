@@ -18,9 +18,9 @@ public class UNIDataSet<T> : UniDataSet<T> where T : BaseModel
             FilterExpressions = filterExpressions,
             SkipInit = skipInit,
         };
-        
+
         ApiResponseModel<T>? response = await new UNIClient<T>().GetDataSet(request);
-        
+
         if (response == null)
             return new List<T>();
 

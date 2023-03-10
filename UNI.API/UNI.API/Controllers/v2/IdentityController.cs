@@ -76,7 +76,7 @@ public class IdentityController : Controller
 
     #region Users and Roles admin
 
-  
+
     [HttpPost("admin/resetPassword")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
     public IActionResult ResetPassword([FromBody] Credentials newCredentials)

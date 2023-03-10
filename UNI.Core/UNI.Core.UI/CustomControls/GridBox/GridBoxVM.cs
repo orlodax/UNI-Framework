@@ -6,7 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Input;
-using UNI.Core.Client;
+using UNI.API.Client;
 using UNI.Core.Library;
 using UNI.Core.UI.CustomEventArgs;
 using UNI.Core.UI.MainPage;
@@ -51,7 +51,7 @@ namespace UNI.Core.UI.CustomControls.GridBox
         /// </summary>
         protected BaseModel ParentItem;
 
-        protected readonly UniClient<T> BaseClient = new UniClient<T>();
+        protected readonly UNIClient<T> BaseClient = new UNIClient<T>();
 
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace UNI.Core.UI.CustomControls.GridBox
             EditItemVisibility = Visibility.Visible;
             DeleteItemVisibility = Visibility.Visible;
 
-            BaseClient = new UniClient<T>();
+            BaseClient = new UNIClient<T>();
             PropertyInfo = propertyInfo;
             ParentItem = parentItem;
 

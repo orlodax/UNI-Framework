@@ -5,15 +5,15 @@ namespace UNI.API.Core.v1Models;
 [ClassInfo(SQLName = "users")]
 public class ApiUser
 {
-    [ValueInfo(SQLName = "username")] 
+    [ValueInfo(SQLName = "username")]
     public string Username { get; set; }
 
-    [ValueInfo(SQLName = "password")] 
+    [ValueInfo(SQLName = "password")]
     public string Password { get; set; }
 
-    [ValueInfo(SQLName = "idcompany")] 
+    [ValueInfo(SQLName = "idcompany")]
     public int IdCompany { get; set; }
 
-    [ValueInfo()] 
+    [ValueInfo()]
     public ApiCompany Company { get; set; }
 }

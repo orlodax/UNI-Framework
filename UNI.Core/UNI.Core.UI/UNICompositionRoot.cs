@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using UNI.Core.Client;
+using UNI.API.Client;
 using UNI.Core.UI.MainPage;
 using UNI.Core.UI.Misc;
 using UNI.Core.UI.Services.Privileges;
@@ -66,7 +66,7 @@ namespace UNI.Core.UI
                 }
                 else
                 {
-                    var client = new UniClient<UNIUser>();
+                    var client = new UNIClient<UNIUser>();
                     UNIUser.Token = await client.Authenticate(username, password);
                     if (JWTHelper.IsTokenValid())
                     {

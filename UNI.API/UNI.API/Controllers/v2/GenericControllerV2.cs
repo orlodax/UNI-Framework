@@ -142,21 +142,4 @@ public class GenericControllerV2<T> : Controller where T : BaseModel
         dbContext.DeleteObject(id);
         return Ok();
     }
-
-    private static List<FilterExpression> ConvertExpressions(List<string> filterExpressions)
-    {
-        List<FilterExpression> result = new();
-
-        if (filterExpressions != null)
-            foreach (string expression in filterExpressions)
-                if (!string.IsNullOrWhiteSpace(expression))
-                    if (expression.Contains(','))
-                    {
-                        string[] parts = expression.Split(',');
-                        if (parts.Length > 1)
-                            result.Add(new FilterExpression() { PropertyName = parts[0], PropertyValue = parts[1] });
-                    }
-
-        return result;
-    }
 }

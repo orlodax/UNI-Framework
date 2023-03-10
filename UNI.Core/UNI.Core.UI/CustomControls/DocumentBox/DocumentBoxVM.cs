@@ -5,8 +5,8 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using UNI.API.Client;
 using UNI.API.Contracts.RequestsDTO;
-using UNI.Core.Client;
 using UNI.Core.Library;
 using UNI.Core.Library.GenericModels;
 using UNI.Core.UI.MainPage;
@@ -28,11 +28,11 @@ namespace UNI.Core.UI.CustomControls
         private readonly PropertyInfo propertyInfo;
         private readonly BaseModel parent;
 
-        private readonly UniClient<Document> baseClient;
+        private readonly UNIClient<Document> baseClient;
 
         public DocumentBoxVM(string memberName, PropertyInfo propertyInfo, BaseModel parent)
         {
-            baseClient = new UniClient<Document>();
+            baseClient = new UNIClient<Document>();
 
             this.memberName = memberName;
             this.propertyInfo = propertyInfo;

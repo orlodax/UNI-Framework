@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Input;
-using UNI.Core.Client;
+using UNI.API.Client;
 using UNI.Core.Library;
 using UNI.Core.UI.Misc;
 using Windows.UI.Xaml;
@@ -14,7 +14,7 @@ namespace UNI.Core.UI.CustomControls.GridBox
 {
     public class GridBoxDataSetVM<T> : GridBoxVM<T> where T : BaseModel
     {
-        private readonly UniDataSet<T> UniDataSet;
+        private readonly UNIDataSet<T> UniDataSet;
 
         /// <summary>
         /// Data Block displayed index
@@ -38,7 +38,7 @@ namespace UNI.Core.UI.CustomControls.GridBox
 
 
         public GridBoxDataSetVM(BaseModel parentItem,
-                                UniDataSet<T> uniDataSet,
+                                UNIDataSet<T> uniDataSet,
                                 string name,
                                 PropertyInfo propertyInfo,
                                 Type newItemType,

@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System.Text.Json;
-using UNI.API.Core.v1Models;
 using UNI.API.DAL.v1;
 using UNI.Core.Library;
 using UNI.Core.Library.GenericModels;

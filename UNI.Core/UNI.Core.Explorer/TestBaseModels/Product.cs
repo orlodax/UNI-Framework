@@ -178,13 +178,13 @@ namespace Gioiaspa.Warehouse.Library
         private double packageQuantity;
         [ValueInfo(SQLName = "packagequantity")]
         [RenderInfo(Group = "Info")]
-        public double PackageQuantity 
-        { 
-            get 
-            { 
+        public double PackageQuantity
+        {
+            get
+            {
                 if (MeasurementUnit == "CF")
                     packageQuantity = 1;
-                
+
                 return packageQuantity;
             }
             set { packageQuantity = value; }

@@ -38,8 +38,8 @@ namespace UNI.Core.Library
         /// <summary>
         /// Determine if the element/field is rendered in views
         /// </summary>
-        public bool IsVisible { get; set; } = true;   
-        
+        public bool IsVisible { get; set; } = true;
+
         /// <summary>
         /// Exclude field from insert/update queries
         /// </summary>
@@ -75,7 +75,7 @@ namespace UNI.Core.Library
         /// <summary>
         /// Set a dependency to a parent's property, used in new item logic
         /// </summary>
-        public string ParentPropertyDependendency { get; set; } 
+        public string ParentPropertyDependendency { get; set; }
 
         #endregion
     }

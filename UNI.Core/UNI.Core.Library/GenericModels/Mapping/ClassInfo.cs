@@ -8,7 +8,7 @@ namespace UNI.Core.Library
         /// <summary>
         /// This is used to map models properties to their tables and columns in the DB
         /// </summary>
-        public string SQLName { get; set; } 
+        public string SQLName { get; set; }
 
         /// <summary>
         /// This is used to retrieve only one type of rows in a common table. For example Hypervisor in table Servers. To work the table must contain the column named classtype

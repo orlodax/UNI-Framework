@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Windows.Input;
-using UNI.Core.Client;
+using UNI.API.Client;
 using UNI.Core.Library;
 using UNI.Core.Library.GenericModels;
 using UNI.Core.UI.Misc;
@@ -16,10 +16,10 @@ namespace UNI.Core.UI.CustomControls.ImageBox
         private readonly PropertyInfo property;
         private readonly BaseModel parent;
         private readonly string name;
-        private readonly UniClient<UniImage> baseClient;
+        private readonly UNIClient<UniImage> baseClient;
         public ImageBoxVM(UniImage uniImage, PropertyInfo property, BaseModel parent, string name)
         {
-            baseClient = new UniClient<UniImage>();
+            baseClient = new UNIClient<UniImage>();
 
             this.uniImage = uniImage;
             this.property = property;

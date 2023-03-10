@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Reflection;
 using UNI.API.Contracts.Models;
 using UNI.Core.Library.AttributesMetadata;
@@ -61,7 +60,7 @@ namespace UNI.API.Tests
 
     public class ClassToReflectUpon<T>
     {
-        public async Task<bool> GenericMethodToReflectUpon(string arg1, T arg2) 
+        public async Task<bool> GenericMethodToReflectUpon(string arg1, T arg2)
         {
             Debug.Print($"I was called with type {typeof(T).Name} and my args were {arg1} and {arg2}");
 
