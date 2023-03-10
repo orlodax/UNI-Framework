@@ -8,7 +8,7 @@ namespace UNI.Core.Explorer.ViewModels.GridBoxDataSet
 {
     public class GridBoxDataSetProductMovementVM<T> : GridBoxDataSetVM<BaseProductMovement>
     {
-        public GridBoxDataSetProductMovementVM(BaseModel parentItem, UNI.Core.Client.UniDataSet<BaseProductMovement> uniDataSet, string name, PropertyInfo propertyInfo, Type newItemType, Type editItemType) : base(parentItem, uniDataSet, name, propertyInfo, newItemType, editItemType)
+        public GridBoxDataSetProductMovementVM(BaseModel parentItem, UNI.API.Client.UNIDataSet<BaseProductMovement> uniDataSet, string name, PropertyInfo propertyInfo, Type newItemType, Type editItemType) : base(parentItem, uniDataSet, name, propertyInfo, newItemType, editItemType)
         {
             CreateItemVisibility = Windows.UI.Xaml.Visibility.Collapsed;
             SaveItemVisibility = Windows.UI.Xaml.Visibility.Collapsed;

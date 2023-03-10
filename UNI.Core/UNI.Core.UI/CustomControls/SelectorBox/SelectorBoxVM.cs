@@ -2,8 +2,8 @@
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using UNI.API.Client;
 using UNI.API.Contracts.RequestsDTO;
-using UNI.Core.Client;
 using UNI.Core.Library;
 using UNI.Core.Library.GenericModels;
 using UNI.Core.UI.Misc;
@@ -50,7 +50,7 @@ namespace UNI.Core.UI.CustomControls.SelectorBox
         private readonly string DependencyFilterPropertyName;
         private readonly string ParentFilterPropertyName;
         private readonly string DependencyFilterPropertyValue;
-        readonly protected UniClient<T> BaseClient;
+        readonly protected UNIClient<T> BaseClient;
         private const int pageSize = 50;
         #endregion
 
@@ -61,7 +61,7 @@ namespace UNI.Core.UI.CustomControls.SelectorBox
             ParentFilterPropertyName = parentFilterPropertyName;
             DependencyFilterPropertyValue = dependencyFilterPropertyValue;
 
-            BaseClient = new UniClient<T>();
+            BaseClient = new UNIClient<T>();
 
             ItemTemplate = new ListDetailVB<T>().SelectItemListTemplate();
             SearchPlaceHolderText = ResourceLoader.GetForCurrentView().GetString("search_PlaceholderText");

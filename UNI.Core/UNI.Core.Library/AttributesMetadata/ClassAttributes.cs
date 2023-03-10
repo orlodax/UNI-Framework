@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace UNI.Core.Library.AttributesMetadata
+﻿namespace UNI.Core.Library.AttributesMetadata
 {
     /// <summary>
     /// Holds all "attributes" previously contained in ClassInfo

@@ -5,8 +5,8 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using UNI.API.Client;
 using UNI.API.Contracts.RequestsDTO;
-using UNI.Core.Client;
 using UNI.Core.Library;
 using UNI.Core.Library.GenericModels;
 using UNI.Core.UI.MainPage;
@@ -96,7 +96,7 @@ namespace UNI.Core.UI.CustomControls.ShowBox
         // optional filters defined in the object's attributes
         private readonly ShowBoxFilters Filters;
         // api client 
-        private readonly UniClient<T> BaseClient;
+        private readonly UNIClient<T> BaseClient;
 
 
         // customizable newItemVM
@@ -112,7 +112,7 @@ namespace UNI.Core.UI.CustomControls.ShowBox
         /// </summary>
         protected Type CreateItemVMType;
         protected string CreateItemTabName;
-        
+
         #endregion
 
         #region CTOR
@@ -131,7 +131,7 @@ namespace UNI.Core.UI.CustomControls.ShowBox
             ResourceLoader = ResourceLoader.GetForCurrentView();
             SearchBoxPlaceHolderText = ResourceLoader.GetString("showBox_SearchBoxPlaceHolderText");
 
-            BaseClient = new UniClient<T>();
+            BaseClient = new UNIClient<T>();
 
             DisplayProperty = GetDisplayProperty();
 

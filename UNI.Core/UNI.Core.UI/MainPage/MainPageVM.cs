@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Input;
-using UNI.Core.Client;
+using UNI.API.Client;
 using UNI.Core.UI.Menu;
 using UNI.Core.UI.Misc;
 using UNI.Core.UI.Services.Privileges;

@@ -26,7 +26,7 @@ public class IdentityRepo
         return existingUser.FirstOrDefault();
     }
 
-    public List<User> GetUsers() 
+    public List<User> GetUsers()
     {
         return dbUser.Get(new GetDataSetRequestDTO())?.ResponseBaseModels ?? new List<User>();
     }
@@ -91,7 +91,7 @@ public class IdentityRepo
     #region Roles
     public List<Role> GetUserRoles(int userId)
     {
-        
+
         return dbRoles.GetData($@"SELECT DISTINCT r.* FROM roles r 
                                             INNER JOIN userroles ur ON ur.idrole = r.id 
                                             INNER JOIN credentials c ON c.id = ur.iduser 

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Toolkit.Uwp.UI.Controls;
-using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,8 +6,8 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using UNI.API.Client;
 using UNI.API.Contracts.RequestsDTO;
-using UNI.Core.Client;
 using UNI.Core.Library;
 using UNI.Core.Library.Mapping;
 using UNI.Core.UI.CustomControls.UniTextBox;
@@ -113,7 +112,7 @@ namespace UNI.Core.UI.Tabs
         /// <summary>
         /// The API Client for this view
         /// </summary>
-        readonly protected UniClient<T> BaseClient = null;
+        readonly protected UNIClient<T> BaseClient = null;
 
         /// <summary>
         /// 
@@ -143,7 +142,7 @@ namespace UNI.Core.UI.Tabs
         #region CTOR
         public BaseTabVM()
         {
-            BaseClient = new UniClient<T>();
+            BaseClient = new UNIClient<T>();
 
             BindCommands();
 

@@ -2,13 +2,14 @@
 using Newtonsoft.Json;
 using RestSharp;
 using System.Collections;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Reflection;
 using UNI.API.Contracts.Models;
 using UNI.API.Contracts.RequestsDTO;
+using UNI.API.DAL.v2;
 using UNI.Core.Library;
 using UNI.Core.Library.GenericModels;
-using UNI.API.DAL.v2;
 
 namespace UNI.API.Client;
 
@@ -20,19 +21,48 @@ public class UNIClient<T> where T : BaseModel
     /// Corresponds to the controller base route = server url + /api/v{version:apiVersion}/[controller]
     /// </summary>
     private static readonly List<string> baseEndpoints = new();
-    private readonly IConfigurationSection configurationSectionServerUrls;
-    private readonly IConfigurationSection configurationSectionApiVersion;
+
+    private UNIClientConfiguration? configuration;
 
     public UNIClient()
     {
-        configurationSectionServerUrls = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("ClientConfiguration").GetSection("ServerUrls");
-        configurationSectionApiVersion = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("ClientConfiguration").GetSection("ApiVersion");
+        UniClientInitialization();
+    }
+
+    /// <summary>
+    /// Xamarin needs to pass configuration section
+    /// </summary>
+    /// <param name="configurationSection"></param>
+    public UNIClient(IConfigurationSection configurationSection)
+    {
+        UniClientInitialization(configurationSection);
+    }
+
+    private void UniClientInitialization(IConfigurationSection? configurationSection = null)
+    {
+        if (configurationSection != null)
+        {
+            configuration = configurationSection
+               .GetSection(nameof(UNIClientConfiguration))
+               .Get<UNIClientConfiguration>();
+        }
+        else
+        {
+            configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .Build()
+                .GetSection(nameof(UNIClientConfiguration))
+                .Get<UNIClientConfiguration>();
+        }
+
+        if (configuration == null)
+            throw new ArgumentNullException(nameof(configuration), $"Check the section {nameof(UNIClientConfiguration)} in your appsettings.json");
+
+        foreach (string server in configuration.ServerUrls)
+            if (!string.IsNullOrWhiteSpace(server) && !baseEndpoints.Contains(server + $"/api/{configuration.ApiVersion}/"))
+                baseEndpoints.Add(server + $"/api/{configuration.ApiVersion}/");
 
         ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
-
-        foreach (KeyValuePair<string, string> server in configurationSectionServerUrls.AsEnumerable())
-            if (!string.IsNullOrWhiteSpace(server.Value) && !baseEndpoints.Contains(server.Value + $"/api/{configurationSectionApiVersion.Value.ToString()}/"))
-                baseEndpoints.Add(server.Value + $"/api/{configurationSectionApiVersion.Value.ToString()}/");
     }
 
     #endregion
@@ -214,42 +244,38 @@ public class UNIClient<T> where T : BaseModel
         return Convert.ToInt32(response?.StatusCode);
     }
 
-    public async Task<List<T>> Get(GetDataSetRequestDTO requestDTO)
+    public async Task<List<T>?> Get(GetDataSetRequestDTO requestDTO)
     {
-        RestRequest request;
-
-        if (configurationSectionApiVersion.Value.ToString().Equals("v1"))
-            request = GetRequestV1(requestDTO);
-        else request = GetRequestV2(requestDTO);
+        RestRequest request = configuration!.ApiVersion switch
+        {
+            "v1" => GetRequestV1(requestDTO),
+            "v2" => GetRequestV2(requestDTO),
+            _ => throw new NotImplementedException("Missing apiVersion in appsettings"),
+        };
 
         try
         {
-
             var response = await ProcessRequest<ApiResponseModel<T>>(request);
 
-            if (response != null && response.StatusCode == HttpStatusCode.OK)
-            {
-                ApiResponseModel<T> apiResponseModel = JsonConvert.DeserializeObject<ApiResponseModel<T>>(response.Content.ToString());
-                if (apiResponseModel != null)
-                {
-                    if (apiResponseModel.BaseModelDependencies != null && apiResponseModel.BaseModelDependencies.Any())
-                        foreach (var obj in apiResponseModel.ResponseBaseModels)
-                            AssignDependencies(obj, apiResponseModel.BaseModelDependencies, new List<Type>() { typeof(T) });
-                    else
-                        foreach (var obj in apiResponseModel.ResponseBaseModels)
-                            InitBaseClientsDependencies(obj, new List<Type>() { typeof(T) });
-
-                    InitBaseModelList(apiResponseModel.ResponseBaseModels);
-
-                    return apiResponseModel.ResponseBaseModels;
-                }
-
+            if (response == null || response.Content == null || response.StatusCode != HttpStatusCode.OK)
                 return null;
-            }
 
-            return null;
+            ApiResponseModel<T>? apiResponseModel = JsonConvert.DeserializeObject<ApiResponseModel<T>>(response.Content.ToString());
+            if (apiResponseModel == null)
+                return null;
+
+            if (apiResponseModel.BaseModelDependencies != null && apiResponseModel.BaseModelDependencies.Any())
+                foreach (var obj in apiResponseModel.ResponseBaseModels)
+                    AssignDependencies(obj, apiResponseModel.BaseModelDependencies, new List<Type>() { typeof(T) });
+            else
+                foreach (var obj in apiResponseModel.ResponseBaseModels)
+                    InitBaseClientsDependencies(obj, new List<Type>() { typeof(T) });
+
+            InitBaseModelList(apiResponseModel.ResponseBaseModels);
+
+            return apiResponseModel.ResponseBaseModels;
         }
-        catch (Exception ex)
+        catch
         {
             return null;
         }
@@ -258,7 +284,7 @@ public class UNIClient<T> where T : BaseModel
     public RestRequest GetRequestV1(GetDataSetRequestDTO requestDTO)
     {
 
-        RestRequest request = new RestRequest() { Method = Method.Get };
+        RestRequest request = new() { Method = Method.Get };
 
         if (requestDTO.Id != null)
             request.AddParameter("id", requestDTO.Id, ParameterType.QueryString);
@@ -279,53 +305,54 @@ public class UNIClient<T> where T : BaseModel
     }
     public RestRequest GetRequestV2(GetDataSetRequestDTO requestDTO)
     {
-        RestRequest request = new RestRequest() { Method = Method.Get };
+        RestRequest request = new() { Method = Method.Get };
         request.AddJsonBody(requestDTO);
         return request;
     }
 
-    public async Task<ApiResponseModel<T>> GetDataSet(GetDataSetRequestDTO requestDTO)
+    public async Task<ApiResponseModel<T>?> GetDataSet(GetDataSetRequestDTO requestDTO)
     {
         try
         {
-            RestRequest request;
-            var apiResponse = new ApiResponseModel<T>();
-            if (configurationSectionApiVersion.Value.ToString().Equals("v1"))
-                request = GetDataSetRequestV1(requestDTO);
-            else request = GetRequestV2(requestDTO);
+            RestRequest request = configuration!.ApiVersion switch
+            {
+                "v1" => GetRequestV1(requestDTO),
+                "v2" => GetRequestV2(requestDTO),
+                _ => throw new NotImplementedException("Missing apiVersion in appsettings"),
+            };
 
             var response = await ProcessRequest<ApiResponseModel<T>>(request);
-            if (response != null && response.StatusCode == HttpStatusCode.OK)
-            {
-                ApiResponseModel<T> apiResponseModel = JsonConvert.DeserializeObject<ApiResponseModel<T>>(response.Content.ToString());
 
-                if (apiResponseModel != null)
-                {
-                    if (!requestDTO.SkipInit)
-                    {
-                        if (apiResponseModel.BaseModelDependencies != null && apiResponseModel.BaseModelDependencies.Any())
-                            Parallel.ForEach(apiResponseModel.ResponseBaseModels, obj =>
-                            {
-                                AssignDependencies(obj, apiResponseModel.BaseModelDependencies, new List<Type>() { typeof(T) });
-                            });
-                        else
-                            Parallel.ForEach(apiResponseModel.ResponseBaseModels, obj =>
-                            {
-                                InitBaseClientsDependencies(obj, new List<Type>() { typeof(T) });
-                            });
-
-                        InitBaseModelList(apiResponseModel.ResponseBaseModels);
-                    }
-
-                    apiResponse.ResponseBaseModels = apiResponseModel.ResponseBaseModels;
-                    apiResponse.Count = apiResponseModel.Count;
-                    apiResponse.DataBlocks = apiResponseModel.DataBlocks;
-                }
-            }
-            else
+            if (response == null || response.Content == null || response.StatusCode != HttpStatusCode.OK)
                 return null;
 
-            return apiResponse;
+            ApiResponseModel<T>? apiResponseModel = JsonConvert.DeserializeObject<ApiResponseModel<T>>(response.Content.ToString());
+
+            if (apiResponseModel == null)
+                return null;
+
+            if (!requestDTO.SkipInit)
+            {
+                if (apiResponseModel.BaseModelDependencies != null && apiResponseModel.BaseModelDependencies.Any())
+                    Parallel.ForEach(apiResponseModel.ResponseBaseModels, obj =>
+                    {
+                        AssignDependencies(obj, apiResponseModel.BaseModelDependencies, new List<Type>() { typeof(T) });
+                    });
+                else
+                    Parallel.ForEach(apiResponseModel.ResponseBaseModels, obj =>
+                    {
+                        InitBaseClientsDependencies(obj, new List<Type>() { typeof(T) });
+                    });
+
+                InitBaseModelList(apiResponseModel.ResponseBaseModels);
+            }
+
+            return new ApiResponseModel<T>()
+            {
+                ResponseBaseModels = apiResponseModel.ResponseBaseModels,
+                Count = apiResponseModel.Count,
+                DataBlocks = apiResponseModel.DataBlocks
+            };
         }
         catch (Exception)
         {
@@ -335,7 +362,7 @@ public class UNIClient<T> where T : BaseModel
 
     public RestRequest GetDataSetRequestV1(GetDataSetRequestDTO requestDTO)
     {
-        var request = new RestRequest() { Method = Method.Get };
+        RestRequest request = new() { Method = Method.Get };
 
         if (requestDTO.Id != null)
             request.AddParameter("id", requestDTO.Id, ParameterType.QueryString);
@@ -440,8 +467,19 @@ public class UNIClient<T> where T : BaseModel
         return request;
     }
 
-    private static async Task<RestResponse<K>?> ProcessRequest<K>(RestRequest request, string? additionalRoute = null, bool isTokenRequest = false, bool isIdentityRequest = false)
+    private async Task<RestResponse<K>?> ProcessRequest<K>(RestRequest request, string? additionalRoute = null, bool isTokenRequest = false, bool isIdentityRequest = false)
     {
+        // refresh token if expired
+        if (configuration!.IsTokenAutoRefreshable)
+        {
+            if (!isTokenRequest && UNIUser.Token != null)
+            {
+                JwtSecurityToken jwtSecurityToken = new JwtSecurityTokenHandler().ReadJwtToken(UNIUser.Token.Value);
+                if (jwtSecurityToken.ValidTo <= DateTime.UtcNow)
+                    UNIUser.Token = await Authenticate(UNIUser.Username!, UNIUser.Password!);
+            }
+        }
+
         int attempt = 0;
         RestResponse<K>? response;
         do
@@ -453,9 +491,14 @@ public class UNIClient<T> where T : BaseModel
             if (!isTokenRequest)
             {
                 if (UNIUser.Token == null)
-                    throw new Exception("Need to authenticate and obtain token.");
+                {
+                    if (configuration!.IsTokenAutoRefreshable)
+                        UNIUser.Token = await Authenticate(UNIUser.Username!, UNIUser.Password!);
+                    else
+                        throw new Exception("Need to authenticate and obtain token.");
+                }
 
-                client.AddDefaultHeader("Authorization", $"Bearer {UNIUser.Token.Value}");
+                client.AddDefaultHeader("Authorization", $"Bearer {UNIUser.Token!.Value}");
             }
 
             response = await client.ExecuteAsync<K>(request);
@@ -490,6 +533,7 @@ public class UNIClient<T> where T : BaseModel
             BaseUrl = new Uri(baseEndpoint),
             RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true
         };
+
         return new RestClient(options);
     }
 
@@ -542,6 +586,7 @@ public class UNIClient<T> where T : BaseModel
             foreach (var item in listValues)
                 values.Add((T)item);
         }
+
         return values;
     }
 
@@ -560,7 +605,7 @@ public class UNIClient<T> where T : BaseModel
             if (pro.PropertyType.IsGenericType)
             {
                 if (pro.PropertyType.GenericTypeArguments[0].IsSubclassOf(typeof(BaseModel)))
-                    if (!string.IsNullOrEmpty(pro.PropertyType.FullName) && pro.PropertyType.FullName.Contains("UniDataSet"))
+                    if (!string.IsNullOrEmpty(pro.PropertyType.FullName) && !pro.PropertyType.FullName.Contains("UniDataSet"))
                         if (pro.GetValue(obj) is IList list)
                             InitBaseModelList(list.Cast<BaseModel>().ToList());
             }
@@ -570,7 +615,6 @@ public class UNIClient<T> where T : BaseModel
                     InitBaseModel(model);
             }
         }
-
     }
 
     private void InitBaseModelList(List<BaseModel> objs)

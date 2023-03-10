@@ -1,8 +1,8 @@
 ﻿using Microsoft.Toolkit.Uwp.Notifications;
 using System;
 using System.Windows.Input;
+using UNI.API.Client;
 using UNI.API.Contracts.RequestsDTO;
-using UNI.Core.Client;
 using UNI.Core.UI.Misc;
 using UNI.Core.UI.Tabs;
 using Windows.UI.Xaml;
@@ -83,7 +83,7 @@ namespace UNI.Core.UI.Menu.Settings
                 if (result != ContentDialogResult.Primary)
                     return;
 
-                if (await new UniClient<UNIUser>().ChangePassword(new ChangePasswordRequestDTO { Username = UNIUser.Username, OldPassword = oldPassword.Password, NewPassword = newPassword.Password }))
+                if (await new UNIClient<UNIUser>().ChangePassword(new ChangePasswordRequestDTO { Username = UNIUser.Username, OldPassword = oldPassword.Password, NewPassword = newPassword.Password }))
                 {
                     new ToastContentBuilder()
                             .AddText(ResourcesHelper.GetString("settings_changePasswordSuccess", "Password changed!"))

@@ -19,7 +19,7 @@ namespace UNI.Core.Library.GenericModels
         public List<ProductSerial> InboundProductSerials { get; set; }
 
 
-         
+
         /// NO
         /// se serve usa i get
         //public override void Loaded(BaseModel parentItem = null)

@@ -9,7 +9,7 @@ namespace UNI.Core.Explorer.ViewModels.GridBoxDataSet
 {
     public class GridBoxDataSetProductSerialVM<T> : GridBoxDataSetVM<ProductSerial>
     {
-        public GridBoxDataSetProductSerialVM(BaseModel parentItem, UNI.Core.Client.UniDataSet<ProductSerial> uniDataSet, string name, PropertyInfo propertyInfo, Type newItemType, Type editItemType) : base(parentItem, uniDataSet, name, propertyInfo, newItemType, editItemType)
+        public GridBoxDataSetProductSerialVM(BaseModel parentItem, UNI.API.Client.UNIDataSet<ProductSerial> uniDataSet, string name, PropertyInfo propertyInfo, Type newItemType, Type editItemType) : base(parentItem, uniDataSet, name, propertyInfo, newItemType, editItemType)
         {
             EditItemVisibility = Windows.UI.Xaml.Visibility.Collapsed;
             DeleteItemVisibility = Windows.UI.Xaml.Visibility.Collapsed;

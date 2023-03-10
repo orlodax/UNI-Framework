@@ -12,7 +12,7 @@ namespace UNI.Core.UI.Tabs.ListDetail
     {
         private FrameworkElement detailsPane; // detail element of the view
 
-        public string SearchBoxPlaceHolderText { get; set; }    
+        public string SearchBoxPlaceHolderText { get; set; }
         public FrameworkElement DetailsPane { get => detailsPane; set => SetValue(ref detailsPane, value); }
         public DataTemplate ItemTemplate { get; set; }
 
@@ -28,7 +28,7 @@ namespace UNI.Core.UI.Tabs.ListDetail
         {
             ViewType = typeof(ListDetail);
             ViewBuilder = new ListDetailVB<T>();
-            SearchBoxPlaceHolderText  = ResourcesHelper.GetString("listDetail_Search", "Search...");
+            SearchBoxPlaceHolderText = ResourcesHelper.GetString("listDetail_Search", "Search...");
             ItemTemplate = (ViewBuilder as ListDetailVB<T>).SelectItemListTemplate();   // select template from dictionary according to Model type
 
             DependencyInitialized();

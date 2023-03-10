@@ -340,6 +340,9 @@
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
       <Version>2.0.1</Version>
     </PackageReference>
+    <PackageReference Include="UNI.API.Client">
+      <Version>2.2.1</Version>
+    </PackageReference>
     <PackageReference Include="UNI.API.Contracts">
       <Version>2.2.0</Version>
     </PackageReference>
@@ -351,10 +354,6 @@
     <PRIResource Include="Strings\it-IT\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\UNI.Core.Client\UNI.Core.Client.csproj">
-      <Project>{1809832f-ae76-465a-a307-8ff2c29906ad}</Project>
-      <Name>UNI.Core.Client</Name>
-    </ProjectReference>
     <ProjectReference Include="..\UNI.Core.Library\UNI.Core.Library.csproj">
       <Project>{604b3435-8692-4174-9704-ef134e960c8d}</Project>
       <Name>UNI.Core.Library</Name>

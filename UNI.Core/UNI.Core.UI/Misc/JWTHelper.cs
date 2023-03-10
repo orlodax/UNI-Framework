@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using UNI.Core.Client;
+using UNI.API.Client;
 
 namespace UNI.Core.UI.Misc
 {

@@ -1,15 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
 using MySqlConnector;
-using System;
 using System.Collections;
 using System.Data;
 using System.Data.Common;
-using System.Linq;
-using System.Net;
 using System.Reflection;
-using System.Reflection.Metadata.Ecma335;
 using UNI.API.Contracts.RequestsDTO;
-using UNI.API.DAL.v1;
 using UNI.Core.Library;
 using UNI.Core.Library.AttributesMetadata;
 using UNI.Core.Library.GenericModels;
@@ -325,7 +320,7 @@ public class DbContextV2<T> where T : BaseModel
                 query = query.Remove(query.Length - 2, 2);
                 query += $" WHERE id = {objectId};";
 
-                if(propertiesToWrite)
+                if (propertiesToWrite)
                     await SetData(query, queryParameters);
 
                 // now update the other tables if needed
@@ -353,7 +348,7 @@ public class DbContextV2<T> where T : BaseModel
             }
             return true;
         }
-        catch (Exception e)
+        catch 
         {
             return false;
         }
@@ -417,7 +412,7 @@ public class DbContextV2<T> where T : BaseModel
             string insertQuery = string.Format("INSERT INTO {0} ({1}) VALUES ({2});", tableName, columnName, maxNumber + 1);
             return await SetData(insertQuery);
         }
-        catch (Exception e)
+        catch
         {
             return 0;
         }
@@ -617,7 +612,7 @@ public class DbContextV2<T> where T : BaseModel
             }
             res = itemId;
         }
-        catch (Exception e)
+        catch
         {
 
         }
@@ -680,7 +675,7 @@ public class DbContextV2<T> where T : BaseModel
                 return results;
             }
         }
-        catch (Exception e)
+        catch 
         {
 
         }
@@ -738,8 +733,7 @@ public class DbContextV2<T> where T : BaseModel
 
 
                 //TODO Convertire filterexpression riferite a dipendenze
-                requestDTO.FilterExpressions = ConvertFilterExpressionDependencies<T>(requestDTO.FilterExpressions);
-
+                requestDTO.FilterExpressions = ConvertFilterExpressionDependencies(requestDTO.FilterExpressions);
 
                 foreach (var filterExpression in requestDTO.FilterExpressions)
                 {
@@ -748,12 +742,12 @@ public class DbContextV2<T> where T : BaseModel
                     query += FilterExpressionToSql(filterExpression, properties.ToList(), firstWhereCondition, requestDTO.FilterDateFormat, filterExpression.ComparisonType);
                     if (filterExpression.FilterExpressions.Any())
                     {
-                        if (query.Substring(query.Length - 4) == "AND ")
+                        if (query[^4..] == "AND ")
                         {
                             if (query.Length > 3)
                                 query = query.Remove(query.Length - 4, 4);
                         }
-                        else if (query.Substring(query.Length - 3) == "OR ")
+                        else if (query[^3..] == "OR ")
                         {
                             if (query.Length > 2)
                                 query = query.Remove(query.Length - 3, 3);
@@ -763,18 +757,18 @@ public class DbContextV2<T> where T : BaseModel
                 }
             }
 
-            if (query.Substring(query.Length - 4) == "AND ")
+            if (query[^4..] == "AND ")
             {
                 if (query.Length > 3)
                     query = query.Remove(query.Length - 4, 4);
             }
-            else if (query.Substring(query.Length - 3) == "OR ")
+            else if (query[^3..] == "OR ")
             {
                 if (query.Length > 2)
                     query = query.Remove(query.Length - 3, 3);
             }
 
-            if (query.Substring(query.Length - 6) == "WHERE ")
+            if (query[^6..] == "WHERE ")
                 query = query.Remove(query.Length - 6, 6);
 
             //execute the query
@@ -855,7 +849,7 @@ public class DbContextV2<T> where T : BaseModel
 
             return response;
         }
-        catch (Exception e)
+        catch
         {
             return null;
         }
@@ -878,17 +872,17 @@ public class DbContextV2<T> where T : BaseModel
 
     #region Private methods
 
-    public List<FilterExpression> ConvertFilterExpressionDependencies<T>(List<FilterExpression> filterExpressions)
+    public List<FilterExpression> ConvertFilterExpressionDependencies(List<FilterExpression> filterExpressions)
     {
         try
         {
             var baseModelTypes = GetSubTypes(typeof(T));
             var typeProperties = typeof(T).GetProperties();
-            List<PropertyInfo> properties = new List<PropertyInfo>();
+            List<PropertyInfo> properties = new();
 
             foreach (var filterExpression in filterExpressions)
             {
-                List<FilterExpression> convertedFilterExpressions = new List<FilterExpression>();
+                List<FilterExpression> convertedFilterExpressions = new();
                 if (filterExpression.PropertyName.Contains("."))
                 {
                     var propertyPath = filterExpression.PropertyName.Split('.');
@@ -909,7 +903,7 @@ public class DbContextV2<T> where T : BaseModel
                     var reversePath = propertyPath.Reverse().ToArray();
                     string filterExpressionProperty = propertyPath[0];
 
-                    List<int> nextExectionIdToFilter = new List<int>();
+                    List<int> nextExectionIdToFilter = new();
                     int count = 0;
                     foreach (string property in reversePath)
                     {
@@ -942,11 +936,9 @@ public class DbContextV2<T> where T : BaseModel
                                 var value = SelectObjects(type: propertyType, tableAttritbute: classInfo.SQLName, valueMatchAttribute: reversePath[0], valueToMatch: filterExpression.PropertyValue);
                                 nextExectionIdToFilter = new();
                                 foreach (var item in value)
-                                {
-                                    int id = (item as BaseModel).ID;
-                                    if (!nextExectionIdToFilter.Contains(id))
-                                        nextExectionIdToFilter.Add(id);
-                                }
+                                    if (item is BaseModel bm)
+                                        if (!nextExectionIdToFilter.Contains(bm.ID))
+                                            nextExectionIdToFilter.Add(bm.ID);
                             }
 
                             else
@@ -958,11 +950,9 @@ public class DbContextV2<T> where T : BaseModel
 
                                     nextExectionIdToFilter = new();
                                     foreach (var item in value)
-                                    {
-                                        int id = (item as BaseModel).IdMtm;
-                                        if (!nextExectionIdToFilter.Contains(id))
-                                            nextExectionIdToFilter.Add(id);
-                                    }
+                                        if (item is BaseModel bm)
+                                            if (!nextExectionIdToFilter.Contains(bm.IdMtm))
+                                                nextExectionIdToFilter.Add(bm.IdMtm);
                                 }
                                 else //normal basemodel or otm
                                 {
@@ -1004,11 +994,10 @@ public class DbContextV2<T> where T : BaseModel
                                     else
                                     {
                                         foreach (var item in value)
-                                        {
-                                            int id = (item as BaseModel).ID;
-                                            if (!nextExectionIdToFilter.Contains(id))
-                                                nextExectionIdToFilter.Add(id);
-                                        }
+                                            if (item is BaseModel bm)
+                                                if (!nextExectionIdToFilter.Contains(bm.ID))
+                                                    nextExectionIdToFilter.Add(bm.ID);
+
                                         filterExpressionProperty = propertyPath[0];
                                     }
                                 }
@@ -1018,9 +1007,11 @@ public class DbContextV2<T> where T : BaseModel
                     }
                     foreach (var id in nextExectionIdToFilter)
                     {
-                        FilterExpression newFilterExpression = new();
-                        newFilterExpression.PropertyValue = id.ToString();
-                        newFilterExpression.PropertyName = $"Id{filterExpressionProperty}";
+                        FilterExpression newFilterExpression = new()
+                        {
+                            PropertyValue = id.ToString(),
+                            PropertyName = $"Id{filterExpressionProperty}"
+                        };
                         filterExpression.FilterExpressions.Add(newFilterExpression);
                         filterExpression.ComparisonType = "OR";
                     }
@@ -1029,29 +1020,29 @@ public class DbContextV2<T> where T : BaseModel
 
             return filterExpressions;
         }
-        catch (Exception ex)
+        catch
         {
             return filterExpressions;
         }
-       
+
     }
 
-    public IList SelectObjects(Type type, string tableAttritbute, string idMatchAttribute = null, List<int> idsToMatch = null, string valueMatchAttribute = null, string valueToMatch = null)
+    public IList SelectObjects(Type type, string tableAttritbute, string? idMatchAttribute = null, List<int>? idsToMatch = null, string? valueMatchAttribute = null, string? valueToMatch = null)
     {
         Type constructedClass = typeof(DbContextV2<>).MakeGenericType(type);
         object? reflectedDbContext = Activator.CreateInstance(constructedClass, new[] { connectionString });
         MethodInfo? genericMethod = reflectedDbContext?.GetType().GetMethod(nameof(SelectObjectsNoFill), BindingFlags.NonPublic | BindingFlags.Instance);
-        
+
         var dictionaryIds = new Dictionary<string, List<int>>();
         if (idMatchAttribute != null && idsToMatch != null)
             dictionaryIds.Add(idMatchAttribute, idsToMatch);
 
-        var dictionaryValues = new Dictionary<string,string>();
+        var dictionaryValues = new Dictionary<string, string>();
         if (valueMatchAttribute != null && valueToMatch != null)
             dictionaryValues.Add(valueMatchAttribute, valueToMatch);
 
         object?[] parameters = { tableAttritbute, dictionaryIds, dictionaryValues };
-        return (IList?)genericMethod?.Invoke(reflectedDbContext, parameters); // it returns a list
+        return (IList)genericMethod?.Invoke(reflectedDbContext, parameters); // it returns a list
     }
 
 
@@ -1168,7 +1159,7 @@ public class DbContextV2<T> where T : BaseModel
         await SetData(query);
     }
 
-    private List<T> SelectObjectsNoFill(string? tableAttritbute = null, Dictionary<string, List<int>> idsToMatch = null, Dictionary<string, string> valuesToMatch = null)
+    private List<T> SelectObjectsNoFill(string? tableAttritbute = null, Dictionary<string, List<int>>? idsToMatch = null, Dictionary<string, string>? valuesToMatch = null)
     {
         List<T> values = new();
 
@@ -1182,7 +1173,7 @@ public class DbContextV2<T> where T : BaseModel
 
         if (idsToMatch != null && idsToMatch.Count > 0)
         {
-            foreach(KeyValuePair<string, List<int>> entry in idsToMatch)
+            foreach (KeyValuePair<string, List<int>> entry in idsToMatch)
             {
                 if (entry.Value.Count > 0)
                 {
@@ -1193,7 +1184,7 @@ public class DbContextV2<T> where T : BaseModel
                     }
                     query = query.Remove(query.Length - 3, 3);
                 }
-              
+
             }
             //
             if (!string.IsNullOrWhiteSpace(classInfo.ClassType))
@@ -1201,7 +1192,7 @@ public class DbContextV2<T> where T : BaseModel
                 query += $" AND classtype = '{classInfo.ClassType}'";
             }
         }
-        else if(valuesToMatch != null && valuesToMatch.Count > 0)
+        else if (valuesToMatch != null && valuesToMatch.Count > 0)
         {
             foreach (KeyValuePair<string, string> entry in valuesToMatch)
             {
@@ -1280,7 +1271,7 @@ public class DbContextV2<T> where T : BaseModel
             if (enumeratedTypes.Contains(keyname))
                 continue;
 
-                enumeratedTypes.Add(keyname);
+            enumeratedTypes.Add(keyname);
 
             if (!baseModelTypes.ContainsKey(keyname))
             {
@@ -1434,17 +1425,17 @@ public class DbContextV2<T> where T : BaseModel
             }
         }
     }
-    
-    private Dictionary<string, IList> GetObjectsListsLargeTables(IList objs, Dictionary<string, IList> listOfObjects = null, Dictionary<string, List<int>> baseModelsIndexes = null, Dictionary<string, Type> baseModelsTypes = null, List<Type>? enumeratedTypes = null)
+
+    private Dictionary<string, IList> GetObjectsListsLargeTables(IList objs, Dictionary<string, IList>? listOfObjects = null, Dictionary<string, List<int>>? baseModelsIndexes = null, Dictionary<string, Type>? baseModelsTypes = null, List<Type>? enumeratedTypes = null)
     {
-        Dictionary<string, List<int>> iterationBaseModelsIndexes = new Dictionary<string, List<int>>();
-        Dictionary<string, List<int>> toReadBaseModelsIndexes = new Dictionary<string, List<int>>();
+        Dictionary<string, List<int>> iterationBaseModelsIndexes = new();
+        Dictionary<string, List<int>> toReadBaseModelsIndexes = new();
 
         baseModelsIndexes ??= new Dictionary<string, List<int>>();
         baseModelsTypes ??= new Dictionary<string, Type>();
 
         listOfObjects ??= new Dictionary<string, IList>();
-        Dictionary<string, IList> iterationListOfObjects = new Dictionary<string, IList>();
+        Dictionary<string, IList> iterationListOfObjects = new();
 
         enumeratedTypes ??= new List<Type>();
         Type type = objs.GetType().GenericTypeArguments[0];
@@ -1483,7 +1474,7 @@ public class DbContextV2<T> where T : BaseModel
                 iterationBaseModelsIndexes.Add(keyname, indexList);
             }
 
-           
+
 
             foreach (var obj in objs)
             {
@@ -1505,8 +1496,8 @@ public class DbContextV2<T> where T : BaseModel
         {
             if (baseModelsIndexes.TryGetValue(listOfIndex.Key, out List<int> previoustIndexList))
             {
-                List<int> toReadIds = new List<int>();
-                foreach(int currentId in listOfIndex.Value)
+                List<int> toReadIds = new();
+                foreach (int currentId in listOfIndex.Value)
                 {
                     if (!previoustIndexList.Contains(currentId))
                     {
@@ -1515,7 +1506,7 @@ public class DbContextV2<T> where T : BaseModel
                     }
                 }
                 if (toReadIds.Count > 0)
-                    toReadBaseModelsIndexes.Add(listOfIndex.Key, toReadIds);            
+                    toReadBaseModelsIndexes.Add(listOfIndex.Key, toReadIds);
             }
             else
             {
@@ -1546,12 +1537,14 @@ public class DbContextV2<T> where T : BaseModel
             object? reflectedDbContext = Activator.CreateInstance(constructedClass, new[] { connectionString });
             MethodInfo? genericMethod = reflectedDbContext?.GetType().GetMethod(nameof(SelectObjectsNoFill), BindingFlags.NonPublic | BindingFlags.Instance);
 
-            if(toReadBaseModelsIndexes.TryGetValue(baseModelType.Key, out List<int> indexList))
+            if (toReadBaseModelsIndexes.TryGetValue(baseModelType.Key, out List<int> indexList))
             {
-                if(indexList != null)
+                if (indexList != null)
                 {
-                    var selectDict = new Dictionary<string, List<int>>();
-                    selectDict.Add(selectWhereParameter, indexList);
+                    Dictionary<string, List<int>> selectDict = new()
+                    {
+                        { selectWhereParameter, indexList }
+                    };
 
                     object?[] parameters = { keyPart, selectDict, null }; // the method requires a string parameter instead of a classinfo
                     var value = (IList?)genericMethod?.Invoke(reflectedDbContext, parameters); // it returns a list
@@ -1560,8 +1553,8 @@ public class DbContextV2<T> where T : BaseModel
                         iterationListOfObjects.Add(baseModelType.Key, value);
                     if (!listOfObjects.ContainsKey(baseModelType.Key) && value != null)
                         listOfObjects.Add(baseModelType.Key, value);
-                }              
-            }          
+                }
+            }
         }
 
         foreach (KeyValuePair<string, IList> list in iterationListOfObjects)
@@ -1572,7 +1565,7 @@ public class DbContextV2<T> where T : BaseModel
 
         return listOfObjects;
     }
-    private Dictionary<string, IList> GetObjectsLists(IList objs, Dictionary<string, IList> listOfObjects = null, Dictionary<string, List<int>> baseModelsIndexes = null, Dictionary<string, Type> baseModelsTypes = null, List<Type>? enumeratedTypes = null)
+    private Dictionary<string, IList> GetObjectsLists(IList objs, Dictionary<string, IList>? listOfObjects = null, Dictionary<string, List<int>>? baseModelsIndexes = null, Dictionary<string, Type>? baseModelsTypes = null, List<Type>? enumeratedTypes = null)
     {
 
         //get the type of the objects
@@ -1626,11 +1619,12 @@ public class DbContextV2<T> where T : BaseModel
                 itemsToFilter = items.Cast<BaseModel>().ToList();
         }
 
-        List<T> itemsFilteredWithDependencies = new List<T>();
+        List<T> itemsFilteredWithDependencies = new();
         foreach (var item in items)
             itemsFilteredWithDependencies.Add(itemsWithDependencies.Find(i => i.ID == item.ID) as T);
         return itemsFilteredWithDependencies;
     }
+
     public int iterations = 0;
     public List<T> FilterListParameter<T>(string searchText, List<BaseModel> itemsWithDependencies, List<BaseModel> itemsToFilter)
     {
@@ -1640,7 +1634,7 @@ public class DbContextV2<T> where T : BaseModel
         if (string.IsNullOrWhiteSpace(searchText))
             return filteredItemsSource.Cast<T>().ToList();
 
-       foreach(var item in itemsToFilter)
+        foreach (var item in itemsToFilter)
         {
             foreach (var property in typeof(T).GetProperties())
             {
@@ -1751,7 +1745,7 @@ public class DbContextV2<T> where T : BaseModel
                     if (value.GetType() != typeof(DBNull))
                         property.SetValue(item, TryConvert(value, property.PropertyType));
                 }
-                catch (Exception e)
+                catch
                 {
 
                 }
@@ -1759,7 +1753,7 @@ public class DbContextV2<T> where T : BaseModel
         }
     }
 
- 
+
     private static bool SearchValueInObject(string searchText, object? item)
     {
         if (item == null)
@@ -1806,7 +1800,7 @@ public class DbContextV2<T> where T : BaseModel
             else if (dest == typeof(DateTime))
                 return Convert.ToDateTime(source);
         }
-        catch (Exception e)
+        catch
         {
 
         }
@@ -1856,7 +1850,7 @@ public class DbContextV2<T> where T : BaseModel
                 val2 = Convert.ToDateTime(obj2);
             }
         }
-        catch (Exception e)
+        catch
         {
             return false;
         }
@@ -1872,12 +1866,12 @@ public class DbContextV2<T> where T : BaseModel
         if (filterExpression.FilterExpressions.Any())
             query += " ( ";
 
-
-        if (!String.IsNullOrWhiteSpace(filterExpression.PropertyName) && filterExpression.PropertyValue != null && property != null)
+        
+        if (!string.IsNullOrWhiteSpace(filterExpression.PropertyName) && filterExpression.PropertyValue != null && property != null)
         {
             if (property.GetCustomAttribute(typeof(ValueInfo)) is ValueInfo valueInfo)
             {
-                if (!String.IsNullOrWhiteSpace(valueInfo.SQLName))
+                if (!string.IsNullOrWhiteSpace(valueInfo.SQLName))
                 {
                     if (!firstWhereCondition)
                     {
@@ -1894,14 +1888,12 @@ public class DbContextV2<T> where T : BaseModel
                     }
                     else
                     {
-                        if(filterExpression.ComparisonType == "LIKE")
-                            query += " " + valueInfo?.SQLName + $" {filterExpression.OperatorSign} %{filterExpression.PropertyValue.ToString()}% ";
-                        else query += " " + valueInfo?.SQLName + $" {filterExpression.OperatorSign} {filterExpression.PropertyValue.ToString()} ";
+                        if (filterExpression.ComparisonType == "LIKE")
+                            query += " " + valueInfo?.SQLName + $" {filterExpression.OperatorSign} %{filterExpression.PropertyValue}% ";
+                        else query += " " + valueInfo?.SQLName + $" {filterExpression.OperatorSign} {filterExpression.PropertyValue} ";
                     }
-                   
                 }
             }
-
         }
 
         int i = 0;
@@ -1913,15 +1905,14 @@ public class DbContextV2<T> where T : BaseModel
                 query += $" {filterExpression.ComparisonType} ";
         }
 
-
         if (filterExpression.FilterExpressions.Any())
         {
-            if (query.Substring(query.Length - 4) == "AND ")
+            if (query[^4..] == "AND ")
             {
                 if (query.Length > 3)
                     query = query.Remove(query.Length - 4, 4);
             }
-            else if (query.Substring(query.Length - 3) == "OR ")
+            else if (query[^3..] == "OR ")
             {
                 if (query.Length > 2)
                     query = query.Remove(query.Length - 3, 3);

@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using UNI.API.Contracts.Models;
 using UNI.Core.Library;
 using UNI.Core.UI.CustomControls.GridBox;
@@ -52,11 +51,11 @@ namespace UNI.Core.UI.Menu.Settings
 
     public class ShowBoxRolesVM : ShowBoxVM<Role>
     {
-        public ShowBoxRolesVM(Role dependency, 
-                              string memberName, 
-                              PropertyInfo propertyInfo, 
-                              BaseModel parent, 
-                              ShowBoxFilters filters, 
+        public ShowBoxRolesVM(Role dependency,
+                              string memberName,
+                              PropertyInfo propertyInfo,
+                              BaseModel parent,
+                              ShowBoxFilters filters,
                               Type newItemType) : base(dependency, memberName, propertyInfo, parent, filters, newItemType)
         {
             NewItemButtonVisibility = Windows.UI.Xaml.Visibility.Collapsed;

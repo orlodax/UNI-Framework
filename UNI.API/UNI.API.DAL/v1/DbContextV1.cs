@@ -141,7 +141,7 @@ namespace UNI.API.DAL.v1
 
                         foreach (PropertyInfo pro in properties)
                         {
-                            if (!enumeratedProperties.Any(p => p.Name == pro.Name)) 
+                            if (!enumeratedProperties.Any(p => p.Name == pro.Name))
                             {
                                 if (pro.GetCustomAttribute(typeof(ValueInfo)) is ValueInfo valueInfo)
                                 {
@@ -1488,7 +1488,7 @@ namespace UNI.API.DAL.v1
                         else
                             throw new ArgumentException($"This class has no related Id{proName} member to populate encapsulated {proName} member.", "Error");
                     }
-                    else 
+                    else
                         continue;
                 }
             }
@@ -1635,7 +1635,7 @@ namespace UNI.API.DAL.v1
                             BaseModel itemWithDependencies = itemsWithDependencies.Find(i => i.ID == item.ID);
 
                             List<BaseModel> dependencyToFilter = (property.GetValue(itemWithDependencies) as IList)?.Cast<BaseModel>().ToList();
-                            if(dependencyToFilter != null)
+                            if (dependencyToFilter != null)
                             {
                                 object[] parameters = { searchText, dependencyToFilter as List<BaseModel>, dependencyToFilter as List<BaseModel> };
                                 IList items = generic.Invoke(this, parameters) as IList;
@@ -1643,7 +1643,7 @@ namespace UNI.API.DAL.v1
                                     if (!filteredItemsSource.Contains(item))
                                         filteredItemsSource.Add(item);
                             }
-                          
+
                         }
                         else if (UtilityMethods.FindAllParentsTypes(property.PropertyType).Contains(typeof(BaseModel)))
                         {

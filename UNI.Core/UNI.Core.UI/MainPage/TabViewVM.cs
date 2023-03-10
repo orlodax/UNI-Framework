@@ -7,7 +7,6 @@ using System.Windows.Input;
 using UNI.Core.UI.Menu;
 using UNI.Core.UI.Menu.Settings;
 using UNI.Core.UI.Misc;
-using UNI.Core.UI.NewItem;
 using UNI.Core.UI.Tabs;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.WindowManagement;
@@ -195,7 +194,7 @@ namespace UNI.Core.UI.MainPage
                 try
                 {
                     // reopen hidden tab saves api calls but it's detrimental during debug and troubleshoot
-                    #if !DEBUG
+#if !DEBUG
                     // if tab already exists among the closed ones, retrieve it
                     TabViewItem tabIsHidden = HiddenTabs.FirstOrDefault(t => t.Header.ToString() == node.Name);
                     if (tabIsHidden != null)
@@ -212,10 +211,10 @@ namespace UNI.Core.UI.MainPage
                     {
                         OpenNewTab(node.Name, node.ViewModelType, new object[] { node.ArgumentObject });
                     }
-                    #endif
-                    #if DEBUG
+#endif
+#if DEBUG
                     OpenNewTab(node.Name, node.ViewModelType, new object[] { node.ArgumentObject });
-                    #endif
+#endif
                 }
                 catch (Exception e)
                 {
@@ -227,7 +226,7 @@ namespace UNI.Core.UI.MainPage
         private void NewWindow_Closed(AppWindow sender, AppWindowClosedEventArgs args)
         {
         }
-#endregion
+        #endregion
 
         /// <summary>
         /// Creates and opens a tab not tied to left side menu (i.e. Report)
@@ -280,7 +279,7 @@ namespace UNI.Core.UI.MainPage
             return SelectedTab;
         }
 
-#region ContentDialogs stack
+        #region ContentDialogs stack
         /// <summary>
         /// There can be multiple content dialogs. Only ever show the last one, keep the other hidden below, show next at pop.
         /// </summary>
@@ -358,6 +357,6 @@ namespace UNI.Core.UI.MainPage
                 ContentDialogShown = null;
             }
         }
-#endregion
+        #endregion
     }
 }

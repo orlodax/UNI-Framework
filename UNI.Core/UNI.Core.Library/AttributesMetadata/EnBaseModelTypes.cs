@@ -4,7 +4,7 @@
     /// Describes the relation between a BaseModel and its table(s) or view
     /// </summary>
     public enum EnBaseModelTypes
-    {  
+    {
         /// <summary>
         /// Normal implementation: to one basemodel corresponds one table in the db
         /// </summary>
