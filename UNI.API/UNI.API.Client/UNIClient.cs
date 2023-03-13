@@ -171,68 +171,8 @@ public class UNIClient<T> where T : BaseModel
 
     public async Task<List<T>?> Get(GetDataSetRequestDTO requestDTO)
     {
-        RestRequest request = configuration!.ApiVersion switch
-        {
-            "v1" => GetRequestV1(requestDTO),
-            "v2" => GetRequestV2(requestDTO),
-            _ => throw new NotImplementedException("Missing apiVersion in appsettings"),
-        };
-
-        try
-        {
-            var response = await ProcessRequest<ApiResponseModel<T>>(request);
-
-            if (response == null || response.Content == null || response.StatusCode != HttpStatusCode.OK)
-                return null;
-
-            ApiResponseModel<T>? apiResponseModel = JsonConvert.DeserializeObject<ApiResponseModel<T>>(response.Content.ToString());
-            if (apiResponseModel == null)
-                return null;
-
-            if (apiResponseModel.BaseModelDependencies != null && apiResponseModel.BaseModelDependencies.Any())
-                foreach (var obj in apiResponseModel.ResponseBaseModels)
-                    AssignDependencies(obj, apiResponseModel.BaseModelDependencies, new List<Type>() { typeof(T) });
-            else
-                foreach (var obj in apiResponseModel.ResponseBaseModels)
-                    InitBaseClientsDependencies(obj, new List<Type>() { typeof(T) });
-
-            InitBaseModelList(apiResponseModel.ResponseBaseModels);
-
-            return apiResponseModel.ResponseBaseModels;
-        }
-        catch
-        {
-            return null;
-        }
-    }
-
-    public RestRequest GetRequestV1(GetDataSetRequestDTO requestDTO)
-    {
-
-        RestRequest request = new() { Method = Method.Get };
-
-        if (requestDTO.Id != null)
-            request.AddParameter("id", requestDTO.Id, ParameterType.QueryString);
-        if (requestDTO.IdName != null)
-            request.AddParameter("idName", requestDTO.IdName, ParameterType.QueryString);
-        if (requestDTO.RequestedEntriesNumber != null)
-            request.AddParameter("requestedEntriesNumber", requestDTO.RequestedEntriesNumber, ParameterType.QueryString);
-        if (requestDTO.BlockToReturn != null)
-            request.AddParameter("blockToReturn", requestDTO.BlockToReturn, ParameterType.QueryString);
-
-        request.AddParameter("filterDateFormat", requestDTO.FilterDateFormat, ParameterType.QueryString);
-
-        foreach (var filterexpression in requestDTO.FilterExpressions ?? new List<FilterExpression>())
-            request.AddParameter("filterExpression", $"{filterexpression.PropertyName},{filterexpression.PropertyValue},{filterexpression.ComparisonType}", ParameterType.QueryString);
-
-        return request;
-
-    }
-    public RestRequest GetRequestV2(GetDataSetRequestDTO requestDTO)
-    {
-        RestRequest request = new() { Method = Method.Get };
-        request.AddJsonBody(requestDTO);
-        return request;
+        ApiResponseModel<T>? apiResponseModel = await GetDataSet(requestDTO);
+        return apiResponseModel?.ResponseBaseModels;
     }
 
     public async Task<ApiResponseModel<T>?> GetDataSet(GetDataSetRequestDTO requestDTO)
@@ -242,11 +182,11 @@ public class UNIClient<T> where T : BaseModel
             RestRequest request = configuration!.ApiVersion switch
             {
                 "v1" => GetRequestV1(requestDTO),
-                "v2" => GetRequestV2(requestDTO),
+                "v2" => PreparePostRequestWithBody(requestDTO),
                 _ => throw new NotImplementedException("Missing apiVersion in appsettings"),
             };
 
-            var response = await ProcessRequest<ApiResponseModel<T>>(request);
+            var response = await ProcessRequest<ApiResponseModel<T>>(request, additionalRoute: "get");
 
             if (response == null || response.Content == null || response.StatusCode != HttpStatusCode.OK)
                 return null;
@@ -283,29 +223,6 @@ public class UNIClient<T> where T : BaseModel
         {
             return null;
         }
-    }
-
-    public RestRequest GetDataSetRequestV1(GetDataSetRequestDTO requestDTO)
-    {
-        RestRequest request = new() { Method = Method.Get };
-
-        if (requestDTO.Id != null)
-            request.AddParameter("id", requestDTO.Id, ParameterType.QueryString);
-        if (requestDTO.IdName != null)
-            request.AddParameter("idName", requestDTO.IdName, ParameterType.QueryString);
-        if (requestDTO.RequestedEntriesNumber != null)
-            request.AddParameter("requestedEntriesNumber", requestDTO.RequestedEntriesNumber, ParameterType.QueryString);
-        if (requestDTO.BlockToReturn != null)
-            request.AddParameter("blockToReturn", requestDTO.BlockToReturn, ParameterType.QueryString);
-        if (requestDTO.FilterText != null)
-            request.AddParameter("filterText", requestDTO.FilterText, ParameterType.QueryString);
-
-        request.AddParameter("filterDateFormat", requestDTO.FilterDateFormat, ParameterType.QueryString);
-
-        if (requestDTO.FilterExpressions != null)
-            foreach (var filterexpression in requestDTO.FilterExpressions)
-                request.AddParameter("filterExpression", $"{filterexpression.PropertyName},{filterexpression.PropertyValue},{filterexpression.ComparisonType}", ParameterType.QueryString);
-        return request;
     }
 
     public async Task<int> CreateItems(List<T> items)
@@ -460,6 +377,31 @@ public class UNIClient<T> where T : BaseModel
         };
 
         return new RestClient(options);
+    }
+
+    private RestRequest GetRequestV1(GetDataSetRequestDTO requestDTO)
+    {
+        RestRequest request = new() { Method = Method.Get };
+
+        if (requestDTO.Id != null)
+            request.AddParameter("id", requestDTO.Id, ParameterType.QueryString);
+        if (requestDTO.IdName != null)
+            request.AddParameter("idName", requestDTO.IdName, ParameterType.QueryString);
+        if (requestDTO.RequestedEntriesNumber != null)
+            request.AddParameter("requestedEntriesNumber", requestDTO.RequestedEntriesNumber, ParameterType.QueryString);
+        if (requestDTO.BlockToReturn != null)
+            request.AddParameter("blockToReturn", requestDTO.BlockToReturn, ParameterType.QueryString);
+        if (requestDTO.FilterText != null)
+            request.AddParameter("filterText", requestDTO.FilterText, ParameterType.QueryString);
+
+        request.AddParameter("filterDateFormat", requestDTO.FilterDateFormat, ParameterType.QueryString);
+
+        // if you need/want to skip the null check, make default values or make properties not nullable!
+        if (requestDTO.FilterExpressions != null && requestDTO.FilterExpressions.Any())
+            foreach (var filterexpression in requestDTO.FilterExpressions)
+                request.AddParameter("filterExpression", $"{filterexpression.PropertyName},{filterexpression.PropertyValue},{filterexpression.ComparisonType}", ParameterType.QueryString);
+
+        return request;
     }
 
     private static async Task<List<T>?> DeserializeInterface()
