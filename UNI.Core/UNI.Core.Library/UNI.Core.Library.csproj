@@ -2,9 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    
     <PackageId>UNI.Core.Library</PackageId>
-    <Version>2.2.1</Version>
+    <Version>2.2.2</Version>
     <Authors>Dario Orlovich, Simone Andreoli</Authors>
     <Company>Teksistemi</Company>
     <Product>UNI.Core.Library</Product>
@@ -17,19 +16,21 @@
     <IncludeSymbols>true</IncludeSymbols>
     <DebugType>embedded</DebugType>
 
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <!-- <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>-->
+  </PropertyGroup>
+  
   <!-- Source link -->
-
+  <PropertyGroup>
     <RepositoryUrl>https://teksoftware@dev.azure.com/teksoftware/UNI%20Framework/_git/UNI.Framework</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-
+  </PropertyGroup>
+  
   <!-- Deterministic build -->
-
-    <!--<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>-->
+  <PropertyGroup>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 	
   <ItemGroup>

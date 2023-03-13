@@ -341,7 +341,7 @@
       <Version>2.0.1</Version>
     </PackageReference>
     <PackageReference Include="UNI.API.Client">
-      <Version>2.2.1</Version>
+      <Version>2.2.2</Version>
     </PackageReference>
     <PackageReference Include="UNI.API.Contracts">
       <Version>2.2.0</Version>
@@ -354,10 +354,6 @@
     <PRIResource Include="Strings\it-IT\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\UNI.Core.Library\UNI.Core.Library.csproj">
-      <Project>{604b3435-8692-4174-9704-ef134e960c8d}</Project>
-      <Name>UNI.Core.Library</Name>
-    </ProjectReference>
     <ProjectReference Include="..\UNI.Core.UI\UNI.Core.UI.csproj">
       <Project>{dba9d792-f6aa-428c-9bbb-77e6a85cf55c}</Project>
       <Name>UNI.Core.UI</Name>
