@@ -186,7 +186,7 @@ public class UNIClient<T> where T : BaseModel
                 _ => throw new NotImplementedException("Missing apiVersion in appsettings"),
             };
 
-            var response = await ProcessRequest<ApiResponseModel<T>>(request, additionalRoute: "get");
+            var response = await ProcessRequest<ApiResponseModel<T>>(request, additionalRoute: "/get");
 
             if (response == null || response.Content == null || response.StatusCode != HttpStatusCode.OK)
                 return null;
