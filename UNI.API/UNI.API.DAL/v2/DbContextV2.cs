@@ -426,6 +426,8 @@ public class DbContextV2<T> where T : BaseModel
     {
         int res = 0;
 
+        obj.InitAttributes();
+
         if (obj.Metadata.ClassAttributes.BaseModelType == EnBaseModelTypes.ViewOnlyBaseModel)
             res = await InsertViewOnlyObject(obj);
 
@@ -854,8 +856,6 @@ public class DbContextV2<T> where T : BaseModel
             return null;
         }
     }
-
-
 
     /// <summary>
     /// Generic method to perform DELETE WHERE ID = ... on any table

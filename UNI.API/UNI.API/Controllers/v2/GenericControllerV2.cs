@@ -25,7 +25,7 @@ public class GenericControllerV2<T> : Controller where T : BaseModel
         dbContext = new(configuration.GetConnectionString("MainDb")!);
     }
 
-    [HttpGet]
+    [HttpPost("get")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<ActionResult<ApiResponseModel<T>>> Get([FromBody] GetDataSetRequestDTO requestDTO)
     {
