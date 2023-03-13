@@ -37,7 +37,7 @@ public class IdentityController : Controller
     /// <param name="credentials"></param>
     /// <returns></returns>
     [HttpPost("token")]
-    public IActionResult GetToken([FromBody] Credentials credentials)
+    public IActionResult Authenticate([FromBody] Credentials credentials)
     {
         if (identityService.AreCredentialsValid(credentials.Username, credentials.Password, out Credentials? user) && user != null)
         {
