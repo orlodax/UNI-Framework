@@ -87,6 +87,7 @@ public class Startup
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
+        services.AddSwaggerGenNewtonsoftSupport();
 
         // Add custom config for Swagger (i.e. for versioning info)
         services.ConfigureOptions<ConfigureSwaggerOptions>();

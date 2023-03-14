@@ -244,7 +244,6 @@ public class DbContextV2<T> where T : BaseModel
 
                     enumeratedProperties.Add(pro);
 
-
                     // if the property points to another table, set it aside
                     if (!string.IsNullOrEmpty(valueInfo.WriteTable))
                     {
@@ -312,8 +311,6 @@ public class DbContextV2<T> where T : BaseModel
                     var value = pro.GetValue(obj);
                     string queryValue = ParsePropertyValue(pro.GetValue(obj), pro, queryParameters);
                     query += $"{valueInfo.SQLName} = {queryValue}";
-
-
                 }
 
                 // remove last comma and space and finish query with WHERE clause
@@ -712,9 +709,7 @@ public class DbContextV2<T> where T : BaseModel
                 query += $" WHERE id{requestDTO.IdName} = {requestDTO.Id.HasValue}";
                 firstWhereCondition = false;
                 if (!string.IsNullOrWhiteSpace(classInfo.ClassType))
-                {
                     query += $" AND classtype = '{classInfo.ClassType}'";
-                }
             }
             else
             {
@@ -732,7 +727,6 @@ public class DbContextV2<T> where T : BaseModel
             if (requestDTO.FilterExpressions.Any())
             {
                 if (!query.Contains("WHERE")) query += " WHERE ";
-
 
                 //TODO Convertire filterexpression riferite a dipendenze
                 requestDTO.FilterExpressions = ConvertFilterExpressionDependencies(requestDTO.FilterExpressions);
@@ -833,7 +827,8 @@ public class DbContextV2<T> where T : BaseModel
 
             response.ResponseBaseModels = results;
 
-            if (dependenciesAlreadyResolved) return response;
+            if (dependenciesAlreadyResolved) 
+                return response;
 
             if (!requestDTO.BackendDependencyResolve)
             {
@@ -1179,41 +1174,28 @@ public class DbContextV2<T> where T : BaseModel
                 {
                     query += " WHERE";
                     foreach (var id in entry.Value)
-                    {
                         query += $" id{entry.Key} = {id} OR";
-                    }
+
                     query = query.Remove(query.Length - 3, 3);
                 }
+            }
 
-            }
-            //
             if (!string.IsNullOrWhiteSpace(classInfo.ClassType))
-            {
                 query += $" AND classtype = '{classInfo.ClassType}'";
-            }
         }
         else if (valuesToMatch != null && valuesToMatch.Count > 0)
         {
             foreach (KeyValuePair<string, string> entry in valuesToMatch)
-            {
-                if (!String.IsNullOrWhiteSpace(entry.Value))
-
+                if (!string.IsNullOrWhiteSpace(entry.Value))
                     query += $" WHERE {entry.Key} LIKE '%{entry.Value}%' ";
 
-
-            }
-            //
             if (!string.IsNullOrWhiteSpace(classInfo.ClassType))
-            {
                 query += $" AND classtype = '{classInfo.ClassType}'";
-            }
         }
         else
         {
             if (!string.IsNullOrWhiteSpace(classInfo.ClassType))
-            {
                 query += $" WHERE classtype = '{classInfo.ClassType}'";
-            }
         }
 
         values = GetData(query);
@@ -1224,7 +1206,8 @@ public class DbContextV2<T> where T : BaseModel
     {
         if (largeTables)
             return GetObjectsListsLargeTables(results);
-        else return GetObjectsLists(results);
+        else 
+            return GetObjectsLists(results);
     }
 
     private void FillDependencies(List<T> objs, bool largeTables)
@@ -1235,11 +1218,9 @@ public class DbContextV2<T> where T : BaseModel
         Dictionary<string, IList> listOfObjects = GetDependenciesLists(objs, largeTables);
 
         //assign items
-        Parallel.ForEach(objs, obj =>
-        {
+        foreach (var obj in objs)
             if (obj is BaseModel bm)
                 AssignDependencies(bm, listOfObjects, new List<Type>() { type });
-        });
     }
 
     //TODO rinominare GetAllSubTypes perchè non li restituisce tutti
@@ -1582,25 +1563,31 @@ public class DbContextV2<T> where T : BaseModel
         Dictionary<string, Type> baseModelTypes = GetAllSubTypes(typeof(T));
 
         //prepare list
-        Parallel.ForEach(baseModelTypes ?? new Dictionary<string, Type>(), baseModelType =>
+        foreach (var baseModelType in baseModelTypes)
         {
+            try
+            {
+                if (!baseModelType.Key.StartsWith("mtm") && !baseModelType.Value.IsSubclassOf(typeof(BaseModel)))
+                    continue;
 
-            if (!baseModelType.Key.StartsWith("mtm") && !baseModelType.Value.IsSubclassOf(typeof(BaseModel)))
-                return;
+                string? keyPart = null;
+                if (baseModelType.Key.StartsWith("mtm")) //mtm case
+                    keyPart = baseModelType.Key.Split('_')[1];
 
-            string? keyPart = null;
-            if (baseModelType.Key.StartsWith("mtm")) //mtm case
-                keyPart = baseModelType.Key.Split('_')[1];
+                Type constructedClass = typeof(DbContextV2<>).MakeGenericType(baseModelType.Value);
+                object? reflectedDbContext = Activator.CreateInstance(constructedClass, new[] { connectionString });
+                MethodInfo? genericMethod = reflectedDbContext?.GetType().GetMethod(nameof(SelectObjectsNoFill), BindingFlags.NonPublic | BindingFlags.Instance);
+                object?[] parameters = { keyPart, null, null }; // the method requires a string parameter instead of a classinfo
+                var value = (IList?)genericMethod?.Invoke(reflectedDbContext, parameters); // it returns a list
 
-            Type constructedClass = typeof(DbContextV2<>).MakeGenericType(baseModelType.Value);
-            object? reflectedDbContext = Activator.CreateInstance(constructedClass, new[] { connectionString });
-            MethodInfo? genericMethod = reflectedDbContext?.GetType().GetMethod(nameof(SelectObjectsNoFill), BindingFlags.NonPublic | BindingFlags.Instance);
-            object?[] parameters = { keyPart, null, null }; // the method requires a string parameter instead of a classinfo
-            var value = (IList?)genericMethod?.Invoke(reflectedDbContext, parameters); // it returns a list
-
-            if (!listOfObjects.ContainsKey(baseModelType.Key) && value != null)
-                listOfObjects.Add(baseModelType.Key, value);
-        });
+                if (!listOfObjects.ContainsKey(baseModelType.Key) && value != null)
+                    listOfObjects.Add(baseModelType.Key, value);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.Print(ex.Message);
+            }
+        }
 
         return listOfObjects;
     }

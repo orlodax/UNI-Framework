@@ -9,7 +9,7 @@
 
   <PropertyGroup>
     <PackageId>UNI.API</PackageId>
-    <Version>2.2.1</Version>
+    <Version>2.2.3</Version>
     <Copyright>Copyright 2022</Copyright>
     <Description>Base package for UNI APIs</Description>
     <Authors>Dario Orlovich</Authors>
@@ -20,7 +20,6 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <IncludeSymbols>true</IncludeSymbols>
     <DebugType>embedded</DebugType>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
   </PropertyGroup>
 
@@ -50,6 +49,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.5.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.27.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.3" />
     <PackageReference Include="MySqlConnector" Version="2.2.5" />

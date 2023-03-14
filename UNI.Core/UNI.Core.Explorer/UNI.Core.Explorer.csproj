@@ -341,7 +341,7 @@
       <Version>2.0.1</Version>
     </PackageReference>
     <PackageReference Include="UNI.API.Client">
-      <Version>2.2.2</Version>
+      <Version>2.2.6</Version>
     </PackageReference>
     <PackageReference Include="UNI.API.Contracts">
       <Version>2.2.0</Version>

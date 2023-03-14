@@ -18,8 +18,7 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <IncludeSymbols>true</IncludeSymbols>
     <DebugType>embedded</DebugType>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    
+        
   </PropertyGroup>
 
   <!-- Source link -->

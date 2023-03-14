@@ -484,8 +484,7 @@ namespace UNI.Core.UI.Tabs
         /// <param name="e"></param>
         public virtual async void Tab_ItemUpdated(object sender, ItemUpdatedEventArgs e)
         {
-            if (SelectedItem != null)
-                SelectedItem.Updated();
+            SelectedItem?.Updated();
             await LoadData();
         }
 
