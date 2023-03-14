@@ -9,13 +9,13 @@
 
   <PropertyGroup>
     <PackageId>UNI.API</PackageId>
-    <Version>2.2.0</Version>
+    <Version>2.2.1</Version>
     <Copyright>Copyright 2022</Copyright>
     <Description>Base package for UNI APIs</Description>
     <Authors>Dario Orlovich</Authors>
     <Company>Teksistemi</Company>
     <TargetFramework>net6.0</TargetFramework>
-    <PackageReleaseNotes>bugfix</PackageReleaseNotes>
+    <PackageReleaseNotes>Passaggio da get a post per i get lisci</PackageReleaseNotes>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <IncludeSymbols>true</IncludeSymbols>
@@ -29,7 +29,7 @@
     <RepositoryUrl>https://teksoftware@dev.azure.com/teksoftware/UNI%20Framework/_git/UNI.Framework</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
-
+  
   <!-- Deterministic build -->
   <PropertyGroup>
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
