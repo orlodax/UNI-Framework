@@ -1565,28 +1565,21 @@ public class DbContextV2<T> where T : BaseModel
         //prepare list
         foreach (var baseModelType in baseModelTypes)
         {
-            try
-            {
-                if (!baseModelType.Key.StartsWith("mtm") && !baseModelType.Value.IsSubclassOf(typeof(BaseModel)))
-                    continue;
+            if (!baseModelType.Key.StartsWith("mtm") && !baseModelType.Value.IsSubclassOf(typeof(BaseModel)))
+                continue;
 
-                string? keyPart = null;
-                if (baseModelType.Key.StartsWith("mtm")) //mtm case
-                    keyPart = baseModelType.Key.Split('_')[1];
+            string? keyPart = null;
+            if (baseModelType.Key.StartsWith("mtm")) //mtm case
+                keyPart = baseModelType.Key.Split('_')[1];
 
-                Type constructedClass = typeof(DbContextV2<>).MakeGenericType(baseModelType.Value);
-                object? reflectedDbContext = Activator.CreateInstance(constructedClass, new[] { connectionString });
-                MethodInfo? genericMethod = reflectedDbContext?.GetType().GetMethod(nameof(SelectObjectsNoFill), BindingFlags.NonPublic | BindingFlags.Instance);
-                object?[] parameters = { keyPart, null, null }; // the method requires a string parameter instead of a classinfo
-                var value = (IList?)genericMethod?.Invoke(reflectedDbContext, parameters); // it returns a list
+            Type constructedClass = typeof(DbContextV2<>).MakeGenericType(baseModelType.Value);
+            object? reflectedDbContext = Activator.CreateInstance(constructedClass, new[] { connectionString });
+            MethodInfo? genericMethod = reflectedDbContext?.GetType().GetMethod(nameof(SelectObjectsNoFill), BindingFlags.NonPublic | BindingFlags.Instance);
+            object?[] parameters = { keyPart, null, null }; // the method requires a string parameter instead of a classinfo
+            var value = (IList?)genericMethod?.Invoke(reflectedDbContext, parameters); // it returns a list
 
-                if (!listOfObjects.ContainsKey(baseModelType.Key) && value != null)
-                    listOfObjects.Add(baseModelType.Key, value);
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.Print(ex.Message);
-            }
+            if (!listOfObjects.ContainsKey(baseModelType.Key) && value != null)
+                listOfObjects.Add(baseModelType.Key, value);
         }
 
         return listOfObjects;
