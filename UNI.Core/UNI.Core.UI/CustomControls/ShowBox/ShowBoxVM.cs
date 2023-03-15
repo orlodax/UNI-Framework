@@ -274,7 +274,7 @@ namespace UNI.Core.UI.CustomControls.ShowBox
             var request = new GetDataSetRequestDTO()
             {
                 RequestedEntriesNumber = pageSize,
-                FilterExpressions = filterExpressions,
+                FilterExpressions = filterExpressions ?? new List<FilterExpression>(),
                 BlockToReturn = SelectedDataBlockNumber,
                 FilterText = SearchBoxText
             };

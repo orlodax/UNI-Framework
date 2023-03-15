@@ -89,6 +89,8 @@ namespace UNI.Core.UI.CustomControls.GridBox
             IsLoading = true;
             if (UniDataSet != null)
             {
+                filterExpressions = filterExpressions ?? new List<FilterExpression>();
+
                 notFilteredItemsSource?.Clear();
                 if (ParentItem != null)
                 {

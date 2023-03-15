@@ -423,7 +423,7 @@ namespace UNI.Core.UI.Tabs
                 BlockToReturn = SelectedDataBlockNumber,
                 RequestedEntriesNumber = SelectedItemsQuantity,
                 FilterText = SearchText,
-                FilterExpressions = filterExpressions,
+                FilterExpressions = filterExpressions ?? new List<FilterExpression>(),
                 FilterDateFormat = FilterDateFormat
             };
 

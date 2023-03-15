@@ -19,8 +19,10 @@ namespace UNI.Core.Explorer.ViewModels.GridBoxDataSet
 
         protected override void PopulateItemsSource(List<FilterExpression> filterExpressions = null)
         {
-            filterExpressions = new List<FilterExpression>();
-            filterExpressions.Add(new FilterExpression() { PropertyName = "Quantity", PropertyValue = "1" });
+            filterExpressions = new List<FilterExpression>
+            {
+                new FilterExpression() { PropertyName = "Quantity", PropertyValue = "1" }
+            };
             base.PopulateItemsSource(filterExpressions);
         }
 
