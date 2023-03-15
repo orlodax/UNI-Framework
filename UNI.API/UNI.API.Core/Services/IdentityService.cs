@@ -21,7 +21,7 @@ public class IdentityService
         this.configuration = configuration;
     }
 
-    public UNIToken GenerateToken(Credentials user, uint passwordLifetime)
+    public async Task<UNIToken> GenerateToken(Credentials user, uint passwordLifetime)
     {
         List<Claim> claims = new()
         {
@@ -31,7 +31,7 @@ public class IdentityService
             new Claim(JwtRegisteredClaimNames.Exp, new DateTimeOffset(DateTime.Now.AddHours(12)).ToUnixTimeSeconds().ToString()),
         };
 
-        foreach (Role r in identityRepo.GetUserRoles(user.ID))
+        foreach (Role r in await identityRepo.GetUserRoles(user.ID))
             if (!string.IsNullOrWhiteSpace(r.Name))
                 claims.Add(new Claim(ClaimTypes.Role, r.Name));
 
@@ -53,15 +53,22 @@ public class IdentityService
         };
     }
 
-    public bool AreCredentialsValid(string username, string password, out Credentials? user)
+    /// <summary>
+    /// Returns a Credentials object if authentication succeeds, otherwise null
+    /// </summary>
+    /// <param name="username"></param>
+    /// <param name="password"></param>
+    /// <param name="user"></param>
+    /// <returns></returns>
+    public async Task<Credentials?> AreCredentialsValid(string username, string password)
     {
-        user = identityRepo.GetUser(username);
+        Credentials? user = await identityRepo.GetUser(username);
 
         if (user != null)
             if (PasswordHelper.VerifyPassword(password, user.Password))
-                return true;
+                return user;
 
-        return false;
+        return null;
     }
 
     public void ChangePassword(string username, string newPassword)

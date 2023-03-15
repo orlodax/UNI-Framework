@@ -1,13 +1,49 @@
-﻿using System.Data.Common;
+﻿using MySqlConnector;
+using System.Data.Common;
 using System.Linq.Expressions;
 using System.Reflection;
 using UNI.Core.Library;
 
 namespace UNI.API.DAL.v2;
 
-public static class ListHelperV2<T>
+public class ListHelperV2<T> where T : BaseModel
 {
-    internal static List<T> CreateList(DbDataReader reader)
+    private readonly string connectionString = string.Empty;
+    public ListHelperV2(string connectionString)
+    {
+        this.connectionString = connectionString;
+    }
+    public object GetGenericInstance(string connectionString, Type genericArg)
+    {
+        return Activator.CreateInstance(typeof(ListHelperV2<>).MakeGenericType(genericArg), new[] { connectionString });
+    }
+
+    public async Task<List<T>> GetData(string query)
+    {
+        List<T> list = new();
+
+        using MySqlConnection conn = new(connectionString);
+        using MySqlCommand cmd = new(query, conn);
+
+        try
+        {
+            conn.Open();
+
+            using (var reader = await cmd.ExecuteReaderAsync())
+                list = new ListHelperV2<T>(connectionString).CreateList(reader);
+
+            conn.Close();
+        }
+        catch (MySqlException e)
+        {
+            DbContextV2<T>.OnMySqlError(new DbContextV2<T>.MySqlErrorEventArgs(e));
+            conn.Close();
+        }
+        
+        return list;
+    }
+
+    private List<T> CreateList(DbDataReader reader)
     {
         Func<DbDataReader, T> readRow = GetReader(reader);
 
@@ -19,22 +55,22 @@ public static class ListHelperV2<T>
         return results;
     }
 
-    internal static List<T> SortList(List<T> listToSort, string propertyName, bool ascending)
-    {
-        // verify that the propertyName is valid
-        var propertyNames = typeof(T).GetProperties().ToList().Select(p => p.Name).ToList();
-        if (!propertyNames.Contains(propertyName))
-            throw new ArgumentOutOfRangeException("There is no property named: " + propertyName);
+    //private static List<T> SortList(List<T> listToSort, string propertyName, bool ascending)
+    //{
+    //    // verify that the propertyName is valid
+    //    var propertyNames = typeof(T).GetProperties().ToList().Select(p => p.Name).ToList();
+    //    if (!propertyNames.Contains(propertyName))
+    //        throw new ArgumentOutOfRangeException("There is no property named: " + propertyName);
 
-        var paramExpression = Expression.Parameter(typeof(T), "item");
-        var propertyExpression = Expression.Convert(Expression.Property(paramExpression, propertyName), typeof(object));
-        var lambdaExpression = Expression.Lambda<Func<T, object>>(propertyExpression, paramExpression);
+    //    var paramExpression = Expression.Parameter(typeof(T), "item");
+    //    var propertyExpression = Expression.Convert(Expression.Property(paramExpression, propertyName), typeof(object));
+    //    var lambdaExpression = Expression.Lambda<Func<T, object>>(propertyExpression, paramExpression);
 
-        if (ascending)
-            return listToSort.AsQueryable().OrderBy(lambdaExpression).ToList();
-        else
-            return listToSort.AsQueryable().OrderByDescending(lambdaExpression).ToList();
-    }
+    //    if (ascending)
+    //        return listToSort.AsQueryable().OrderBy(lambdaExpression).ToList();
+    //    else
+    //        return listToSort.AsQueryable().OrderByDescending(lambdaExpression).ToList();
+    //}
 
     private static Func<DbDataReader, T> GetReader(DbDataReader reader)
     {
@@ -115,50 +151,3 @@ public static class ListHelperV2<T>
         return SQLNames;
     }
 }
-
-
-
-
-//DOVESSE SERVI
-
-//     foreach (var property in properties)
-//            {
-//                string SQLName = SQLNames[property.Name];
-//                if (readerColumns.Contains(SQLName))
-//                {
-//                    MemberExpression setProperty = Expression.Property(instanceParam, property);
-//    Expression GetValueExpr;
-
-//    IndexExpression readValue = Expression.MakeIndex(readerParam, indexerProperty, new[] { Expression.Constant(SQLName) });
-//    ConstantExpression nullValue = Expression.Constant(DBNull.Value, typeof(System.DBNull));
-//    BinaryExpression valueNotNull = Expression.NotEqual(readValue, nullValue);
-
-//    MethodInfo GetValueMethod = typeof(David.Utils.Tools).GetMethod("GetValue");
-//    MethodInfo genericGetValue = GetValueMethod.MakeGenericMethod(property.PropertyType);
-//    GetValueExpr = Expression.Call(null, genericGetValue, new[] { readValue
-//});
-//                    statements.Add(GetValueExpr);
-
-//                    ConditionalExpression assignProperty = Expression.IfThen(valueNotNull, Expression.Assign(setProperty, GetValueExpr));
-//statements.Add(assignProperty);
-//                }
-//            }
-//            var returnStatement = instanceParam;
-//statements.Add(returnStatement);
-
-//    namespace David.Utils
-//    {
-//        public static class Tools
-//        {
-//            static public T GetValue<T>(object obj)
-//            {
-//                if (obj.GetType() != typeof(DBNull))
-//                {
-//                    var t = typeof(T);
-//                    return (T)Convert.ChangeType(obj, Nullable.GetUnderlyingType(t) ?? t);
-//                }
-//                else
-//                    return default(T);
-//            }
-//        }
-//    }

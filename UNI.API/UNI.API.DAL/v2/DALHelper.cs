@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System.Collections;
+using System.Collections.Generic;
+using System.Reflection;
 using UNI.Core.Library;
 
 namespace UNI.API.DAL.v2;
@@ -27,5 +29,61 @@ public class DALHelper
                     typeListBaseModel.Add(bm);
 
         return typeListBaseModel;
+    }
+
+    public static string? GetSelectObjectsNoFillQuery(Type baseModelType,
+                                                      string? tableAttritbute = null,
+                                                      Dictionary<string, List<int>>? idsToMatch = null,
+                                                      Dictionary<string, string>? valuesToMatch = null)
+    {
+        var classInfo = (ClassInfo?)baseModelType.GetCustomAttribute(typeof(ClassInfo));
+        if (classInfo == null)
+            return null;
+
+        tableAttritbute ??= classInfo.SQLName;
+
+        string query = "SELECT * FROM " + tableAttritbute;
+
+        if (idsToMatch != null && idsToMatch.Count > 0)
+        {
+            foreach (KeyValuePair<string, List<int>> entry in idsToMatch)
+            {
+                if (entry.Value.Count > 0)
+                {
+                    query += " WHERE";
+                    foreach (var id in entry.Value)
+                        query += $" id{entry.Key} = {id} OR";
+
+                    query = query.Remove(query.Length - 3, 3);
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(classInfo.ClassType))
+                query += $" AND classtype = '{classInfo.ClassType}'";
+        }
+        else if (valuesToMatch != null && valuesToMatch.Count > 0)
+        {
+            foreach (KeyValuePair<string, string> entry in valuesToMatch)
+                if (!string.IsNullOrWhiteSpace(entry.Value))
+                    query += $" WHERE {entry.Key} LIKE '%{entry.Value}%' ";
+
+            if (!string.IsNullOrWhiteSpace(classInfo.ClassType))
+                query += $" AND classtype = '{classInfo.ClassType}'";
+        }
+        else
+        {
+            if (!string.IsNullOrWhiteSpace(classInfo.ClassType))
+                query += $" WHERE classtype = '{classInfo.ClassType}'";
+        }
+
+        return query;
+    }
+
+    internal static async Task<object> InvokeAsyncList(object reflectedClass, MethodInfo reflectedMethod, object[] args)
+    {
+        var task = (Task)reflectedMethod.Invoke(reflectedClass, args);
+        await task.ConfigureAwait(false);
+        var resultProperty = task.GetType().GetProperty("Result");
+        return resultProperty.GetValue(task);
     }
 }

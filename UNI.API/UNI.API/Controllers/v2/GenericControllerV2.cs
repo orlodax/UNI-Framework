@@ -32,7 +32,7 @@ public class GenericControllerV2<T> : Controller where T : BaseModel
         logger.Log(LogLevel.Information, "GenericControllerV2: Get/v2 was hit");
         try
         {
-            var response = dbContext.Get(requestDTO);
+            var response = await dbContext.Get(requestDTO);
             if (response == null)
                 return StatusCode(500);
             return response;
@@ -48,7 +48,7 @@ public class GenericControllerV2<T> : Controller where T : BaseModel
     public async Task<ActionResult<List<T>>> GetAllSkipList()
     {
         logger.Log(LogLevel.Information, "GenericControllerV2: GetAllSkipList was hit");
-        return dbContext.SelectObjects();
+        return await dbContext.SelectObjects();
     }
 
     [HttpGet("{id}")]
@@ -56,7 +56,7 @@ public class GenericControllerV2<T> : Controller where T : BaseModel
     public async Task<ActionResult<List<T>>> GetById(int id)
     {
         logger.Log(LogLevel.Information, "GenericControllerV2: GetById was hit");
-        return dbContext.SelectObjects(id);
+        return await dbContext.SelectObjects(id);
     }
 
     [HttpGet("GetWhere")]
@@ -64,7 +64,7 @@ public class GenericControllerV2<T> : Controller where T : BaseModel
     public async Task<ActionResult<List<T>>> GetWhere([FromQuery] int id, [FromQuery] string idName)
     {
         logger.Log(LogLevel.Information, "GenericControllerV2: GetWhere was hit");
-        return dbContext.SelectObjects(id, idName: idName);
+        return await dbContext.SelectObjects(id, idName: idName);
     }
 
     [HttpPost]
@@ -75,7 +75,7 @@ public class GenericControllerV2<T> : Controller where T : BaseModel
         int id = await dbContext.InsertObject(obj);
         if (id > 0)
         {
-            List<T> items = dbContext.SelectObjects(id);
+            List<T> items = await dbContext.SelectObjects(id);
             if (items.Any())
                 return items.First();
             else
@@ -114,7 +114,7 @@ public class GenericControllerV2<T> : Controller where T : BaseModel
         int id = await dbContext.InsertRapidObject();
         if (id > 0)
         {
-            List<T> items = dbContext.SelectObjects(id);
+            List<T> items = await dbContext.SelectObjects(id);
             if (items.Any())
                 return items.First();
             else

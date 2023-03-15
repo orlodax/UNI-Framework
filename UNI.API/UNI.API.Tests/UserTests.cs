@@ -9,14 +9,14 @@ namespace UNI.API.Tests;
 public class UserTests
 {
     private readonly IConfiguration configuration;
-    private readonly DbContextV2<User> dbContextUser;
+    //private readonly DbContextV2<User> dbContextUser;
     private readonly DbContextV2<Role> dbContextRole;
     private readonly DbContextV2<Credentials> dbContextCredentials;
 
     public UserTests()
     {
         configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-        dbContextUser = new(configuration.GetConnectionString("IdentityDb")!);
+        //dbContextUser = new(configuration.GetConnectionString("IdentityDb")!);
         dbContextRole = new(configuration.GetConnectionString("IdentityDb")!);
         dbContextCredentials = new(configuration.GetConnectionString("IdentityDb")!);
     }
@@ -35,6 +35,7 @@ public class UserTests
                 Password = hashedPassword
             };
             int res = await dbContextCredentials.InsertObject(newUser);
+            Assert.IsFalse(res == 0);
         }
     }
 

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System.Net;
 using UNI.API.Contracts.Models;
 using UNI.API.Contracts.RequestsDTO;
 using UNI.API.Core.Services;
@@ -37,20 +38,19 @@ public class IdentityController : Controller
     /// <param name="credentials"></param>
     /// <returns></returns>
     [HttpPost("token")]
-    public IActionResult Authenticate([FromBody] Credentials credentials)
+    public async Task<IActionResult> Authenticate([FromBody] Credentials credentials)
     {
-        if (identityService.AreCredentialsValid(credentials.Username, credentials.Password, out Credentials? user) && user != null)
-        {
-            if (user.LastModify < DateTime.Now.AddDays(-passwordLifetime))
-                return Unauthorized("Password expired. Change password and authenticate again.");
+        Credentials? user = await identityService.AreCredentialsValid(credentials.Username, credentials.Password);
+        if (user == null)
+            return Unauthorized("Wrong username or password");
 
-            UNIToken token = identityService.GenerateToken(user, passwordLifetime);
-            logger.Log(LogLevel.Information, "{controllerName}: User '{userName}' requested a token.", nameof(IdentityController), credentials.Username);
+        if (user.LastModify < DateTime.Now.AddDays(-passwordLifetime))
+            return Unauthorized("Password expired. Change password and authenticate again.");
 
-            return new ObjectResult(token);
-        }
+        UNIToken token = await identityService.GenerateToken(user, passwordLifetime);
+        logger.Log(LogLevel.Information, "{controllerName}: User '{userName}' requested a token.", nameof(IdentityController), credentials.Username);
 
-        return Unauthorized("Wrong username or password");
+        return new ObjectResult(token);
     }
 
     /// <summary>
@@ -60,12 +60,13 @@ public class IdentityController : Controller
     /// <returns></returns>
     [HttpPost("changePassword")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public IActionResult ChangePassword([FromBody] ChangePasswordRequestDTO requestDTO)
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequestDTO requestDTO)
     {
         if (HttpContext.User.Identities.First().Name != requestDTO.Username)
             return Unauthorized("Wrong username");
-
-        if (!identityService.AreCredentialsValid(requestDTO.Username, requestDTO.OldPassword, out Credentials? user) || user == null)
+        
+        Credentials? user = await identityService.AreCredentialsValid(requestDTO.Username, requestDTO.OldPassword);
+        if (user == null)
             return Unauthorized("Wrong username or password");
 
         identityService.ChangePassword(requestDTO.Username, requestDTO.NewPassword);
