@@ -52,9 +52,8 @@ public class DbContextV2<T> where T : BaseModel
             dataset.Load(reader);
             conn.Close();
         }
-        catch (MySqlException e)
+        catch (MySqlException)
         {
-            OnMySqlError(new MySqlErrorEventArgs(e));
             conn.Close();
         }
 
@@ -83,7 +82,6 @@ public class DbContextV2<T> where T : BaseModel
         catch (MySqlException e)
         {
             logger.Log(LogLevel.Error, "{controllerName}: Error message: '{message}'. Inner exception: '{innerException}'", nameof(DbContextV2<T>), e.Message, e.InnerException?.Message);
-            OnMySqlError(new MySqlErrorEventArgs(e));
         }
 
         conn.Close();
@@ -118,32 +116,12 @@ public class DbContextV2<T> where T : BaseModel
         catch (MySqlException e)
         {
             logger.Log(LogLevel.Error, "{controllerName}: Error message: '{message}'. Inner exception: '{innerException}'", nameof(DbContextV2<T>), e.Message, e.InnerException?.Message);
-            OnMySqlError(new MySqlErrorEventArgs(e));
             lastId = 0;
         }
 
         conn.Close();
 
         return lastId;
-    }
-    #endregion
-
-    #region Error events
-
-    internal static event EventHandler<MySqlErrorEventArgs>? MySqlError;
-    internal static void OnMySqlError(MySqlErrorEventArgs e)
-    {
-        MySqlError?.Invoke(null, e);
-    }
-
-    internal class MySqlErrorEventArgs : EventArgs
-    {
-        public MySqlErrorEventArgs(Exception _exception)
-        {
-            Exception = _exception;
-        }
-
-        public Exception Exception { get; }
     }
     #endregion
 
@@ -737,7 +715,21 @@ public class DbContextV2<T> where T : BaseModel
             {
                 var resultCopyWithDependencies = new List<T>(results);
                 await FillDependencies(resultCopyWithDependencies, requestDTO.LargeTablesLogic);
-                results = FilterListCommand(requestDTO.FilterText, resultCopyWithDependencies.Cast<BaseModel>().ToList(), results.Cast<BaseModel>().ToList());
+
+                string[] searchRequests = new string[] { requestDTO.FilterText };
+                if (requestDTO.FilterText.Contains(','))
+                    searchRequests = requestDTO.FilterText.Split(',');
+
+                List<T>? items = new();
+                foreach (string text in searchRequests)
+                    results = FilterListParameter(text, resultCopyWithDependencies, results);
+
+                List<T> itemsFilteredWithDependencies = new();
+                foreach (T item in results)
+                    itemsFilteredWithDependencies.Add(resultCopyWithDependencies.Find(i => i.ID == item.ID));
+
+                results = itemsFilteredWithDependencies;
+
                 dependenciesAlreadyResolved = true;
             }
 
@@ -816,7 +808,7 @@ public class DbContextV2<T> where T : BaseModel
     /// Generic method to perform DELETE WHERE ID = ... on any table
     /// </summary>
     /// <param name="obj" the object to be deleted></param>
-    public async void DeleteObject(int id)
+    public async Task DeleteObject(int id)
     {
         var tableAttritbute = typeof(T).GetCustomAttribute(typeof(ClassInfo)) as ClassInfo;
 
@@ -1366,14 +1358,11 @@ public class DbContextV2<T> where T : BaseModel
 
             enumeratedTypes.Add(propertyType);
 
-
             if (!iterationBaseModelsIndexes.TryGetValue(keyname, out List<int> indexList))
             {
                 indexList = new List<int>();
                 iterationBaseModelsIndexes.Add(keyname, indexList);
             }
-
-
 
             foreach (var obj in objs)
             {
@@ -1388,7 +1377,6 @@ public class DbContextV2<T> where T : BaseModel
                 }
             }
         }
-
 
         //unificazione liste di indici iterazione corrente e precedente iterazione con calcolo indici da leggere
         foreach (KeyValuePair<string, List<int>> listOfIndex in iterationBaseModelsIndexes)
@@ -1413,7 +1401,6 @@ public class DbContextV2<T> where T : BaseModel
                 toReadBaseModelsIndexes.Add(listOfIndex.Key, listOfIndex.Value);
             }
         }
-
 
         foreach (var baseModelType in baseModelsTypes)
         {
@@ -1460,16 +1447,13 @@ public class DbContextV2<T> where T : BaseModel
         }
 
         foreach (KeyValuePair<string, IList> list in iterationListOfObjects)
-        {
             GetObjectsListsLargeTables(list.Value, listOfObjects, baseModelsIndexes, baseModelsTypes, enumeratedTypes);
-        }
-
 
         return listOfObjects;
     }
+
     private async Task<Dictionary<string, IList>> GetObjectsLists(IList objs, Dictionary<string, IList>? listOfObjects = null, Dictionary<string, List<int>>? baseModelsIndexes = null, Dictionary<string, Type>? baseModelsTypes = null, List<Type>? enumeratedTypes = null)
     {
-
         //get the type of the objects
         Type type = typeof(T);
 
@@ -1499,10 +1483,6 @@ public class DbContextV2<T> where T : BaseModel
 
             var genericListHelper = listHelper.GetGenericInstance(connectionString, baseModelType.Value);
             var getDataMethod = genericListHelper.GetType().GetMethod(nameof(ListHelperV2<T>.GetData));
-            //var task = (Task)getDataMethod.Invoke(genericListHelper, new[] { query });
-            //await task.ConfigureAwait(false);
-            //var resultProperty = task.GetType().GetProperty("Result");
-            //var value = (IList)resultProperty.GetValue(task);
 
             var value = (IList)(await DALHelper.InvokeAsyncList(genericListHelper, getDataMethod, new[] { query }));
 
@@ -1513,36 +1493,17 @@ public class DbContextV2<T> where T : BaseModel
         return listOfObjects;
     }
 
-    private List<T> FilterListCommand(string searchText, List<BaseModel> itemsWithDependencies, List<BaseModel> itemsToFilter)
+    // The second <T> is required because it is changed when called at runtime by reflection
+#pragma warning disable CS0693 // Type parameter has the same name as the type parameter from outer type
+    private List<T> FilterListParameter<T>(string searchText, List<T> resultCopyWithDependencies, List<T> results) where T : BaseModel
+#pragma warning restore CS0693 // Type parameter has the same name as the type parameter from outer type
     {
-        string[] searchRequests = new string[] { searchText };
-        if (searchText.Contains(','))
-            searchRequests = searchText.Split(',');
-
-        List<T>? items = new();
-        foreach (string text in searchRequests)
-        {
-            items = FilterListParameter<T>(text, itemsWithDependencies, itemsToFilter);
-            if (items != null)
-                itemsToFilter = items.Cast<BaseModel>().ToList();
-        }
-
-        List<T> itemsFilteredWithDependencies = new();
-        foreach (var item in items)
-            itemsFilteredWithDependencies.Add(itemsWithDependencies.Find(i => i.ID == item.ID) as T);
-        return itemsFilteredWithDependencies;
-    }
-
-    public int iterations = 0;
-    public List<T> FilterListParameter<T>(string searchText, List<BaseModel> itemsWithDependencies, List<BaseModel> itemsToFilter)
-    {
-        iterations++;
-        List<BaseModel> filteredItemsSource = new();
+        List<T> filteredItemsSource = new();
 
         if (string.IsNullOrWhiteSpace(searchText))
-            return filteredItemsSource.Cast<T>().ToList();
+            return filteredItemsSource;
 
-        foreach (var item in itemsToFilter)
+        foreach (var item in results)
         {
             foreach (var property in typeof(T).GetProperties())
             {
@@ -1571,25 +1532,24 @@ public class DbContextV2<T> where T : BaseModel
                 }
                 else if (property.PropertyType.IsGenericType && property.PropertyType.FullName != null && !property.PropertyType.FullName.Contains("UniDataSet"))
                 {
-                    BaseModel? itemWithDependencies = itemsWithDependencies.Find(i => i.ID == item.ID);
+                    BaseModel? itemWithDependencies = resultCopyWithDependencies.Find(i => i.ID == item.ID);
                     if (itemWithDependencies == null)
                         continue;
 
                     List<BaseModel>? dependencyToFilter = (property.GetValue(itemWithDependencies) as IList)?.Cast<BaseModel>().ToList();
                     if (dependencyToFilter == null || dependencyToFilter.Count == 0)
                         continue;
-                    object[] parameters = { searchText, dependencyToFilter, dependencyToFilter };
-                    var mets = this.GetType().GetMethods();
-                    MethodInfo method = this.GetType().GetMethod(nameof(this.FilterListParameter));
-                    MethodInfo generic = method.MakeGenericMethod(property.PropertyType.GenericTypeArguments[0]);
 
+                    object[] parameters = { searchText, dependencyToFilter, dependencyToFilter };
+                    MethodInfo method = GetType().GetMethod(nameof(FilterListParameter), BindingFlags.NonPublic | BindingFlags.Instance);
+                    MethodInfo generic = method.MakeGenericMethod(property.PropertyType.GenericTypeArguments[0]);
                     IList? items = generic?.Invoke(this, parameters) as IList;
                     if (items?.Count > 0 && !filteredItemsSource.Contains(item))
                         filteredItemsSource.Add(item);
                 }
                 else if (property.PropertyType.IsSubclassOf(typeof(BaseModel)))
                 {
-                    BaseModel? itemWithDependencies = itemsWithDependencies.Find(i => i.ID == item.ID);
+                    BaseModel? itemWithDependencies = resultCopyWithDependencies.Find(i => i.ID == item.ID);
                     if (!SearchValueInObject(searchText, property.GetValue(itemWithDependencies)))
                         continue;
 
@@ -1602,7 +1562,7 @@ public class DbContextV2<T> where T : BaseModel
             }
         }
 
-        return filteredItemsSource.Cast<T>().ToList();
+        return filteredItemsSource;
     }
 
     private void ResolveSqlFields(List<T> items)
@@ -1660,7 +1620,6 @@ public class DbContextV2<T> where T : BaseModel
             }
         }
     }
-
 
     private static bool SearchValueInObject(string searchText, object? item)
     {
@@ -1805,7 +1764,7 @@ public class DbContextV2<T> where T : BaseModel
         }
 
         int i = 0;
-        foreach (var subFilterExpression in filterExpression.FilterExpressions ?? new List<FilterExpression>())
+        foreach (var subFilterExpression in filterExpression.FilterExpressions)
         {
             i++;
             query += FilterExpressionToSql(subFilterExpression, properties, firstWhereCondition, filterDateFormat, filterExpression.ComparisonType);

@@ -25,7 +25,7 @@ public class UserTests
     [DataRow("testUsername", "testPassword")]
     public async Task CreateUser(string username, string password)
     {
-        List<Credentials> existingUser = dbContextCredentials.GetData($"SELECT * FROM credentials WHERE username = '{username}'");
+        List<Credentials> existingUser = await dbContextCredentials.GetData($"SELECT * FROM credentials WHERE username = '{username}'");
         if (!existingUser.Any())
         {
             string hashedPassword = PasswordHelper.CreatePasswordHash(password);
@@ -60,8 +60,8 @@ public class UserTests
     [DataRow("testUsername", "DefaultUser")]
     public async Task AssignRoleToUser(string username, string roleName)
     {
-        List<Credentials> existingUser = dbContextCredentials.GetData($"SELECT * FROM credentials WHERE username = '{username}'");
-        List<Role> existingRole = dbContextRole.GetData($"SELECT * FROM roles WHERE name = '{roleName}'");
+        List<Credentials> existingUser = await dbContextCredentials.GetData($"SELECT * FROM credentials WHERE username = '{username}'");
+        List<Role> existingRole = await dbContextRole.GetData($"SELECT * FROM roles WHERE name = '{roleName}'");
         if (existingUser.Any() && existingRole.Any())
             await dbContextRole.SetData($"INSERT INTO userroles (userid, roleid) VALUES({existingUser.First().ID}, {existingRole.First().ID})");
     }
@@ -70,7 +70,7 @@ public class UserTests
     [DataRow("testUsername", "testRole")]
     public async Task RevokeRoleFromUser(string username, string roleName)
     {
-        List<Credentials> existingUser = dbContextCredentials.GetData($"SELECT * FROM credentials WHERE username = '{username}'");
+        List<Credentials> existingUser = await dbContextCredentials.GetData($"SELECT * FROM credentials WHERE username = '{username}'");
         if (existingUser.Any())
             await dbContextCredentials.SetData($"DELETE FROM userroles WHERE userid = {existingUser.First().ID} AND roleid IN (SELECT id FROM roles WHERE name = '{roleName}')");
     }

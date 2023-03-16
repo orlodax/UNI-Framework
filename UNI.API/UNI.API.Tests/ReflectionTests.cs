@@ -1,11 +1,27 @@
 ﻿using System.Diagnostics;
 using System.Reflection;
+using UNI.API.DAL.v2;
+using UNI.Core.Library.GenericModels;
+using UNI.Core.Library;
 
 namespace UNI.API.Tests
 {
     [TestClass]
     public class ReflectionTests
     {
+        [TestMethod]
+        public void MakeGenericMethodOverwritesTheGenericArgumentOfItsContainingClass()
+        {
+            var listHelper = new ListHelperV2<Employee>("connectionString");
+            var genericListHelper = listHelper.GetGenericInstance("connectionString", typeof(Document));
+            var getDataMethod = genericListHelper.GetType().GetMethod(nameof(ListHelperV2<Employee>.GetData));
+
+            //var method = listHelper.GetType().GetMethod(nameof(ListHelperV2<BaseModel>.TestMethod));
+            //var genericMethod = method?.MakeGenericMethod(typeof(Document));
+            //var items = genericMethod?.Invoke(listHelper, null);
+        }
+
+
         [TestMethod]
         public void ShouldWorkInvokeMethodWithReflection()
         {

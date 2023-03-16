@@ -139,7 +139,7 @@ public class GenericControllerV2<T> : Controller where T : BaseModel
     public async Task<ActionResult> Delete([FromBody] int id)
     {
         logger.Log(LogLevel.Information, "GenericControllerV2: Delete was hit");
-        dbContext.DeleteObject(id);
+        await dbContext.DeleteObject(id);
         return Ok();
     }
 }

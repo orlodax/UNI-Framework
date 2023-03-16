@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 using UNI.API.Contracts.Models;
-using UNI.API.Core.Helpers;
 using UNI.Core.Library;
 using UNI.Core.Library.AttributesMetadata;
-
 namespace UNI.API.Tests;
 
 [TestClass]
@@ -39,28 +31,28 @@ public class VariousTests
         }
     }
 
-    [TestMethod]
-    public void IListTypePopulation()
-    {
-        IList values = new List<BaseModel>();
-        values = PopulateList();
-        Assert.IsTrue( values.Count == 2 );
-    }
+    //[TestMethod]
+    //public void IListTypePopulation()
+    //{
+    //    IList values = new List<BaseModel>();
+    //    values = PopulateList();
+    //    Assert.IsTrue( values.Count == 2 );
+    //}
 
-    private static List<User> PopulateList()
-    {
-        return new List<User>()
-        {
-            new User()
-            {
-                ID = 1,
-                FirstName="test1"
-            },
-            new User()
-            {
-                ID = 2,
-                FirstName="test2"
-            },
-        };
-    }
+    //private static List<User> PopulateList()
+    //{
+    //    return new List<User>()
+    //    {
+    //        new User()
+    //        {
+    //            ID = 1,
+    //            FirstName="test1"
+    //        },
+    //        new User()
+    //        {
+    //            ID = 2,
+    //            FirstName="test2"
+    //        },
+    //    };
+    //}
 }

@@ -34,9 +34,8 @@ public class ListHelperV2<T> where T : BaseModel
 
             conn.Close();
         }
-        catch (MySqlException e)
+        catch (MySqlException)
         {
-            DbContextV2<T>.OnMySqlError(new DbContextV2<T>.MySqlErrorEventArgs(e));
             conn.Close();
         }
         

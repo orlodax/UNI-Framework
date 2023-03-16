@@ -31,7 +31,7 @@ public class DALHelper
         return typeListBaseModel;
     }
 
-    public static string? GetSelectObjectsNoFillQuery(Type baseModelType,
+    internal static string? GetSelectObjectsNoFillQuery(Type baseModelType,
                                                       string? tableAttritbute = null,
                                                       Dictionary<string, List<int>>? idsToMatch = null,
                                                       Dictionary<string, string>? valuesToMatch = null)
