@@ -14,6 +14,7 @@ namespace UNI.Core.UI.Menu.Settings
     {
         public string UserDataHeader { get; set; }
         public string UserLabel { get; set; }
+        public string Username { get; set; }
         public string ChangePasswordLabel { get; set; }
         public bool IsUserAdmin { get; set; }
         public string AdminToolsHeader { get; set; }
@@ -23,6 +24,7 @@ namespace UNI.Core.UI.Menu.Settings
         {
             ViewType = typeof(SettingsPage);
 
+            Username = UNIUser.Username;
             IsUserAdmin = JWTHelper.IsCurrentUserInRole("Admin");
             UserManagerVM = new UserManagerVM();
 
