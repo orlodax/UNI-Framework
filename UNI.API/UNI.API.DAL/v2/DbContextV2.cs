@@ -202,13 +202,13 @@ public class DbContextV2<T> where T : BaseModel
 
                         // do list select of actual elements in list
                         List<BaseModel>? actualList = new();
-                        Type typeArg = pro.PropertyType.GenericTypeArguments[0];
-                        Type constructedClass = typeof(DbContextV2<>).MakeGenericType(typeArg);
-                        object? reflectedDbContext = Activator.CreateInstance(constructedClass, new[] { connectionString });
-                        MethodInfo? genericMethod = reflectedDbContext?.GetType().GetMethod(nameof(SelectObjects));
+
+                        MethodInfo method = GetType().GetMethod(nameof(SelectObjects));
+                        MethodInfo reflectedSelectObjects = method.MakeGenericMethod(pro.PropertyType.GenericTypeArguments[0]);
+
                         object[] parameters = { obj.ID, valueInfo.ManyToManySQLName, "Mtm" };
-                        if (genericMethod != null)
-                            actualList = ((IList?)genericMethod.Invoke(reflectedDbContext, parameters))?.Cast<BaseModel>().ToList();
+                        if (reflectedSelectObjects != null)
+                            actualList = ((IList?)reflectedSelectObjects.Invoke(this, parameters))?.Cast<BaseModel>().ToList();
 
                         var property = (IList?)pro.GetValue(obj);
                         if (property == null || actualList == null)
@@ -228,12 +228,12 @@ public class DbContextV2<T> where T : BaseModel
                             {
                                 if (item.ID == 0)
                                 {
-                                    Type constructedClassItemType = typeof(DbContextV2<>).MakeGenericType(item.GetType());
-                                    object? reflectedDbContextItemType = Activator.CreateInstance(constructedClassItemType, new[] { connectionString });
-                                    MethodInfo? reflectedInsertViewObject = reflectedDbContextItemType?.GetType().GetMethod(nameof(InsertObject));
+                                    MethodInfo methodInsert = GetType().GetMethod(nameof(InsertObject));
+                                    MethodInfo reflectedInsertObject = methodInsert.MakeGenericMethod(item.GetType());
+
                                     int id = 0;
-                                    if (reflectedInsertViewObject != null)
-                                        id = (int)reflectedInsertViewObject.Invoke(reflectedDbContextItemType, new object[] { item })!;
+                                    if (reflectedInsertObject != null)
+                                        id = (int)reflectedInsertObject.Invoke(this, new object[] { item })!;
 
                                     if (id != 0)
                                         item.ID = id;
@@ -518,12 +518,12 @@ public class DbContextV2<T> where T : BaseModel
                                 {
                                     if (item.ID == 0)
                                     {
-                                        Type constructedClassItemType = typeof(DbContextV2<>).MakeGenericType(item.GetType());
-                                        object? reflectedDbContextItemType = Activator.CreateInstance(constructedClassItemType, new[] { connectionString });
-                                        MethodInfo? reflectedInsertViewObject = reflectedDbContextItemType?.GetType().GetMethod(nameof(InsertObject));
+                                        MethodInfo method = GetType().GetMethod(nameof(FilterListParameter));
+                                        MethodInfo reflectedInsertViewObject = method.MakeGenericMethod(item.GetType());
+
                                         int id = 0;
                                         if (reflectedInsertViewObject != null)
-                                            id = (int)reflectedInsertViewObject.Invoke(reflectedDbContextItemType, new object[] { item })!;
+                                            id = (int)reflectedInsertViewObject.Invoke(this, new object[] { item })!;
 
                                         if (id != 0)
                                             item.ID = id;
@@ -579,15 +579,14 @@ public class DbContextV2<T> where T : BaseModel
                 // reflection on generic method with run-time determined types
                 foreach (var K in types)
                 {
-                    Type constructedClass = typeof(DbContextV2<>).MakeGenericType(K);
-                    object? reflectedDbContext = Activator.CreateInstance(constructedClass, new[] { connectionString });
-                    MethodInfo? genericMethod = reflectedDbContext?.GetType().GetMethod(nameof(SelectObjects));
+                    MethodInfo method = GetType().GetMethod(nameof(SelectObjects));
+                    MethodInfo reflectedSelectObjects = method.MakeGenericMethod(K);
 
-                    object?[] parameters = { null, null, null };
-                    if (genericMethod == null)
+                    if (reflectedSelectObjects == null)
                         continue;
 
-                    var valuesToAdd = (IEnumerable<T>?)genericMethod.Invoke(reflectedDbContext, parameters);
+                    object?[] parameters = { null, null, null };
+                    var valuesToAdd = (IEnumerable<T>?)reflectedSelectObjects.Invoke(this, parameters);
                     if (valuesToAdd == null)
                         continue;
 
