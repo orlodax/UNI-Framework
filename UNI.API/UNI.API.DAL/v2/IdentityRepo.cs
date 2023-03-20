@@ -2,6 +2,7 @@
 using MySqlConnector;
 using UNI.API.Contracts.Models;
 using UNI.API.Contracts.RequestsDTO;
+using UNI.Core.Library.GenericModels;
 
 namespace UNI.API.DAL.v2;
 
@@ -19,16 +20,17 @@ public class IdentityRepo
     }
 
     #region User
-    public Credentials? GetUser(string username)
+    public async Task<Credentials?> GetUser(string username)
     {
-        List<Credentials> existingUser = dbCredentials.GetData($"SELECT * FROM credentials WHERE username = '{username}'");
+        List<Credentials> existingUser = await dbCredentials.GetData($"SELECT * FROM credentials WHERE username = '{username}'");
 
         return existingUser.FirstOrDefault();
     }
 
-    public List<User> GetUsers()
+    public async Task<List<User>> GetUsers()
     {
-        return dbUser.Get(new GetDataSetRequestDTO())?.ResponseBaseModels ?? new List<User>();
+        ApiResponseModel<User>? res = await dbUser.Get(new GetDataSetRequestDTO());
+        return res?.ResponseBaseModels ?? new List<User>();
     }
 
     public void CreateUser(string username, string password)
@@ -89,10 +91,10 @@ public class IdentityRepo
     #endregion
 
     #region Roles
-    public List<Role> GetUserRoles(int userId)
+    public async Task<List<Role>> GetUserRoles(int userId)
     {
 
-        return dbRoles.GetData($@"SELECT DISTINCT r.* FROM roles r 
+        return await dbRoles.GetData($@"SELECT DISTINCT r.* FROM roles r 
                                             INNER JOIN userroles ur ON ur.idrole = r.id 
                                             INNER JOIN credentials c ON c.id = ur.iduser 
                                         WHERE c.id = {userId}");

@@ -9,14 +9,14 @@ namespace UNI.API.Tests;
 public class UserTests
 {
     private readonly IConfiguration configuration;
-    private readonly DbContextV2<User> dbContextUser;
+    //private readonly DbContextV2<User> dbContextUser;
     private readonly DbContextV2<Role> dbContextRole;
     private readonly DbContextV2<Credentials> dbContextCredentials;
 
     public UserTests()
     {
         configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-        dbContextUser = new(configuration.GetConnectionString("IdentityDb")!);
+        //dbContextUser = new(configuration.GetConnectionString("IdentityDb")!);
         dbContextRole = new(configuration.GetConnectionString("IdentityDb")!);
         dbContextCredentials = new(configuration.GetConnectionString("IdentityDb")!);
     }
@@ -25,7 +25,7 @@ public class UserTests
     [DataRow("testUsername", "testPassword")]
     public async Task CreateUser(string username, string password)
     {
-        List<Credentials> existingUser = dbContextCredentials.GetData($"SELECT * FROM credentials WHERE username = '{username}'");
+        List<Credentials> existingUser = await dbContextCredentials.GetData($"SELECT * FROM credentials WHERE username = '{username}'");
         if (!existingUser.Any())
         {
             string hashedPassword = PasswordHelper.CreatePasswordHash(password);
@@ -35,6 +35,7 @@ public class UserTests
                 Password = hashedPassword
             };
             int res = await dbContextCredentials.InsertObject(newUser);
+            Assert.IsFalse(res == 0);
         }
     }
 
@@ -59,8 +60,8 @@ public class UserTests
     [DataRow("testUsername", "DefaultUser")]
     public async Task AssignRoleToUser(string username, string roleName)
     {
-        List<Credentials> existingUser = dbContextCredentials.GetData($"SELECT * FROM credentials WHERE username = '{username}'");
-        List<Role> existingRole = dbContextRole.GetData($"SELECT * FROM roles WHERE name = '{roleName}'");
+        List<Credentials> existingUser = await dbContextCredentials.GetData($"SELECT * FROM credentials WHERE username = '{username}'");
+        List<Role> existingRole = await dbContextRole.GetData($"SELECT * FROM roles WHERE name = '{roleName}'");
         if (existingUser.Any() && existingRole.Any())
             await dbContextRole.SetData($"INSERT INTO userroles (userid, roleid) VALUES({existingUser.First().ID}, {existingRole.First().ID})");
     }
@@ -69,7 +70,7 @@ public class UserTests
     [DataRow("testUsername", "testRole")]
     public async Task RevokeRoleFromUser(string username, string roleName)
     {
-        List<Credentials> existingUser = dbContextCredentials.GetData($"SELECT * FROM credentials WHERE username = '{username}'");
+        List<Credentials> existingUser = await dbContextCredentials.GetData($"SELECT * FROM credentials WHERE username = '{username}'");
         if (existingUser.Any())
             await dbContextCredentials.SetData($"DELETE FROM userroles WHERE userid = {existingUser.First().ID} AND roleid IN (SELECT id FROM roles WHERE name = '{roleName}')");
     }

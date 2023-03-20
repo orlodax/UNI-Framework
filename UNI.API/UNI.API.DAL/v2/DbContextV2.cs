@@ -16,6 +16,7 @@ public class DbContextV2<T> where T : BaseModel
 {
     private readonly string connectionString;
     private readonly ILogger logger;
+    private readonly ListHelperV2<T> listHelper;
 
     public DbContextV2(string connectionString)
     {
@@ -25,55 +26,14 @@ public class DbContextV2<T> where T : BaseModel
                                                     .SetMinimumLevel(LogLevel.Trace)
                                                     .AddConsole());
         logger = loggerFactory.CreateLogger<DbContextV2<T>>();
+        listHelper = new ListHelperV2<T>(connectionString);
     }
 
     #region Queries
-    public List<T> GetData(string query)
-    {
-        List<T> list = new();
 
-        using MySqlConnection conn = new(connectionString);
-        using MySqlCommand cmd = new(query, conn);
-
-        conn.Open();
-
-        try
-        {
-            using MySqlDataReader reader = cmd.ExecuteReader();
-            list = ListHelperV2<T>.CreateList(reader);
-        }
-        catch (MySqlException e)
-        {
-            OnMySqlError(new MySqlErrorEventArgs(e));
-        }
-
-        conn.Close();
-
-        return list;
-    }
-
-    public async Task<List<T>> GetDataAsync(string query)
-    {
-        List<T> list = new();
-
-        using MySqlConnection conn = new(connectionString);
-        using MySqlCommand cmd = new(query, conn);
-
-        conn.Open();
-
-        try
-        {
-            using MySqlDataReader? reader = await cmd.ExecuteReaderAsync();
-            list = ListHelperV2<T>.CreateList(reader);
-        }
-        catch (MySqlException e)
-        {
-            OnMySqlError(new MySqlErrorEventArgs(e));
-        }
-
-        conn.Close();
-
-        return list;
+    public async Task<List<T>> GetData(string query)
+    { 
+        return await listHelper.GetData(query);
     }
 
     public DataTable ExecuteReadQuery(string query)
@@ -92,9 +52,8 @@ public class DbContextV2<T> where T : BaseModel
             dataset.Load(reader);
             conn.Close();
         }
-        catch (MySqlException e)
+        catch (MySqlException)
         {
-            OnMySqlError(new MySqlErrorEventArgs(e));
             conn.Close();
         }
 
@@ -123,7 +82,6 @@ public class DbContextV2<T> where T : BaseModel
         catch (MySqlException e)
         {
             logger.Log(LogLevel.Error, "{controllerName}: Error message: '{message}'. Inner exception: '{innerException}'", nameof(DbContextV2<T>), e.Message, e.InnerException?.Message);
-            OnMySqlError(new MySqlErrorEventArgs(e));
         }
 
         conn.Close();
@@ -158,32 +116,12 @@ public class DbContextV2<T> where T : BaseModel
         catch (MySqlException e)
         {
             logger.Log(LogLevel.Error, "{controllerName}: Error message: '{message}'. Inner exception: '{innerException}'", nameof(DbContextV2<T>), e.Message, e.InnerException?.Message);
-            OnMySqlError(new MySqlErrorEventArgs(e));
             lastId = 0;
         }
 
         conn.Close();
 
         return lastId;
-    }
-    #endregion
-
-    #region Error events
-
-    internal static event EventHandler<MySqlErrorEventArgs>? MySqlError;
-    internal static void OnMySqlError(MySqlErrorEventArgs e)
-    {
-        MySqlError?.Invoke(null, e);
-    }
-
-    internal class MySqlErrorEventArgs : EventArgs
-    {
-        public MySqlErrorEventArgs(Exception _exception)
-        {
-            Exception = _exception;
-        }
-
-        public Exception Exception { get; }
     }
     #endregion
 
@@ -264,13 +202,13 @@ public class DbContextV2<T> where T : BaseModel
 
                         // do list select of actual elements in list
                         List<BaseModel>? actualList = new();
-                        Type typeArg = pro.PropertyType.GenericTypeArguments[0];
-                        Type constructedClass = typeof(DbContextV2<>).MakeGenericType(typeArg);
-                        object? reflectedDbContext = Activator.CreateInstance(constructedClass, new[] { connectionString });
-                        MethodInfo? genericMethod = reflectedDbContext?.GetType().GetMethod(nameof(SelectObjects));
+
+                        MethodInfo method = GetType().GetMethod(nameof(SelectObjects));
+                        MethodInfo reflectedSelectObjects = method.MakeGenericMethod(pro.PropertyType.GenericTypeArguments[0]);
+
                         object[] parameters = { obj.ID, valueInfo.ManyToManySQLName, "Mtm" };
-                        if (genericMethod != null)
-                            actualList = ((IList?)genericMethod.Invoke(reflectedDbContext, parameters))?.Cast<BaseModel>().ToList();
+                        if (reflectedSelectObjects != null)
+                            actualList = ((IList?)reflectedSelectObjects.Invoke(this, parameters))?.Cast<BaseModel>().ToList();
 
                         var property = (IList?)pro.GetValue(obj);
                         if (property == null || actualList == null)
@@ -290,12 +228,12 @@ public class DbContextV2<T> where T : BaseModel
                             {
                                 if (item.ID == 0)
                                 {
-                                    Type constructedClassItemType = typeof(DbContextV2<>).MakeGenericType(item.GetType());
-                                    object? reflectedDbContextItemType = Activator.CreateInstance(constructedClassItemType, new[] { connectionString });
-                                    MethodInfo? reflectedInsertViewObject = reflectedDbContextItemType?.GetType().GetMethod(nameof(InsertObject));
+                                    MethodInfo methodInsert = GetType().GetMethod(nameof(InsertObject));
+                                    MethodInfo reflectedInsertObject = methodInsert.MakeGenericMethod(item.GetType());
+
                                     int id = 0;
-                                    if (reflectedInsertViewObject != null)
-                                        id = (int)reflectedInsertViewObject.Invoke(reflectedDbContextItemType, new object[] { item })!;
+                                    if (reflectedInsertObject != null)
+                                        id = (int)reflectedInsertObject.Invoke(this, new object[] { item })!;
 
                                     if (id != 0)
                                         item.ID = id;
@@ -580,12 +518,12 @@ public class DbContextV2<T> where T : BaseModel
                                 {
                                     if (item.ID == 0)
                                     {
-                                        Type constructedClassItemType = typeof(DbContextV2<>).MakeGenericType(item.GetType());
-                                        object? reflectedDbContextItemType = Activator.CreateInstance(constructedClassItemType, new[] { connectionString });
-                                        MethodInfo? reflectedInsertViewObject = reflectedDbContextItemType?.GetType().GetMethod(nameof(InsertObject));
+                                        MethodInfo method = GetType().GetMethod(nameof(FilterListParameter));
+                                        MethodInfo reflectedInsertViewObject = method.MakeGenericMethod(item.GetType());
+
                                         int id = 0;
                                         if (reflectedInsertViewObject != null)
-                                            id = (int)reflectedInsertViewObject.Invoke(reflectedDbContextItemType, new object[] { item })!;
+                                            id = (int)reflectedInsertViewObject.Invoke(this, new object[] { item })!;
 
                                         if (id != 0)
                                             item.ID = id;
@@ -626,7 +564,7 @@ public class DbContextV2<T> where T : BaseModel
     /// <typeparam name="T" the type of the object-s we want></typeparam>
     /// <param name="id" facultative parameter></param>
     /// <returns></returns>
-    public List<T> SelectObjects(int? idToMatch = null, string? tableAttritbute = null, string? idName = null)
+    public async Task<List<T>> SelectObjects(int? idToMatch = null, string? tableAttritbute = null, string? idName = null)
     {
         List<T> values = new();
         try
@@ -641,15 +579,14 @@ public class DbContextV2<T> where T : BaseModel
                 // reflection on generic method with run-time determined types
                 foreach (var K in types)
                 {
-                    Type constructedClass = typeof(DbContextV2<>).MakeGenericType(K);
-                    object? reflectedDbContext = Activator.CreateInstance(constructedClass, new[] { connectionString });
-                    MethodInfo? genericMethod = reflectedDbContext?.GetType().GetMethod(nameof(SelectObjects));
+                    MethodInfo method = GetType().GetMethod(nameof(SelectObjects));
+                    MethodInfo reflectedSelectObjects = method.MakeGenericMethod(K);
 
-                    object?[] parameters = { null, null, null };
-                    if (genericMethod == null)
+                    if (reflectedSelectObjects == null)
                         continue;
 
-                    var valuesToAdd = (IEnumerable<T>?)genericMethod.Invoke(reflectedDbContext, parameters);
+                    object?[] parameters = { null, null, null };
+                    var valuesToAdd = (IEnumerable<T>?)reflectedSelectObjects.Invoke(this, parameters);
                     if (valuesToAdd == null)
                         continue;
 
@@ -668,9 +605,9 @@ public class DbContextV2<T> where T : BaseModel
                 if (idToMatch.HasValue)
                     query += $" WHERE id{idName} = {idToMatch}";
 
-                var results = GetData(query);
+                var results = await listHelper.GetData(query);
 
-                FillDependencies(results, false);
+                await FillDependencies(results, false);
                 return results;
             }
         }
@@ -689,7 +626,7 @@ public class DbContextV2<T> where T : BaseModel
     /// <typeparam name="T" the type of the object-s we want></typeparam>
     /// <param name="id" facultative parameter></param>
     /// <returns></returns>
-    public ApiResponseModel<T>? Get(GetDataSetRequestDTO requestDTO)
+    public async Task<ApiResponseModel<T>?> Get(GetDataSetRequestDTO requestDTO)
     {
         try
         {
@@ -768,16 +705,30 @@ public class DbContextV2<T> where T : BaseModel
                 query = query.Remove(query.Length - 6, 6);
 
             //execute the query
-            var results = GetData(query);
+            var results = await listHelper.GetData(query);
 
             bool dependenciesAlreadyResolved = false;
 
             //resolve dependencies if a filter text is specified
             if (!string.IsNullOrWhiteSpace(requestDTO.FilterText))
             {
-                var resultCopyWithDependencies = GetData(query);
-                FillDependencies(resultCopyWithDependencies, requestDTO.LargeTablesLogic);
-                results = FilterListCommand(requestDTO.FilterText, resultCopyWithDependencies.Cast<BaseModel>().ToList(), results.Cast<BaseModel>().ToList());
+                var resultCopyWithDependencies = new List<T>(results);
+                await FillDependencies(resultCopyWithDependencies, requestDTO.LargeTablesLogic);
+
+                string[] searchRequests = new string[] { requestDTO.FilterText };
+                if (requestDTO.FilterText.Contains(','))
+                    searchRequests = requestDTO.FilterText.Split(',');
+
+                List<T>? items = new();
+                foreach (string text in searchRequests)
+                    results = FilterListParameter(text, resultCopyWithDependencies, results);
+
+                List<T> itemsFilteredWithDependencies = new();
+                foreach (T item in results)
+                    itemsFilteredWithDependencies.Add(resultCopyWithDependencies.Find(i => i.ID == item.ID));
+
+                results = itemsFilteredWithDependencies;
+
                 dependenciesAlreadyResolved = true;
             }
 
@@ -836,12 +787,12 @@ public class DbContextV2<T> where T : BaseModel
                 //if (results.Count > 1)
                 //    response.BaseModelDependencies = GetDependenciesLists(results, true);
                 //else
-                FillDependencies(response.ResponseBaseModels, requestDTO.LargeTablesLogic);
+                await FillDependencies(response.ResponseBaseModels, requestDTO.LargeTablesLogic);
             }
             else
             {
-                FillDependencies(response.ResponseBaseModels, requestDTO.LargeTablesLogic);
-                response.BaseModelDependencies = GetDependenciesLists(results, requestDTO.LargeTablesLogic);
+                await FillDependencies(response.ResponseBaseModels, requestDTO.LargeTablesLogic);
+                response.BaseModelDependencies = await GetDependenciesLists(results, requestDTO.LargeTablesLogic);
             }
 
             return response;
@@ -856,7 +807,7 @@ public class DbContextV2<T> where T : BaseModel
     /// Generic method to perform DELETE WHERE ID = ... on any table
     /// </summary>
     /// <param name="obj" the object to be deleted></param>
-    public async void DeleteObject(int id)
+    public async Task DeleteObject(int id)
     {
         var tableAttritbute = typeof(T).GetCustomAttribute(typeof(ClassInfo)) as ClassInfo;
 
@@ -939,7 +890,7 @@ public class DbContextV2<T> where T : BaseModel
                             else
                             {
                                 //caso mtm
-                                if (!String.IsNullOrWhiteSpace(valueInfoChildProperty.ManyToManySQLName))
+                                if (!string.IsNullOrWhiteSpace(valueInfoChildProperty.ManyToManySQLName))
                                 {
                                     var value = SelectObjects(type: propertyType, tableAttritbute: valueInfoChildProperty.ManyToManySQLName, idMatchAttribute: "", idsToMatch: nextExectionIdToFilter);
 
@@ -1024,9 +975,7 @@ public class DbContextV2<T> where T : BaseModel
 
     public IList SelectObjects(Type type, string tableAttritbute, string? idMatchAttribute = null, List<int>? idsToMatch = null, string? valueMatchAttribute = null, string? valueToMatch = null)
     {
-        Type constructedClass = typeof(DbContextV2<>).MakeGenericType(type);
-        object? reflectedDbContext = Activator.CreateInstance(constructedClass, new[] { connectionString });
-        MethodInfo? genericMethod = reflectedDbContext?.GetType().GetMethod(nameof(SelectObjectsNoFill), BindingFlags.NonPublic | BindingFlags.Instance);
+        IList res = new List<BaseModel>();
 
         var dictionaryIds = new Dictionary<string, List<int>>();
         if (idMatchAttribute != null && idsToMatch != null)
@@ -1036,8 +985,16 @@ public class DbContextV2<T> where T : BaseModel
         if (valueMatchAttribute != null && valueToMatch != null)
             dictionaryValues.Add(valueMatchAttribute, valueToMatch);
 
-        object?[] parameters = { tableAttritbute, dictionaryIds, dictionaryValues };
-        return (IList)genericMethod?.Invoke(reflectedDbContext, parameters); // it returns a list
+        string? query = DALHelper.GetSelectObjectsNoFillQuery(type, tableAttritbute, dictionaryIds, dictionaryValues);
+
+        if (query != null)
+        {
+            var genericListHelper = listHelper.GetGenericInstance(connectionString, type);
+            var getDataMethod = genericListHelper.GetType().GetMethod(nameof(ListHelperV2<T>.GetData));
+            return (IList)getDataMethod.Invoke(genericListHelper, new[] { query });
+        }
+
+        return res;
     }
 
 
@@ -1154,68 +1111,20 @@ public class DbContextV2<T> where T : BaseModel
         await SetData(query);
     }
 
-    private List<T> SelectObjectsNoFill(string? tableAttritbute = null, Dictionary<string, List<int>>? idsToMatch = null, Dictionary<string, string>? valuesToMatch = null)
-    {
-        List<T> values = new();
-
-        var classInfo = (ClassInfo?)typeof(T).GetCustomAttribute(typeof(ClassInfo));
-        if (classInfo == null)
-            return values;
-
-        tableAttritbute ??= classInfo.SQLName;
-
-        string query = "SELECT * FROM " + tableAttritbute;
-
-        if (idsToMatch != null && idsToMatch.Count > 0)
-        {
-            foreach (KeyValuePair<string, List<int>> entry in idsToMatch)
-            {
-                if (entry.Value.Count > 0)
-                {
-                    query += " WHERE";
-                    foreach (var id in entry.Value)
-                        query += $" id{entry.Key} = {id} OR";
-
-                    query = query.Remove(query.Length - 3, 3);
-                }
-            }
-
-            if (!string.IsNullOrWhiteSpace(classInfo.ClassType))
-                query += $" AND classtype = '{classInfo.ClassType}'";
-        }
-        else if (valuesToMatch != null && valuesToMatch.Count > 0)
-        {
-            foreach (KeyValuePair<string, string> entry in valuesToMatch)
-                if (!string.IsNullOrWhiteSpace(entry.Value))
-                    query += $" WHERE {entry.Key} LIKE '%{entry.Value}%' ";
-
-            if (!string.IsNullOrWhiteSpace(classInfo.ClassType))
-                query += $" AND classtype = '{classInfo.ClassType}'";
-        }
-        else
-        {
-            if (!string.IsNullOrWhiteSpace(classInfo.ClassType))
-                query += $" WHERE classtype = '{classInfo.ClassType}'";
-        }
-
-        values = GetData(query);
-
-        return values;
-    }
-    private Dictionary<string, IList> GetDependenciesLists(List<T> results, bool largeTables)
+    private async Task<Dictionary<string, IList>> GetDependenciesLists(List<T> results, bool largeTables)
     {
         if (largeTables)
             return GetObjectsListsLargeTables(results);
         else 
-            return GetObjectsLists(results);
+            return await GetObjectsLists(results);
     }
 
-    private void FillDependencies(List<T> objs, bool largeTables)
+    private async Task FillDependencies(List<T> objs, bool largeTables)
     {
         ////get the type of the objects
         Type type = typeof(T);
 
-        Dictionary<string, IList> listOfObjects = GetDependenciesLists(objs, largeTables);
+        Dictionary<string, IList> listOfObjects = await GetDependenciesLists(objs, largeTables);
 
         //assign items
         foreach (var obj in objs)
@@ -1448,14 +1357,11 @@ public class DbContextV2<T> where T : BaseModel
 
             enumeratedTypes.Add(propertyType);
 
-
             if (!iterationBaseModelsIndexes.TryGetValue(keyname, out List<int> indexList))
             {
                 indexList = new List<int>();
                 iterationBaseModelsIndexes.Add(keyname, indexList);
             }
-
-
 
             foreach (var obj in objs)
             {
@@ -1470,7 +1376,6 @@ public class DbContextV2<T> where T : BaseModel
                 }
             }
         }
-
 
         //unificazione liste di indici iterazione corrente e precedente iterazione con calcolo indici da leggere
         foreach (KeyValuePair<string, List<int>> listOfIndex in iterationBaseModelsIndexes)
@@ -1496,7 +1401,6 @@ public class DbContextV2<T> where T : BaseModel
             }
         }
 
-
         foreach (var baseModelType in baseModelsTypes)
         {
             string selectWhereParameter = string.Empty;
@@ -1514,10 +1418,7 @@ public class DbContextV2<T> where T : BaseModel
             {
                 selectWhereParameter = baseModelType.Key.Split('_')[2];
             }
-            Type constructedClass = typeof(DbContextV2<>).MakeGenericType(baseModelType.Value);
-            object? reflectedDbContext = Activator.CreateInstance(constructedClass, new[] { connectionString });
-            MethodInfo? genericMethod = reflectedDbContext?.GetType().GetMethod(nameof(SelectObjectsNoFill), BindingFlags.NonPublic | BindingFlags.Instance);
-
+          
             if (toReadBaseModelsIndexes.TryGetValue(baseModelType.Key, out List<int> indexList))
             {
                 if (indexList != null)
@@ -1527,8 +1428,14 @@ public class DbContextV2<T> where T : BaseModel
                         { selectWhereParameter, indexList }
                     };
 
-                    object?[] parameters = { keyPart, selectDict, null }; // the method requires a string parameter instead of a classinfo
-                    var value = (IList?)genericMethod?.Invoke(reflectedDbContext, parameters); // it returns a list
+                    IList value = new List<BaseModel>();
+                    string? query = DALHelper.GetSelectObjectsNoFillQuery(baseModelType.Value, keyPart, selectDict, null);
+                    if (query != null)
+                    {
+                        var genericListHelper = listHelper.GetGenericInstance(connectionString, type);
+                        var getDataMethod = genericListHelper.GetType().GetMethod(nameof(ListHelperV2<T>.GetData));
+                        value = (IList)getDataMethod.Invoke(genericListHelper, new[] { query });
+                    }
 
                     if (!iterationListOfObjects.ContainsKey(baseModelType.Key) && value != null)
                         iterationListOfObjects.Add(baseModelType.Key, value);
@@ -1539,16 +1446,13 @@ public class DbContextV2<T> where T : BaseModel
         }
 
         foreach (KeyValuePair<string, IList> list in iterationListOfObjects)
-        {
             GetObjectsListsLargeTables(list.Value, listOfObjects, baseModelsIndexes, baseModelsTypes, enumeratedTypes);
-        }
-
 
         return listOfObjects;
     }
-    private Dictionary<string, IList> GetObjectsLists(IList objs, Dictionary<string, IList>? listOfObjects = null, Dictionary<string, List<int>>? baseModelsIndexes = null, Dictionary<string, Type>? baseModelsTypes = null, List<Type>? enumeratedTypes = null)
-    {
 
+    private async Task<Dictionary<string, IList>> GetObjectsLists(IList objs, Dictionary<string, IList>? listOfObjects = null, Dictionary<string, List<int>>? baseModelsIndexes = null, Dictionary<string, Type>? baseModelsTypes = null, List<Type>? enumeratedTypes = null)
+    {
         //get the type of the objects
         Type type = typeof(T);
 
@@ -1572,11 +1476,14 @@ public class DbContextV2<T> where T : BaseModel
             if (baseModelType.Key.StartsWith("mtm")) //mtm case
                 keyPart = baseModelType.Key.Split('_')[1];
 
-            Type constructedClass = typeof(DbContextV2<>).MakeGenericType(baseModelType.Value);
-            object? reflectedDbContext = Activator.CreateInstance(constructedClass, new[] { connectionString });
-            MethodInfo? genericMethod = reflectedDbContext?.GetType().GetMethod(nameof(SelectObjectsNoFill), BindingFlags.NonPublic | BindingFlags.Instance);
-            object?[] parameters = { keyPart, null, null }; // the method requires a string parameter instead of a classinfo
-            var value = (IList?)genericMethod?.Invoke(reflectedDbContext, parameters); // it returns a list
+            string? query = DALHelper.GetSelectObjectsNoFillQuery(baseModelType.Value, keyPart, null, null);
+            if (query == null)
+                continue;
+
+            var genericListHelper = listHelper.GetGenericInstance(connectionString, baseModelType.Value);
+            var getDataMethod = genericListHelper.GetType().GetMethod(nameof(ListHelperV2<T>.GetData));
+
+            var value = (IList)(await DALHelper.InvokeAsyncList(genericListHelper, getDataMethod, new[] { query }));
 
             if (!listOfObjects.ContainsKey(baseModelType.Key) && value != null)
                 listOfObjects.Add(baseModelType.Key, value);
@@ -1585,36 +1492,17 @@ public class DbContextV2<T> where T : BaseModel
         return listOfObjects;
     }
 
-    private List<T> FilterListCommand(string searchText, List<BaseModel> itemsWithDependencies, List<BaseModel> itemsToFilter)
+    // The second <T> is required because it is changed when called at runtime by reflection
+#pragma warning disable CS0693 // Type parameter has the same name as the type parameter from outer type
+    private List<T> FilterListParameter<T>(string searchText, List<T> resultCopyWithDependencies, List<T> results) where T : BaseModel
+#pragma warning restore CS0693 // Type parameter has the same name as the type parameter from outer type
     {
-        string[] searchRequests = new string[] { searchText };
-        if (searchText.Contains(','))
-            searchRequests = searchText.Split(',');
-
-        List<T>? items = new();
-        foreach (string text in searchRequests)
-        {
-            items = FilterListParameter<T>(text, itemsWithDependencies, itemsToFilter);
-            if (items != null)
-                itemsToFilter = items.Cast<BaseModel>().ToList();
-        }
-
-        List<T> itemsFilteredWithDependencies = new();
-        foreach (var item in items)
-            itemsFilteredWithDependencies.Add(itemsWithDependencies.Find(i => i.ID == item.ID) as T);
-        return itemsFilteredWithDependencies;
-    }
-
-    public int iterations = 0;
-    public List<T> FilterListParameter<T>(string searchText, List<BaseModel> itemsWithDependencies, List<BaseModel> itemsToFilter)
-    {
-        iterations++;
-        List<BaseModel> filteredItemsSource = new();
+        List<T> filteredItemsSource = new();
 
         if (string.IsNullOrWhiteSpace(searchText))
-            return filteredItemsSource.Cast<T>().ToList();
+            return filteredItemsSource;
 
-        foreach (var item in itemsToFilter)
+        foreach (var item in results)
         {
             foreach (var property in typeof(T).GetProperties())
             {
@@ -1643,25 +1531,24 @@ public class DbContextV2<T> where T : BaseModel
                 }
                 else if (property.PropertyType.IsGenericType && property.PropertyType.FullName != null && !property.PropertyType.FullName.Contains("UniDataSet"))
                 {
-                    BaseModel? itemWithDependencies = itemsWithDependencies.Find(i => i.ID == item.ID);
+                    BaseModel? itemWithDependencies = resultCopyWithDependencies.Find(i => i.ID == item.ID);
                     if (itemWithDependencies == null)
                         continue;
 
                     List<BaseModel>? dependencyToFilter = (property.GetValue(itemWithDependencies) as IList)?.Cast<BaseModel>().ToList();
                     if (dependencyToFilter == null || dependencyToFilter.Count == 0)
                         continue;
-                    object[] parameters = { searchText, dependencyToFilter, dependencyToFilter };
-                    var mets = this.GetType().GetMethods();
-                    MethodInfo method = this.GetType().GetMethod(nameof(this.FilterListParameter));
-                    MethodInfo generic = method.MakeGenericMethod(property.PropertyType.GenericTypeArguments[0]);
 
+                    object[] parameters = { searchText, dependencyToFilter, dependencyToFilter };
+                    MethodInfo method = GetType().GetMethod(nameof(FilterListParameter), BindingFlags.NonPublic | BindingFlags.Instance);
+                    MethodInfo generic = method.MakeGenericMethod(property.PropertyType.GenericTypeArguments[0]);
                     IList? items = generic?.Invoke(this, parameters) as IList;
                     if (items?.Count > 0 && !filteredItemsSource.Contains(item))
                         filteredItemsSource.Add(item);
                 }
                 else if (property.PropertyType.IsSubclassOf(typeof(BaseModel)))
                 {
-                    BaseModel? itemWithDependencies = itemsWithDependencies.Find(i => i.ID == item.ID);
+                    BaseModel? itemWithDependencies = resultCopyWithDependencies.Find(i => i.ID == item.ID);
                     if (!SearchValueInObject(searchText, property.GetValue(itemWithDependencies)))
                         continue;
 
@@ -1674,7 +1561,7 @@ public class DbContextV2<T> where T : BaseModel
             }
         }
 
-        return filteredItemsSource.Cast<T>().ToList();
+        return filteredItemsSource;
     }
 
     private void ResolveSqlFields(List<T> items)
@@ -1732,7 +1619,6 @@ public class DbContextV2<T> where T : BaseModel
             }
         }
     }
-
 
     private static bool SearchValueInObject(string searchText, object? item)
     {
@@ -1877,7 +1763,7 @@ public class DbContextV2<T> where T : BaseModel
         }
 
         int i = 0;
-        foreach (var subFilterExpression in filterExpression.FilterExpressions ?? new List<FilterExpression>())
+        foreach (var subFilterExpression in filterExpression.FilterExpressions)
         {
             i++;
             query += FilterExpressionToSql(subFilterExpression, properties, firstWhereCondition, filterDateFormat, filterExpression.ComparisonType);

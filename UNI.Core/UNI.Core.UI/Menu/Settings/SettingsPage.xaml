@@ -30,7 +30,7 @@
                 <TextBox x:Name="username"
                          d:Text="username"
                          d:Header ="User"
-                         Text="{Binding UNIUser.Username}"
+                         Text="{Binding Username}"
                          Header="{Binding UserLabel}"
                          IsReadOnly="True"
                          Margin="0,20"

@@ -1,7 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Reflection;
-using UNI.API.Contracts.Models;
-using UNI.Core.Library.AttributesMetadata;
+using UNI.API.DAL.v2;
+using UNI.Core.Library.GenericModels;
+using UNI.Core.Library;
 
 namespace UNI.API.Tests
 {
@@ -9,29 +10,20 @@ namespace UNI.API.Tests
     public class ReflectionTests
     {
         [TestMethod]
-        public async Task GroupBaseModelMetadata()
+        public void MakeGenericMethodOverwritesTheGenericArgumentOfItsContainingClass()
         {
-            User obj = new();
-            IEnumerable<DataAttributes> dataAttributes = obj.Metadata.DataAttributes.Values.Distinct();
-            PropertyInfo[] properties = typeof(User).GetProperties();
+            var listHelper = new ListHelperV2<Employee>("connectionString");
+            var genericListHelper = listHelper.GetGenericInstance("connectionString", typeof(Document));
+            var getDataMethod = genericListHelper.GetType().GetMethod(nameof(ListHelperV2<Employee>.GetData));
 
-
-            IEnumerable<IGrouping<string, KeyValuePair<string, DataAttributes>>> groupsOfWriteTablesAndProperties = obj.Metadata.DataAttributes.Where(d => !string.IsNullOrWhiteSpace(d.Value.WriteTable)).GroupBy(d => d.Value.WriteTable);
-
-            foreach (IGrouping<string, KeyValuePair<string, DataAttributes>> group in groupsOfWriteTablesAndProperties)
-            {
-                Debug.Print($"GROUP KEY {group.Key}");
-
-                foreach (var b in group)
-                {
-                    Debug.Print($"  key {b.Key}");
-                    Debug.Print($"  value {b.Value}");
-                }
-            }
+            //var method = listHelper.GetType().GetMethod(nameof(ListHelperV2<BaseModel>.TestMethod));
+            //var genericMethod = method?.MakeGenericMethod(typeof(Document));
+            //var items = genericMethod?.Invoke(listHelper, null);
         }
 
+
         [TestMethod]
-        public async Task ShouldWorkInvokeMethodWithReflection()
+        public void ShouldWorkInvokeMethodWithReflection()
         {
             Type typeArg = typeof(int);
             Type genericClass = typeof(ClassToReflectUpon<>);
@@ -44,7 +36,7 @@ namespace UNI.API.Tests
         }
 
         [TestMethod]
-        public async Task ShouldNotWorkInvokeMethodWithReflectionPassingWrongParameterType()
+        public void ShouldNotWorkInvokeMethodWithReflectionPassingWrongParameterType()
         {
             Type typeArg = typeof(int);
             Type genericClass = typeof(ClassToReflectUpon<>);
@@ -60,7 +52,7 @@ namespace UNI.API.Tests
 
     public class ClassToReflectUpon<T>
     {
-        public async Task<bool> GenericMethodToReflectUpon(string arg1, T arg2)
+        public bool GenericMethodToReflectUpon(string arg1, T arg2)
         {
             Debug.Print($"I was called with type {typeof(T).Name} and my args were {arg1} and {arg2}");
 
