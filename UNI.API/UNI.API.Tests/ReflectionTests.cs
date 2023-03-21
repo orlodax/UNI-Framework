@@ -2,7 +2,6 @@
 using System.Reflection;
 using UNI.API.DAL.v2;
 using UNI.Core.Library.GenericModels;
-using UNI.Core.Library;
 
 namespace UNI.API.Tests
 {

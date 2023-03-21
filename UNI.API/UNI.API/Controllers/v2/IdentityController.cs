@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System.Net;
 using UNI.API.Contracts.Models;
 using UNI.API.Contracts.RequestsDTO;
 using UNI.API.Core.Services;
@@ -64,7 +63,7 @@ public class IdentityController : Controller
     {
         if (HttpContext.User.Identities.First().Name != requestDTO.Username)
             return Unauthorized("Wrong username");
-        
+
         Credentials? user = await identityService.AreCredentialsValid(requestDTO.Username, requestDTO.OldPassword);
         if (user == null)
             return Unauthorized("Wrong username or password");

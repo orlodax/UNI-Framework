@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
 
     <PackageId>UNI.API.Contracts</PackageId>
-    <Version>2.2.0</Version>
+    <Version>2.2.1</Version>
     <Copyright>Copyright 2022</Copyright>
     <Description>Contracts for UNI.API</Description>
     <Authors>Dario Orlovich</Authors>

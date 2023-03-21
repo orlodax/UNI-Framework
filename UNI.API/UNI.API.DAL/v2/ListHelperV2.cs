@@ -38,7 +38,7 @@ public class ListHelperV2<T> where T : BaseModel
         {
             conn.Close();
         }
-        
+
         return list;
     }
 

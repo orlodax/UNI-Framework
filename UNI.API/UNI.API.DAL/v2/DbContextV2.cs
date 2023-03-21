@@ -2,7 +2,6 @@
 using MySqlConnector;
 using System.Collections;
 using System.Data;
-using System.Data.Common;
 using System.Reflection;
 using UNI.API.Contracts.RequestsDTO;
 using UNI.Core.Library;
@@ -28,102 +27,6 @@ public class DbContextV2<T> where T : BaseModel
         logger = loggerFactory.CreateLogger<DbContextV2<T>>();
         listHelper = new ListHelperV2<T>(connectionString);
     }
-
-    #region Queries
-
-    public async Task<List<T>> GetData(string query)
-    { 
-        return await listHelper.GetData(query);
-    }
-
-    public DataTable ExecuteReadQuery(string query)
-    {
-        DataTable dataset = new();
-
-        using MySqlConnection conn = new(connectionString);
-        using MySqlCommand cmd = new(query, conn);
-
-        try
-        {
-            conn.Open();
-            DbDataReader reader;
-            reader = cmd.ExecuteReader();
-
-            dataset.Load(reader);
-            conn.Close();
-        }
-        catch (MySqlException)
-        {
-            conn.Close();
-        }
-
-        return dataset;
-    }
-
-    /// <summary>
-    /// Can perform writing queries with safe sql parameters
-    /// </summary>
-    /// <param name="query"></param>
-    /// <param name="queryParameters"></param>
-    /// <returns></returns>
-    public async Task SetDataParametrized(string query, MySqlParameter[] queryParameters)
-    {
-        using MySqlConnection conn = new(connectionString);
-        using MySqlCommand cmd = new(query, conn);
-
-        cmd.Parameters.AddRange(queryParameters);
-
-        conn.Open();
-
-        try
-        {
-            await cmd.ExecuteNonQueryAsync();
-        }
-        catch (MySqlException e)
-        {
-            logger.Log(LogLevel.Error, "{controllerName}: Error message: '{message}'. Inner exception: '{innerException}'", nameof(DbContextV2<T>), e.Message, e.InnerException?.Message);
-        }
-
-        conn.Close();
-    }
-
-    /// <summary>
-    /// Can perform all writing queries; queryParameters is for byte blobs only though
-    /// </summary>
-    /// <param name="query"></param>
-    /// <param name="queryParameters"></param>
-    /// <returns></returns>
-    public async Task<int> SetData(string query, Dictionary<string, byte[]>? queryParameters = null)
-    {
-        int lastId;
-
-        using MySqlConnection conn = new(connectionString);
-        using MySqlCommand cmd = new(query, conn);
-
-        if (queryParameters != null)
-            foreach (string key in queryParameters.Keys)
-                if (queryParameters.TryGetValue(key, out byte[]? value))
-                    if (value != null)
-                        cmd.Parameters.Add(new MySqlParameter($"@{key}", MySqlDbType.LongBlob, value.Length) { Value = value });
-
-        conn.Open();
-
-        try
-        {
-            await cmd.ExecuteNonQueryAsync();
-            lastId = Convert.ToInt32(cmd.LastInsertedId);
-        }
-        catch (MySqlException e)
-        {
-            logger.Log(LogLevel.Error, "{controllerName}: Error message: '{message}'. Inner exception: '{innerException}'", nameof(DbContextV2<T>), e.Message, e.InnerException?.Message);
-            lastId = 0;
-        }
-
-        conn.Close();
-
-        return lastId;
-    }
-    #endregion
 
     #region PUBLIC Generic CRUD
 
@@ -256,7 +159,7 @@ public class DbContextV2<T> where T : BaseModel
                 query += $" WHERE id = {objectId};";
 
                 if (propertiesToWrite)
-                    await SetData(query, queryParameters);
+                    await DALHelper.SetData(query, connectionString, logger, queryParameters);
 
                 // now update the other tables if needed
                 foreach (PropertyInfo property in externalProperties)
@@ -278,12 +181,12 @@ public class DbContextV2<T> where T : BaseModel
                     additionalTableQuery = additionalTableQuery.Remove(additionalTableQuery.Length - 2, 2);
                     additionalTableQuery += $" WHERE id = {objectId};";
 
-                    await SetData(additionalTableQuery, additionalQueryParameters);
+                    await DALHelper.SetData(additionalTableQuery, connectionString, logger, additionalQueryParameters);
                 }
             }
             return true;
         }
-        catch 
+        catch
         {
             return false;
         }
@@ -330,7 +233,7 @@ public class DbContextV2<T> where T : BaseModel
                         continue;
 
                     string getMaxquery = string.Format("SELECT MAX({0}) FROM {1};", valueInfo.SQLName, tablename);
-                    DataTable? table = ExecuteReadQuery(getMaxquery);
+                    DataTable? table = DALHelper.ExecuteReadQuery(getMaxquery, connectionString);
                     tableName = tablename;
                     columnName = valueInfo.SQLName;
                     if (table == null || table.Rows.Count <= 0)
@@ -345,7 +248,7 @@ public class DbContextV2<T> where T : BaseModel
             }
 
             string insertQuery = string.Format("INSERT INTO {0} ({1}) VALUES ({2});", tableName, columnName, maxNumber + 1);
-            return await SetData(insertQuery);
+            return await DALHelper.SetData(insertQuery, connectionString, logger);
         }
         catch
         {
@@ -365,195 +268,196 @@ public class DbContextV2<T> where T : BaseModel
 
         if (obj.Metadata.ClassAttributes.BaseModelType == EnBaseModelTypes.ViewOnlyBaseModel)
             res = await InsertViewOnlyObject(obj);
-
-        try
+        else
         {
-            //set the classtype string 
-            if (typeof(T).GetCustomAttribute(typeof(ClassInfo)) is ClassInfo info)
+            try
             {
-                if (!string.IsNullOrWhiteSpace(info.ClassType))
+                //set the classtype string 
+                if (typeof(T).GetCustomAttribute(typeof(ClassInfo)) is ClassInfo info)
                 {
-                    var classTypeProp = typeof(T).GetProperties().ToList().Find(i => i.Name == "ClassType");
-                    classTypeProp?.SetValue(obj, info.ClassType);
-                }
-            }
-
-            Type? lowerType = null;
-            List<Type> extendedTypes = UtilityMethods.FindAllParentsTypes(typeof(T));
-            int itemId = 0;
-            extendedTypes.Insert(0, typeof(T));
-            extendedTypes.Reverse();
-
-            Dictionary<string, int> foreignKeys = new();
-
-            Dictionary<string, byte[]> queryParameters = new();
-
-            string previousTableName = string.Empty;
-
-            foreach (Type t in extendedTypes)
-            {
-                var classInfo = (ClassInfo?)t.GetCustomAttribute(typeof(ClassInfo));
-                if (classInfo == null)
-                    continue;
-
-                string tablename = classInfo.SQLName;
-
-                if (tablename != previousTableName)
-                {
-                    previousTableName = tablename;
-                    string query = "INSERT INTO " + tablename + " (";
-
-                    //List of propertyinfo that contains only the ones that can be written on the db in the iterated type. This list is used in the second foreach
-                    var writeablePropertyInfos = new List<PropertyInfo>();
-                    //List of propertyinfo that requires a many to many in a link table
-                    var manyToManyPropertyInfos = new List<PropertyInfo>();
-
-                    foreach (var prop in typeof(T).GetProperties())
+                    if (!string.IsNullOrWhiteSpace(info.ClassType))
                     {
-                        List<Type> types = UtilityMethods.FindAllParentsTypes(prop.PropertyType);
+                        var classTypeProp = typeof(T).GetProperties().ToList().Find(i => i.Name == "ClassType");
+                        classTypeProp?.SetValue(obj, info.ClassType);
+                    }
+                }
 
-                        var valueInfo = (ValueInfo?)prop.GetCustomAttribute(typeof(ValueInfo));
-                        if (valueInfo == null)
-                            continue;
+                Type? lowerType = null;
+                List<Type> extendedTypes = UtilityMethods.FindAllParentsTypes(typeof(T));
+                int itemId = 0;
+                extendedTypes.Insert(0, typeof(T));
+                extendedTypes.Reverse();
 
-                        if (valueInfo.IsReadOnly
-                            || prop.PropertyType.IsInterface
-                            || prop.DeclaringType != t)
-                            continue;
+                Dictionary<string, int> foreignKeys = new();
 
-                        if (prop.PropertyType.IsGenericType)
+                Dictionary<string, byte[]> queryParameters = new();
+
+                string previousTableName = string.Empty;
+
+                foreach (Type t in extendedTypes)
+                {
+                    var classInfo = (ClassInfo?)t.GetCustomAttribute(typeof(ClassInfo));
+                    if (classInfo == null)
+                        continue;
+
+                    string tablename = classInfo.SQLName;
+
+                    if (tablename != previousTableName)
+                    {
+                        previousTableName = tablename;
+                        string query = "INSERT INTO " + tablename + " (";
+
+                        //List of propertyinfo that contains only the ones that can be written on the db in the iterated type. This list is used in the second foreach
+                        var writeablePropertyInfos = new List<PropertyInfo>();
+                        //List of propertyinfo that requires a many to many in a link table
+                        var manyToManyPropertyInfos = new List<PropertyInfo>();
+
+                        foreach (var prop in typeof(T).GetProperties())
                         {
-                            if (!prop.PropertyType.GenericTypeArguments[0].IsSubclassOf(typeof(BaseModel)))
+                            List<Type> types = UtilityMethods.FindAllParentsTypes(prop.PropertyType);
+
+                            var valueInfo = (ValueInfo?)prop.GetCustomAttribute(typeof(ValueInfo));
+                            if (valueInfo == null)
                                 continue;
-                            else if (!string.IsNullOrWhiteSpace(valueInfo.ManyToManySQLName))
-                                manyToManyPropertyInfos.Add(prop);
-                        }
-                        else if (prop.PropertyType.IsSubclassOf(typeof(BaseModel)))
-                            continue;
 
-                        //if it is a class derived from basemodel it will not be added in the query
-                        if (!prop.PropertyType.IsClass)
-                        {
-                            query += valueInfo.SQLName + ", ";
-                            writeablePropertyInfos.Add(prop);
-                        }
-                        else
-                        {
-                            if (!types.Contains(typeof(BaseModel))
-                                && prop.PropertyType != typeof(BaseModel)
-                                && !prop.PropertyType.IsGenericType)
+                            if (valueInfo.IsReadOnly
+                                || prop.PropertyType.IsInterface
+                                || prop.DeclaringType != t)
+                                continue;
+
+                            if (prop.PropertyType.IsGenericType)
+                            {
+                                if (!prop.PropertyType.GenericTypeArguments[0].IsSubclassOf(typeof(BaseModel)))
+                                    continue;
+                                else if (!string.IsNullOrWhiteSpace(valueInfo.ManyToManySQLName))
+                                    manyToManyPropertyInfos.Add(prop);
+                            }
+                            else if (prop.PropertyType.IsSubclassOf(typeof(BaseModel)))
+                                continue;
+
+                            //if it is a class derived from basemodel it will not be added in the query
+                            if (!prop.PropertyType.IsClass)
                             {
                                 query += valueInfo.SQLName + ", ";
                                 writeablePropertyInfos.Add(prop);
                             }
-                        }
-                    }
-
-                    query = query.Remove(query.Length - 2, 2);
-
-                    query += ") VALUES (";
-
-                    foreach (PropertyInfo pro in writeablePropertyInfos)
-                    {
-                        var value = pro.GetValue(obj);
-
-                        if (pro.GetCustomAttribute(typeof(ValueInfo)) is ValueInfo valueinfo && valueinfo.IsMainNumeration)
-                        {
-                            string queryMainNumeratino = string.Format("SELECT MAX({0}) FROM {1};", valueinfo.SQLName, tablename);
-                            DataTable table = ExecuteReadQuery(queryMainNumeratino);
-
-                            if (table.Rows.Count > 0)
-                                if (table.Rows[0][0].GetType() != typeof(DBNull))
-                                    if (int.TryParse(table.Rows[0][0].ToString(), out int n))
-                                        value = Convert.ToDouble(table.Rows[0][0]) + 1;
-                        }
-                        if (pro.Name.Equals("IdRef"))
-                        {
-                            if (lowerType != null && foreignKeys.TryGetValue(lowerType.Name, out int id))
-                                query += $"{id}, ";
-                        }
-                        else if (pro.Name.Equals("TableRef"))
-                        {
-                            if (lowerType != null && foreignKeys.TryGetValue(lowerType.Name, out int id) && lowerType?.GetCustomAttribute(typeof(ClassInfo)) is ClassInfo lowerClassInfo)
-                                query += $"'{lowerClassInfo.SQLName}', ";
-                        }
-                        else if (pro.Name.StartsWith("Id"))
-                        {
-                            if (foreignKeys.TryGetValue(pro.Name[2..], out int id))
-                                query += $"{id}, ";
                             else
-                                query += $"{value}, ";
-                        }
-                        else
-                        {
-                            query += ParsePropertyValue(pro.GetValue(obj), pro, queryParameters);
-                        }
-                    }
-                    query = query.Remove(query.Length - 2, 2);
-
-                    query += ");";
-
-                    var lastId = await SetData(query, queryParameters);
-                    itemId = lastId;
-                    if (lastId > 0)
-                    {
-                        foreignKeys.Add(t.Name, lastId);
-
-                        //sets all many to many links because we need the id of the created object
-                        foreach (var prop in manyToManyPropertyInfos)
-                        {
-                            var valueInfo = (ValueInfo?)t.GetCustomAttribute(typeof(ValueInfo));
-                            if (valueInfo == null)
-                                continue;
-
-                            var dependencyAttribute = prop.PropertyType.GenericTypeArguments[0].GetCustomAttribute(typeof(ClassInfo)) as ClassInfo;
-
-                            var propertyList = (IList?)prop.GetValue(obj);
-                            if (propertyList != null)
                             {
-                                var modifiedList = propertyList.Cast<BaseModel>().ToList();
-
-                                //create all needed links
-                                foreach (var item in modifiedList)
+                                if (!types.Contains(typeof(BaseModel))
+                                    && prop.PropertyType != typeof(BaseModel)
+                                    && !prop.PropertyType.IsGenericType)
                                 {
-                                    if (item.ID == 0)
-                                    {
-                                        MethodInfo method = GetType().GetMethod(nameof(FilterListParameter));
-                                        MethodInfo reflectedInsertViewObject = method.MakeGenericMethod(item.GetType());
-
-                                        int id = 0;
-                                        if (reflectedInsertViewObject != null)
-                                            id = (int)reflectedInsertViewObject.Invoke(this, new object[] { item })!;
-
-                                        if (id != 0)
-                                            item.ID = id;
-                                    }
-
-                                    if (item.ID != 0)
-                                        InsertLinkObjects(valueInfo.LinkTableSQLName, item.GetType(), item.ID, obj.GetType(), lastId, valueInfo.ColumnReference1Name, valueInfo.ColumnReference2Name);
+                                    query += valueInfo.SQLName + ", ";
+                                    writeablePropertyInfos.Add(prop);
                                 }
                             }
                         }
+
+                        query = query.Remove(query.Length - 2, 2);
+
+                        query += ") VALUES (";
+
+                        foreach (PropertyInfo pro in writeablePropertyInfos)
+                        {
+                            var value = pro.GetValue(obj);
+
+                            if (pro.GetCustomAttribute(typeof(ValueInfo)) is ValueInfo valueinfo && valueinfo.IsMainNumeration)
+                            {
+                                string queryMainNumeratino = string.Format("SELECT MAX({0}) FROM {1};", valueinfo.SQLName, tablename);
+                                DataTable table = DALHelper.ExecuteReadQuery(queryMainNumeratino, connectionString);
+
+                                if (table.Rows.Count > 0)
+                                    if (table.Rows[0][0].GetType() != typeof(DBNull))
+                                        if (int.TryParse(table.Rows[0][0].ToString(), out int n))
+                                            value = Convert.ToDouble(table.Rows[0][0]) + 1;
+                            }
+                            if (pro.Name.Equals("IdRef"))
+                            {
+                                if (lowerType != null && foreignKeys.TryGetValue(lowerType.Name, out int id))
+                                    query += $"{id}, ";
+                            }
+                            else if (pro.Name.Equals("TableRef"))
+                            {
+                                if (lowerType != null && foreignKeys.TryGetValue(lowerType.Name, out int id) && lowerType?.GetCustomAttribute(typeof(ClassInfo)) is ClassInfo lowerClassInfo)
+                                    query += $"'{lowerClassInfo.SQLName}', ";
+                            }
+                            else if (pro.Name.StartsWith("Id"))
+                            {
+                                if (foreignKeys.TryGetValue(pro.Name[2..], out int id))
+                                    query += $"{id}, ";
+                                else
+                                    query += $"{value}, ";
+                            }
+                            else
+                            {
+                                query += ParsePropertyValue(pro.GetValue(obj), pro, queryParameters);
+                            }
+                        }
+                        query = query.Remove(query.Length - 2, 2);
+
+                        query += ");";
+
+                        var lastId = await DALHelper.SetData(query, connectionString, logger, queryParameters);
+                        itemId = lastId;
+                        if (lastId > 0)
+                        {
+                            foreignKeys.Add(t.Name, lastId);
+
+                            //sets all many to many links because we need the id of the created object
+                            foreach (var prop in manyToManyPropertyInfos)
+                            {
+                                var valueInfo = (ValueInfo?)t.GetCustomAttribute(typeof(ValueInfo));
+                                if (valueInfo == null)
+                                    continue;
+
+                                var dependencyAttribute = prop.PropertyType.GenericTypeArguments[0].GetCustomAttribute(typeof(ClassInfo)) as ClassInfo;
+
+                                var propertyList = (IList?)prop.GetValue(obj);
+                                if (propertyList != null)
+                                {
+                                    var modifiedList = propertyList.Cast<BaseModel>().ToList();
+
+                                    //create all needed links
+                                    foreach (var item in modifiedList)
+                                    {
+                                        if (item.ID == 0)
+                                        {
+                                            MethodInfo method = GetType().GetMethod(nameof(FilterListParameter));
+                                            MethodInfo reflectedInsertViewObject = method.MakeGenericMethod(item.GetType());
+
+                                            int id = 0;
+                                            if (reflectedInsertViewObject != null)
+                                                id = (int)reflectedInsertViewObject.Invoke(this, new object[] { item })!;
+
+                                            if (id != 0)
+                                                item.ID = id;
+                                        }
+
+                                        if (item.ID != 0)
+                                            InsertLinkObjects(valueInfo.LinkTableSQLName, item.GetType(), item.ID, obj.GetType(), lastId, valueInfo.ColumnReference1Name, valueInfo.ColumnReference2Name);
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            return 0;
+                        }
+                        lowerType = t;
                     }
                     else
                     {
-                        return 0;
+                        obj.ID = itemId;
+                        await UpdateObject(obj);
                     }
-                    lowerType = t;
                 }
-                else
-                {
-                    obj.ID = itemId;
-                    await UpdateObject(obj);
-                }
+                res = itemId;
             }
-            res = itemId;
-        }
-        catch
-        {
+            catch
+            {
 
+            }
         }
-
         return res;
     }
 
@@ -611,7 +515,7 @@ public class DbContextV2<T> where T : BaseModel
                 return results;
             }
         }
-        catch 
+        catch
         {
 
         }
@@ -778,7 +682,7 @@ public class DbContextV2<T> where T : BaseModel
 
             response.ResponseBaseModels = results;
 
-            if (dependenciesAlreadyResolved) 
+            if (dependenciesAlreadyResolved)
                 return response;
 
             if (!requestDTO.BackendDependencyResolve)
@@ -809,9 +713,15 @@ public class DbContextV2<T> where T : BaseModel
     /// <param name="obj" the object to be deleted></param>
     public async Task DeleteObject(int id)
     {
-        var tableAttritbute = typeof(T).GetCustomAttribute(typeof(ClassInfo)) as ClassInfo;
+        string? table;
+        var obj = Activator.CreateInstance(typeof(T)) as BaseModel;
 
-        await SetData("DELETE FROM " + tableAttritbute?.SQLName + $" WHERE id = {id}");
+        if (obj?.Metadata.ClassAttributes.BaseModelType == EnBaseModelTypes.ViewOnlyBaseModel)
+            table = obj.Metadata.ClassAttributes.MasterTable;
+        else
+            table = (typeof(T).GetCustomAttribute(typeof(ClassInfo)) as ClassInfo)?.SQLName;
+
+        await DALHelper.SetData("DELETE FROM " + table + $" WHERE id = {id}", connectionString, logger);
     }
 
     #endregion
@@ -1042,7 +952,7 @@ public class DbContextV2<T> where T : BaseModel
             query = query.Remove(query.Length - 2, 2);
             query += ");";
 
-            res = await SetData(query, queryParameters);
+            res = await DALHelper.SetData(query, connectionString, logger, queryParameters);
         }
 
         return res;
@@ -1092,7 +1002,7 @@ public class DbContextV2<T> where T : BaseModel
             columnReference2Name = $"id{type2.Name}";
 
         string query = "INSERT INTO " + tablename + $" ({columnReference1Name}, {columnReference2Name}) VALUES ({idObj1} ,{idObj2})";
-        await SetData(query);
+        await DALHelper.SetData(query, connectionString, logger);
     }
 
     private async void DeleteLinkFromObjects(string tablename, BaseModel obj1, BaseModel obj2, string columnReference1Name, string columnReference2Name)
@@ -1108,14 +1018,14 @@ public class DbContextV2<T> where T : BaseModel
             columnReference2Name = $"id{type2.Name}";
 
         string query = "DELETE FROM " + tablename + $" WHERE {columnReference1Name} = {obj1.ID} AND {columnReference2Name} = {obj2.ID}";
-        await SetData(query);
+        await DALHelper.SetData(query, connectionString, logger);
     }
 
     private async Task<Dictionary<string, IList>> GetDependenciesLists(List<T> results, bool largeTables)
     {
         if (largeTables)
             return GetObjectsListsLargeTables(results);
-        else 
+        else
             return await GetObjectsLists(results);
     }
 
@@ -1418,7 +1328,7 @@ public class DbContextV2<T> where T : BaseModel
             {
                 selectWhereParameter = baseModelType.Key.Split('_')[2];
             }
-          
+
             if (toReadBaseModelsIndexes.TryGetValue(baseModelType.Key, out List<int> indexList))
             {
                 if (indexList != null)
@@ -1602,7 +1512,7 @@ public class DbContextV2<T> where T : BaseModel
                 }
 
                 string query = string.Format(sqlFieldInfo.Query, parameters.ToArray());
-                DataTable table = ExecuteReadQuery(query);
+                DataTable table = DALHelper.ExecuteReadQuery(query, connectionString);
                 if (table.Rows.Count == 0)
                     continue;
 
@@ -1732,7 +1642,7 @@ public class DbContextV2<T> where T : BaseModel
         if (filterExpression.FilterExpressions.Any())
             query += " ( ";
 
-        
+
         if (!string.IsNullOrWhiteSpace(filterExpression.PropertyName) && filterExpression.PropertyValue != null && property != null)
         {
             if (property.GetCustomAttribute(typeof(ValueInfo)) is ValueInfo valueInfo)

@@ -8,9 +8,6 @@ namespace UNI.API.Contracts.Models
     [ClassInfo(SQLName = "usersview")]
     public class User : BaseModel
     {
-        [ValueInfo(SQLName = "title")]
-        public string Title { get; set; }
-
         [ValueInfo(SQLName = "firstname")]
         public string FirstName { get; set; }
 
@@ -68,11 +65,6 @@ namespace UNI.API.Contracts.Models
 
         protected void AddDataAttributes()
         {
-            AddDataAttribute(nameof(Title), new DataAttributes()
-            {
-                SQLName = "title",
-                WriteTable = "users"
-            });
             AddDataAttribute(nameof(FirstName), new DataAttributes()
             {
                 SQLName = "firstname",
