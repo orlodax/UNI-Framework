@@ -100,6 +100,23 @@ public class UNIClient<T> where T : BaseModel
         return response != null && response.StatusCode == HttpStatusCode.OK;
     }
 
+    /// <summary>
+    /// Admins can call this to create a new set of credentials (for a new user)
+    /// </summary>
+    /// <param name="requestDTO"></param>
+    /// <returns></returns>
+    public async Task<int> CreateCredentials(Credentials requestDTO)
+    {
+        RestRequest request = PreparePostRequestWithBody(requestDTO);
+
+        var response = await ProcessRequest<RestResponse>(request, additionalRoute: "identity/admin/createCredentials", isIdentityRequest: true);
+
+        if (response?.StatusCode == HttpStatusCode.OK)
+            return Convert.ToInt32(response.Content);
+
+        return 0;
+    }
+
     public async Task<bool> ResetPassword(Credentials newCredentials)
     {
         RestRequest request = PreparePostRequestWithBody(newCredentials);

@@ -1,4 +1,8 @@
-﻿namespace UNI.API.Tests;
+﻿using System.IdentityModel.Tokens.Jwt;
+using UNI.API.Client;
+using UNI.API.Contracts.Models;
+
+namespace UNI.API.Tests;
 
 [TestClass]
 public class ClientTests
@@ -17,24 +21,35 @@ public class ClientTests
     //private PlantTest testObject = new();
     //private PlantTest testObject2 = new();
 
-    //public async Task EnsureAuthentication()
-    //{
-    //    if (UNIUser.Token == null)
-    //        await Authenticate();
-    //    else
-    //    {
-    //        JwtSecurityToken jwtSecurityToken = new JwtSecurityTokenHandler().ReadJwtToken(UNIUser.Token.Value);
-    //        if (jwtSecurityToken.ValidTo < DateTime.UtcNow)
-    //            await Authenticate();
-    //    }
-    //}
+    private readonly UNIClient<User> client = new();
 
-    //[TestMethod]
-    //public async Task Authenticate()
-    //{
-    //    UNIUser.Token = await client.Authenticate("a", "a");
-    //    Assert.IsNotNull(UNIUser.Token);
-    //}
+    public async Task EnsureAuthentication()
+    {
+        if (UNIUser.Token == null)
+            await Authenticate();
+        else
+        {
+            JwtSecurityToken jwtSecurityToken = new JwtSecurityTokenHandler().ReadJwtToken(UNIUser.Token.Value);
+            if (jwtSecurityToken.ValidTo < DateTime.UtcNow)
+                await Authenticate();
+        }
+    }
+
+    [TestMethod]
+    public async Task Authenticate()
+    {
+        UNIUser.Token = await client.Authenticate("a@a.a", "a");
+        Assert.IsNotNull(UNIUser.Token);
+    }
+
+    [TestMethod]
+    public async Task CreateCredentials()
+    {
+        await EnsureAuthentication();
+
+        int insertedId = await client.CreateCredentials(new Credentials() { Username = "test", Password = "test" });
+        Assert.IsTrue(insertedId > 0);
+    }
 
     //[TestMethod]
     //public async Task CreateItem()

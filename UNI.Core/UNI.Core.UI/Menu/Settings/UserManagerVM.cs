@@ -2,16 +2,21 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using UNI.API.Client;
 using UNI.API.Contracts.Models;
 using UNI.Core.Library;
 using UNI.Core.UI.CustomControls.GridBox;
 using UNI.Core.UI.CustomControls.ShowBox;
+using UNI.Core.UI.Misc;
+using UNI.Core.UI.NewItem;
 using UNI.Core.UI.Tabs.ListDetail;
 
 namespace UNI.Core.UI.Menu.Settings
 {
     public class UserManagerVM : ListDetailVM<User>
     {
+        UNIClient<Credentials> credentialsClient = new UNIClient<Credentials>();
+
         public UserManagerVM()
         {
             ViewBuilder.CustomizeVisibleProperties(new List<string>
@@ -27,6 +32,19 @@ namespace UNI.Core.UI.Menu.Settings
             ViewBuilder.CustomizeViewModelByPropertyName(nameof(User.Roles), typeof(UserRolesGridBoxMTMVM));
 
             ViewBuilder.CustomizeShowBoxVM(UI.ViewBuilder.EnControlTypes.GridBoxMtM, typeof(ShowBoxRolesVM));
+
+            OverrideBaseCommands();
+        }
+
+        private void OverrideBaseCommands()
+        { 
+            CreateItem = new RelayCommand(async (parameter) =>
+            {
+                var newItemVM = new NewItemVM<Credentials>();
+                NewItemVM.ItemUpdated += async (s, e) => await LoadData();
+                var newItem = new NewItem.NewItem() { DataContext = NewItemVM };
+                //credentialsClient.CreateCredentials();
+            });
         }
     }
 

@@ -68,20 +68,31 @@ public class IdentityController : Controller
         if (user == null)
             return Unauthorized("Wrong username or password");
 
-        identityService.ChangePassword(requestDTO.Username, requestDTO.NewPassword);
+        await identityService.ChangePassword(requestDTO.Username, requestDTO.NewPassword);
         logger.Log(LogLevel.Information, "{controllerName}: User '{userName}' changed their password.", nameof(IdentityController), requestDTO.Username);
 
         return Ok();
     }
 
     #region Users and Roles admin
+    [HttpPost("admin/createCredentials")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+    public async Task<ActionResult<int>> CreateCredentials([FromBody] Credentials newCredentials)
+    {
+        int insertedId = await identityService.CreateCredentials(newCredentials.Username, newCredentials.Password);
+        logger.Log(LogLevel.Information, "{controllerName}: Admin '{adminName}' created credentials for user '{userName}'.", nameof(IdentityController), HttpContext.User.Identities.First().Name, newCredentials.Username);
 
+        if (insertedId == 0)
+            return BadRequest("Something went wrong creating credentials. Check with your IT helpdesk");
+
+        return Ok(insertedId);
+    }
 
     [HttpPost("admin/resetPassword")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
-    public IActionResult ResetPassword([FromBody] Credentials newCredentials)
+    public async Task<IActionResult> ResetPassword([FromBody] Credentials newCredentials)
     {
-        identityService.ChangePassword(newCredentials.Username, newCredentials.Password);
+        await identityService.ChangePassword(newCredentials.Username, newCredentials.Password);
         logger.Log(LogLevel.Information, "{controllerName}: Admin '{adminName}' reset the password of user '{userName}'.", nameof(IdentityController), HttpContext.User.Identities.First().Name, newCredentials.Username);
 
         return Ok();

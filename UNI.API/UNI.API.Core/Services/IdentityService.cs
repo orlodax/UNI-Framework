@@ -44,7 +44,7 @@ public class IdentityService
 
         JwtSecurityToken token = new(header, payload);
 
-        identityRepo.LogAccess(user);
+        await identityRepo.LogAccess(user);
 
         return new UNIToken()
         {
@@ -71,9 +71,15 @@ public class IdentityService
         return null;
     }
 
-    public void ChangePassword(string username, string newPassword)
+    public async Task<int> CreateCredentials(string username, string newPassword)
     {
         string hashPassword = PasswordHelper.CreatePasswordHash(newPassword);
-        identityRepo.ChangePassword(username, hashPassword);
+        return await identityRepo.CreateCredentials(username, hashPassword);
+    }
+
+    public async Task ChangePassword(string username, string newPassword)
+    {
+        string hashPassword = PasswordHelper.CreatePasswordHash(newPassword);
+        await identityRepo.ChangePassword(username, hashPassword);
     }
 }

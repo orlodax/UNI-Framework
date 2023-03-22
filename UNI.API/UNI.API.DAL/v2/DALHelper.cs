@@ -78,8 +78,10 @@ public class DALHelper
     /// <param name="query"></param>
     /// <param name="queryParameters"></param>
     /// <returns></returns>
-    public static async Task SetDataParametrized(string query, MySqlParameter[] queryParameters, string connectionString, ILogger logger)
+    public static async Task<int> SetDataParametrized(string query, MySqlParameter[] queryParameters, string connectionString, ILogger logger)
     {
+        int lastId;
+
         using MySqlConnection conn = new(connectionString);
         using MySqlCommand cmd = new(query, conn);
 
@@ -90,13 +92,17 @@ public class DALHelper
         try
         {
             await cmd.ExecuteNonQueryAsync();
+            lastId = Convert.ToInt32(cmd.LastInsertedId);
         }
         catch (MySqlException e)
         {
             LogError(logger, e);
+            lastId = 0;
         }
 
         conn.Close();
+
+        return lastId;
     }
 
     private static void LogError(ILogger logger, MySqlException e)
