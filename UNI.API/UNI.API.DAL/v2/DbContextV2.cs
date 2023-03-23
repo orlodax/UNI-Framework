@@ -103,21 +103,15 @@ public class DbContextV2<T> where T : BaseModel
                         if (string.IsNullOrWhiteSpace(valueInfo.ManyToManySQLName))
                             continue;
 
-                        // do list select of actual elements in list
-                        List<BaseModel>? actualList = new();
-
-                        MethodInfo method = GetType().GetMethod(nameof(SelectObjects));
-                        MethodInfo reflectedSelectObjects = method.MakeGenericMethod(pro.PropertyType.GenericTypeArguments[0]);
-
-                        object[] parameters = { obj.ID, valueInfo.ManyToManySQLName, "Mtm" };
-                        if (reflectedSelectObjects != null)
-                            actualList = ((IList?)reflectedSelectObjects.Invoke(this, parameters))?.Cast<BaseModel>().ToList();
-
+                        List<int> idsToMatch = new() { obj.ID };
+                        IList list = await SelectObjects(type: pro.PropertyType.GenericTypeArguments[0], tableAttritbute: valueInfo.ManyToManySQLName, idMatchAttribute: "Mtm", idsToMatch: idsToMatch);
+                        List<BaseModel> actualList =  list.Cast<BaseModel>().ToList();
+        
                         var property = (IList?)pro.GetValue(obj);
                         if (property == null || actualList == null)
                             continue;
 
-                        var modifiedList = property.Cast<BaseModel>().ToList();
+                        List<BaseModel> modifiedList = property.Cast<BaseModel>().ToList();
 
                         //delete all no more needed links
                         foreach (var item in actualList)
@@ -149,7 +143,7 @@ public class DbContextV2<T> where T : BaseModel
                         continue;
                     }
 
-                    var value = pro.GetValue(obj);
+                    object value = pro.GetValue(obj);
                     string queryValue = ParsePropertyValue(pro.GetValue(obj), pro, queryParameters);
                     query += $"{valueInfo.SQLName} = {queryValue}";
                 }
@@ -468,7 +462,7 @@ public class DbContextV2<T> where T : BaseModel
     /// <typeparam name="T" the type of the object-s we want></typeparam>
     /// <param name="id" facultative parameter></param>
     /// <returns></returns>
-    public async Task<List<T>> SelectObjects(int? idToMatch = null, string? tableAttritbute = null, string? idName = null)
+    public async Task<List<T>> ReadObjects (int? idToMatch = null, string? tableAttritbute = null, string? idName = null)
     {
         List<T> values = new();
         try
@@ -570,13 +564,13 @@ public class DbContextV2<T> where T : BaseModel
                 if (!query.Contains("WHERE")) query += " WHERE ";
 
                 //TODO Convertire filterexpression riferite a dipendenze
-                requestDTO.FilterExpressions = ConvertFilterExpressionDependencies(requestDTO.FilterExpressions);
+                requestDTO.FilterExpressions = await ConvertFilterExpressionDependencies(requestDTO.FilterExpressions);
 
                 foreach (var filterExpression in requestDTO.FilterExpressions)
                 {
                     if (filterExpression.FilterExpressions.Any())
                         query += " ( ";
-                    query += FilterExpressionToSql(filterExpression, properties.ToList(), firstWhereCondition, requestDTO.FilterDateFormat, filterExpression.ComparisonType);
+                    query += FilterExpressionToSql(filterExpression, properties.ToList(), firstWhereCondition, requestDTO.FilterDateFormat);
                     if (filterExpression.FilterExpressions.Any())
                     {
                         if (query[^4..] == "AND ")
@@ -728,7 +722,7 @@ public class DbContextV2<T> where T : BaseModel
 
     #region Private methods
 
-    public List<FilterExpression> ConvertFilterExpressionDependencies(List<FilterExpression> filterExpressions)
+    private async Task<List<FilterExpression>> ConvertFilterExpressionDependencies(List<FilterExpression> filterExpressions)
     {
         try
         {
@@ -789,7 +783,7 @@ public class DbContextV2<T> where T : BaseModel
                                 if (classInfo == null)
                                     continue;
 
-                                var value = SelectObjects(type: propertyType, tableAttritbute: classInfo.SQLName, valueMatchAttribute: reversePath[0], valueToMatch: filterExpression.PropertyValue);
+                                var value = await SelectObjects(type: propertyType, tableAttritbute: classInfo.SQLName, valueMatchAttribute: reversePath[0], valueToMatch: filterExpression.PropertyValue);
                                 nextExectionIdToFilter = new();
                                 foreach (var item in value)
                                     if (item is BaseModel bm)
@@ -802,7 +796,7 @@ public class DbContextV2<T> where T : BaseModel
                                 //caso mtm
                                 if (!string.IsNullOrWhiteSpace(valueInfoChildProperty.ManyToManySQLName))
                                 {
-                                    var value = SelectObjects(type: propertyType, tableAttritbute: valueInfoChildProperty.ManyToManySQLName, idMatchAttribute: "", idsToMatch: nextExectionIdToFilter);
+                                    var value =await SelectObjects(type: propertyType, tableAttritbute: valueInfoChildProperty.ManyToManySQLName, idMatchAttribute: "", idsToMatch: nextExectionIdToFilter);
 
                                     nextExectionIdToFilter = new();
                                     foreach (var item in value)
@@ -832,7 +826,7 @@ public class DbContextV2<T> where T : BaseModel
                                     if (childPropertyInfo.PropertyType.IsGenericType && String.IsNullOrWhiteSpace(valueInfoChildProperty.ManyToManySQLName))
                                         idMatchAttribute = string.Empty;
 
-                                    var value = SelectObjects(type: propertyType, tableAttritbute: classInfoProperty.SQLName, idMatchAttribute: idMatchAttribute, idsToMatch: nextExectionIdToFilter);
+                                    var value =await SelectObjects(type: propertyType, tableAttritbute: classInfoProperty.SQLName, idMatchAttribute: idMatchAttribute, idsToMatch: nextExectionIdToFilter);
 
                                     nextExectionIdToFilter = new();
 
@@ -883,7 +877,7 @@ public class DbContextV2<T> where T : BaseModel
 
     }
 
-    public IList SelectObjects(Type type, string tableAttritbute, string? idMatchAttribute = null, List<int>? idsToMatch = null, string? valueMatchAttribute = null, string? valueToMatch = null)
+    private async Task<IList> SelectObjects(Type type, string tableAttritbute, string? idMatchAttribute = null, List<int>? idsToMatch = null, string? valueMatchAttribute = null, string? valueToMatch = null)
     {
         IList res = new List<BaseModel>();
 
@@ -901,7 +895,7 @@ public class DbContextV2<T> where T : BaseModel
         {
             var genericListHelper = listHelper.GetGenericInstance(connectionString, type);
             var getDataMethod = genericListHelper.GetType().GetMethod(nameof(ListHelperV2<T>.GetData));
-            return (IList)getDataMethod.Invoke(genericListHelper, new[] { query });
+            return (IList)await DALHelper.InvokeAsyncList(genericListHelper, getDataMethod, new[] { query });
         }
 
         return res;
@@ -1024,8 +1018,8 @@ public class DbContextV2<T> where T : BaseModel
     private async Task<Dictionary<string, IList>> GetDependenciesLists(List<T> results, bool largeTables)
     {
         if (largeTables)
-            return GetObjectsListsLargeTables(results);
-        else
+            return await GetObjectsListsLargeTables(results);
+        else 
             return await GetObjectsLists(results);
     }
 
@@ -1226,7 +1220,7 @@ public class DbContextV2<T> where T : BaseModel
         }
     }
 
-    private Dictionary<string, IList> GetObjectsListsLargeTables(IList objs, Dictionary<string, IList>? listOfObjects = null, Dictionary<string, List<int>>? baseModelsIndexes = null, Dictionary<string, Type>? baseModelsTypes = null, List<Type>? enumeratedTypes = null)
+    private async Task<Dictionary<string, IList>> GetObjectsListsLargeTables(IList objs, Dictionary<string, IList>? listOfObjects = null, Dictionary<string, List<int>>? baseModelsIndexes = null, Dictionary<string, Type>? baseModelsTypes = null, List<Type>? enumeratedTypes = null)
     {
         Dictionary<string, List<int>> iterationBaseModelsIndexes = new();
         Dictionary<string, List<int>> toReadBaseModelsIndexes = new();
@@ -1344,7 +1338,7 @@ public class DbContextV2<T> where T : BaseModel
                     {
                         var genericListHelper = listHelper.GetGenericInstance(connectionString, type);
                         var getDataMethod = genericListHelper.GetType().GetMethod(nameof(ListHelperV2<T>.GetData));
-                        value = (IList)getDataMethod.Invoke(genericListHelper, new[] { query });
+                        value = (IList)await DALHelper.InvokeAsyncList(genericListHelper, getDataMethod, new[] { query });
                     }
 
                     if (!iterationListOfObjects.ContainsKey(baseModelType.Key) && value != null)
@@ -1356,7 +1350,7 @@ public class DbContextV2<T> where T : BaseModel
         }
 
         foreach (KeyValuePair<string, IList> list in iterationListOfObjects)
-            GetObjectsListsLargeTables(list.Value, listOfObjects, baseModelsIndexes, baseModelsTypes, enumeratedTypes);
+           await GetObjectsListsLargeTables(list.Value, listOfObjects, baseModelsIndexes, baseModelsTypes, enumeratedTypes);
 
         return listOfObjects;
     }
@@ -1634,7 +1628,7 @@ public class DbContextV2<T> where T : BaseModel
         return val1 == val2;
     }
 
-    private string FilterExpressionToSql(FilterExpression filterExpression, List<PropertyInfo> properties, bool firstWhereCondition, string filterDateFormat, string comparisonType)
+    private string FilterExpressionToSql(FilterExpression filterExpression, List<PropertyInfo> properties, bool firstWhereCondition, string filterDateFormat)
     {
         var property = properties.Find(p => p.Name == filterExpression.PropertyName);
         string query = string.Empty;
@@ -1676,7 +1670,7 @@ public class DbContextV2<T> where T : BaseModel
         foreach (var subFilterExpression in filterExpression.FilterExpressions)
         {
             i++;
-            query += FilterExpressionToSql(subFilterExpression, properties, firstWhereCondition, filterDateFormat, filterExpression.ComparisonType);
+            query += FilterExpressionToSql(subFilterExpression, properties, firstWhereCondition, filterDateFormat);
             if (i < filterExpression.FilterExpressions.Count)
                 query += $" {filterExpression.ComparisonType} ";
         }
