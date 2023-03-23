@@ -672,7 +672,7 @@ public class DbContextV2<T> where T : BaseModel
                 {
                     if (filterExpression.FilterExpressions.Any())
                         query += " ( ";
-                    query += FilterExpressionToSql(filterExpression, properties.ToList(), firstWhereCondition, requestDTO.FilterDateFormat, filterExpression.ComparisonType);
+                    query += FilterExpressionToSql(filterExpression, properties.ToList(), firstWhereCondition, requestDTO.FilterDateFormat);
                     if (filterExpression.FilterExpressions.Any())
                     {
                         if (query[^4..] == "AND ")
@@ -1724,7 +1724,7 @@ public class DbContextV2<T> where T : BaseModel
         return val1 == val2;
     }
 
-    private string FilterExpressionToSql(FilterExpression filterExpression, List<PropertyInfo> properties, bool firstWhereCondition, string filterDateFormat, string comparisonType)
+    private string FilterExpressionToSql(FilterExpression filterExpression, List<PropertyInfo> properties, bool firstWhereCondition, string filterDateFormat)
     {
         var property = properties.Find(p => p.Name == filterExpression.PropertyName);
         string query = string.Empty;
@@ -1766,7 +1766,7 @@ public class DbContextV2<T> where T : BaseModel
         foreach (var subFilterExpression in filterExpression.FilterExpressions)
         {
             i++;
-            query += FilterExpressionToSql(subFilterExpression, properties, firstWhereCondition, filterDateFormat, filterExpression.ComparisonType);
+            query += FilterExpressionToSql(subFilterExpression, properties, firstWhereCondition, filterDateFormat);
             if (i < filterExpression.FilterExpressions.Count)
                 query += $" {filterExpression.ComparisonType} ";
         }
