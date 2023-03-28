@@ -200,8 +200,10 @@ public class DbContextV2<T> where T : BaseModel
                         if (string.IsNullOrWhiteSpace(valueInfo.ManyToManySQLName))
                             continue;
 
-                        var idsToMatch = new List<int>();
-                        idsToMatch.Add(obj.ID);
+                        var idsToMatch = new List<int>
+                        {
+                            obj.ID
+                        };
                         var list = await SelectObjects(type: pro.PropertyType.GenericTypeArguments[0], tableAttritbute: valueInfo.ManyToManySQLName, idMatchAttribute: "Mtm", idsToMatch: idsToMatch);
                         var actualList =  list.Cast<BaseModel>().ToList();
         
@@ -638,7 +640,7 @@ public class DbContextV2<T> where T : BaseModel
 
             if (requestDTO.Id.HasValue)
             {
-                query += $" WHERE id{requestDTO.IdName} = {requestDTO.Id.HasValue}";
+                query += $" WHERE id{requestDTO.IdName} = {requestDTO.Id}";
                 firstWhereCondition = false;
                 if (!string.IsNullOrWhiteSpace(classInfo.ClassType))
                     query += $" AND classtype = '{classInfo.ClassType}'";
@@ -716,7 +718,7 @@ public class DbContextV2<T> where T : BaseModel
 
                 List<T>? items = new();
                 foreach (string text in searchRequests)
-                    results = FilterListParameter(text, resultCopyWithDependencies, results);
+                    results = FilterListParameter<T>(text, resultCopyWithDependencies.Cast<BaseModel>().ToList(), results.Cast<BaseModel>().ToList());
 
                 List<T> itemsFilteredWithDependencies = new();
                 foreach (T item in results)
@@ -1487,17 +1489,16 @@ public class DbContextV2<T> where T : BaseModel
         return listOfObjects;
     }
 
-    // The second <T> is required because it is changed when called at runtime by reflection
-#pragma warning disable CS0693 // Type parameter has the same name as the type parameter from outer type
-    private List<T> FilterListParameter<T>(string searchText, List<T> resultCopyWithDependencies, List<T> results) where T : BaseModel
-#pragma warning restore CS0693 // Type parameter has the same name as the type parameter from outer type
+#pragma warning disable CS0693 // Il parametro di tipo ha lo stesso nome del parametro del tipo outer
+    private List<T> FilterListParameter<T>(string searchText, List<BaseModel> itemsWithDependencies, List<BaseModel> itemsToFilter)
+#pragma warning restore CS0693 // Il parametro di tipo ha lo stesso nome del parametro del tipo outer
     {
-        List<T> filteredItemsSource = new();
+        List<BaseModel> filteredItemsSource = new();
 
         if (string.IsNullOrWhiteSpace(searchText))
-            return filteredItemsSource;
+            return filteredItemsSource.Cast<T>().ToList();
 
-        foreach (var item in results)
+        foreach (var item in itemsToFilter)
         {
             foreach (var property in typeof(T).GetProperties())
             {
@@ -1526,24 +1527,25 @@ public class DbContextV2<T> where T : BaseModel
                 }
                 else if (property.PropertyType.IsGenericType && property.PropertyType.FullName != null && !property.PropertyType.FullName.Contains("UniDataSet"))
                 {
-                    BaseModel? itemWithDependencies = resultCopyWithDependencies.Find(i => i.ID == item.ID);
+                    BaseModel? itemWithDependencies = itemsWithDependencies.Find(i => i.ID == item.ID);
                     if (itemWithDependencies == null)
                         continue;
 
                     List<BaseModel>? dependencyToFilter = (property.GetValue(itemWithDependencies) as IList)?.Cast<BaseModel>().ToList();
                     if (dependencyToFilter == null || dependencyToFilter.Count == 0)
                         continue;
-
                     object[] parameters = { searchText, dependencyToFilter, dependencyToFilter };
+                   
                     MethodInfo method = GetType().GetMethod(nameof(FilterListParameter), BindingFlags.NonPublic | BindingFlags.Instance);
                     MethodInfo generic = method.MakeGenericMethod(property.PropertyType.GenericTypeArguments[0]);
+
                     IList? items = generic?.Invoke(this, parameters) as IList;
                     if (items?.Count > 0 && !filteredItemsSource.Contains(item))
                         filteredItemsSource.Add(item);
                 }
                 else if (property.PropertyType.IsSubclassOf(typeof(BaseModel)))
                 {
-                    BaseModel? itemWithDependencies = resultCopyWithDependencies.Find(i => i.ID == item.ID);
+                    BaseModel? itemWithDependencies = itemsWithDependencies.Find(i => i.ID == item.ID);
                     if (!SearchValueInObject(searchText, property.GetValue(itemWithDependencies)))
                         continue;
 
@@ -1556,7 +1558,7 @@ public class DbContextV2<T> where T : BaseModel
             }
         }
 
-        return filteredItemsSource;
+        return filteredItemsSource.Cast<T>().ToList();
     }
 
     private void ResolveSqlFields(List<T> items)
