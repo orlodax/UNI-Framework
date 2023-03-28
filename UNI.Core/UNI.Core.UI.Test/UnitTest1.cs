@@ -17,9 +17,9 @@ namespace UNI.Core.UI.Test
             // var vm = new ViewModelDerivato();
             // vm.VBBase.MetodoBase();
 
-            Type classType = typeof(List<>);
-            Type[] typeParams = new Type[] { typeof(BaseCustomer) };
-            Type constructedType = classType.MakeGenericType(typeParams);
+            //Type classType = typeof(List<>);
+            //Type[] typeParams = new Type[] { typeof(BaseCustomer) };
+            //Type constructedType = classType.MakeGenericType(typeParams);
 
             //if (constructedType.Equals(typeof(List<Customer>)))
             //    Assert.Pass();

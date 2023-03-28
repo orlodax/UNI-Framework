@@ -29,7 +29,6 @@ namespace UNI.Core.UI.Test
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
             {
@@ -37,11 +36,9 @@ namespace UNI.Core.UI.Test
             }
 #endif
 
-            Frame rootFrame = Window.Current.Content as Frame;
-
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
-            if (rootFrame == null)
+            if (!(Window.Current.Content is Frame rootFrame))
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();

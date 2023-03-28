@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Reflection;
 using System.Threading.Tasks;
 using UNI.Core.Library;
 using UNI.Core.Library.GenericModels;
@@ -10,8 +9,6 @@ namespace UNI.Core.Explorer.ViewModels.SelectorBox
     public class SelectorBoxOutboundProductSerialVM<T> : SelectorBoxVM<ProductSerial>
     {
         public SelectorBoxOutboundProductSerialVM(
-            List<FilterExpression> filterExpressions,
-            PropertyInfo displayPropertyInfo,
             BaseModel parent,
             string dependencyFilterPropertyName,
             string parentFilterPropertyName,
@@ -20,13 +17,16 @@ namespace UNI.Core.Explorer.ViewModels.SelectorBox
                 dependencyFilterPropertyName,
                 parentFilterPropertyName,
                 dependencyFilterPropertyValue)
-        {
+        { 
+        
         }
 
         public override Task LoadData(List<FilterExpression> filterExpressions = null)
         {
-            filterExpressions = new List<FilterExpression>();
-            filterExpressions.Add(new FilterExpression() { PropertyName = "Quantity", PropertyValue = "1" });
+            filterExpressions = new List<FilterExpression>
+            {
+                new FilterExpression() { PropertyName = "Quantity", PropertyValue = "1" }
+            };
             return base.LoadData(filterExpressions);
         }
     }

@@ -53,12 +53,12 @@ namespace UNI.Core.UI.NewItem
                 //TODO manage codes
                 if (statusCode >= 400 && statusCode != 0)
                 {
-                    var cd = new TeachingTip()
+                    _ = new TeachingTip()
                     {
                         Title = ResourceLoader.GetForCurrentView().GetString("error"),
-                        Subtitle = $"error n. {statusCode}"
+                        Subtitle = $"error n. {statusCode}",
+                        IsOpen = true 
                     };
-                    cd.IsOpen = true;
                 }
                 else
                     OnItemUpdated(this, new CustomEventArgs.ItemUpdatedEventArgs(SelectedItem));

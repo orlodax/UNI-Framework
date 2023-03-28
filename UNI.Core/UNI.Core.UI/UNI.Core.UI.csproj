@@ -280,6 +280,7 @@
     <Compile Include="CustomEventArgs\NavigationTabEventArgs.cs" />
     <Compile Include="CustomEventArgs\ObjectSelectedEventArgs.cs" />
     <Compile Include="CustomEventArgs\PrintEventArgs.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="MainPage\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>

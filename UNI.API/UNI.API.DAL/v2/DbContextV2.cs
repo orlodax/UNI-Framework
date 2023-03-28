@@ -105,8 +105,8 @@ public class DbContextV2<T> where T : BaseModel
 
                         List<int> idsToMatch = new() { obj.ID };
                         IList list = await SelectObjects(type: pro.PropertyType.GenericTypeArguments[0], tableAttritbute: valueInfo.ManyToManySQLName, idMatchAttribute: "Mtm", idsToMatch: idsToMatch);
-                        List<BaseModel> actualList =  list.Cast<BaseModel>().ToList();
-        
+                        List<BaseModel> actualList = list.Cast<BaseModel>().ToList();
+
                         var property = (IList?)pro.GetValue(obj);
                         if (property == null || actualList == null)
                             continue;
@@ -460,9 +460,9 @@ public class DbContextV2<T> where T : BaseModel
     /// Generic method to perform SELECT * or SELECT WHERE ID = ... on any table
     /// </summary>
     /// <typeparam name="T" the type of the object-s we want></typeparam>
-    /// <param name="id" facultative parameter></param>
+    /// <param name="id" optional parameter></param>
     /// <returns></returns>
-    public async Task<List<T>> ReadObjects (int? idToMatch = null, string? tableAttritbute = null, string? idName = null)
+    public async Task<List<T>> ReadObjects(int? idToMatch = null, string? tableAttritbute = null, string? idName = null)
     {
         List<T> values = new();
         try
@@ -796,7 +796,7 @@ public class DbContextV2<T> where T : BaseModel
                                 //caso mtm
                                 if (!string.IsNullOrWhiteSpace(valueInfoChildProperty.ManyToManySQLName))
                                 {
-                                    var value =await SelectObjects(type: propertyType, tableAttritbute: valueInfoChildProperty.ManyToManySQLName, idMatchAttribute: "", idsToMatch: nextExectionIdToFilter);
+                                    var value = await SelectObjects(type: propertyType, tableAttritbute: valueInfoChildProperty.ManyToManySQLName, idMatchAttribute: "", idsToMatch: nextExectionIdToFilter);
 
                                     nextExectionIdToFilter = new();
                                     foreach (var item in value)
@@ -826,7 +826,7 @@ public class DbContextV2<T> where T : BaseModel
                                     if (childPropertyInfo.PropertyType.IsGenericType && String.IsNullOrWhiteSpace(valueInfoChildProperty.ManyToManySQLName))
                                         idMatchAttribute = string.Empty;
 
-                                    var value =await SelectObjects(type: propertyType, tableAttritbute: classInfoProperty.SQLName, idMatchAttribute: idMatchAttribute, idsToMatch: nextExectionIdToFilter);
+                                    var value = await SelectObjects(type: propertyType, tableAttritbute: classInfoProperty.SQLName, idMatchAttribute: idMatchAttribute, idsToMatch: nextExectionIdToFilter);
 
                                     nextExectionIdToFilter = new();
 
@@ -1019,7 +1019,7 @@ public class DbContextV2<T> where T : BaseModel
     {
         if (largeTables)
             return await GetObjectsListsLargeTables(results);
-        else 
+        else
             return await GetObjectsLists(results);
     }
 
@@ -1350,7 +1350,7 @@ public class DbContextV2<T> where T : BaseModel
         }
 
         foreach (KeyValuePair<string, IList> list in iterationListOfObjects)
-           await GetObjectsListsLargeTables(list.Value, listOfObjects, baseModelsIndexes, baseModelsTypes, enumeratedTypes);
+            await GetObjectsListsLargeTables(list.Value, listOfObjects, baseModelsIndexes, baseModelsTypes, enumeratedTypes);
 
         return listOfObjects;
     }

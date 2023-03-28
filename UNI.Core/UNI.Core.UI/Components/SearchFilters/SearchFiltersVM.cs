@@ -210,7 +210,7 @@ namespace UNI.Core.UI.Components.SearchFilters
                 searchExpression = StringInputToSearch;
 
 
-            if (!String.IsNullOrWhiteSpace(searchExpression) && selectedProperty != null)
+            if (!string.IsNullOrWhiteSpace(searchExpression) && selectedProperty != null)
             {
                 var filterExpression = new FilterExpression() { PropertyName = SelectedProperty.Name, PropertyValue = searchExpression };
 
@@ -272,11 +272,11 @@ namespace UNI.Core.UI.Components.SearchFilters
             searchTag.Close += SearchTag_Close;
         }
 
-        private void RemoveTagBox(FilterExpression filterExpression)
-        {
-            FilterExpressions.Remove(filterExpression);
-            SearchTags.Remove(SearchTags.First(s => s.FilterExpression == filterExpression));
-        }
+        //private void RemoveTagBox(FilterExpression filterExpression)
+        //{
+        //    FilterExpressions.Remove(filterExpression);
+        //    SearchTags.Remove(SearchTags.First(s => s.FilterExpression == filterExpression));
+        //}
 
         private void SearchTag_Close(object sender, RoutedEventArgs e)
         {

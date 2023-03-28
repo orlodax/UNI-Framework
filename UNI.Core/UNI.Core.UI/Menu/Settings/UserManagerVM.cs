@@ -38,7 +38,7 @@ namespace UNI.Core.UI.Menu.Settings
 
         private void OverrideBaseCommands()
         { 
-            CreateItem = new RelayCommand(async (parameter) =>
+            CreateItem = new RelayCommand((parameter) =>
             {
                 var newItemVM = new NewItemVM<Credentials>();
                 NewItemVM.ItemUpdated += async (s, e) => await LoadData();

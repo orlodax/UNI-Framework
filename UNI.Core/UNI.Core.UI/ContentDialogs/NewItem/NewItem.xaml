@@ -16,7 +16,6 @@
     PrimaryButtonCommand="{Binding Save}"
     SecondaryButtonText="{Binding CancelButtonLabel}"
     SecondaryButtonCommand="{Binding Cancel}"
-    SecondaryButtonClick="ContentDialog_SecondaryButtonClick"
      xmlns:i="using:Microsoft.Xaml.Interactivity" 
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
    >
