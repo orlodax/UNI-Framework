@@ -200,8 +200,10 @@ public class DbContextV2<T> where T : BaseModel
                         if (string.IsNullOrWhiteSpace(valueInfo.ManyToManySQLName))
                             continue;
 
-                        var idsToMatch = new List<int>();
-                        idsToMatch.Add(obj.ID);
+                        var idsToMatch = new List<int>
+                        {
+                            obj.ID
+                        };
                         var list = await SelectObjects(type: pro.PropertyType.GenericTypeArguments[0], tableAttritbute: valueInfo.ManyToManySQLName, idMatchAttribute: "Mtm", idsToMatch: idsToMatch);
                         var actualList =  list.Cast<BaseModel>().ToList();
         
@@ -1487,7 +1489,9 @@ public class DbContextV2<T> where T : BaseModel
         return listOfObjects;
     }
 
+#pragma warning disable CS0693 // Il parametro di tipo ha lo stesso nome del parametro del tipo outer
     public List<T> FilterListParameter<T>(string searchText, List<BaseModel> itemsWithDependencies, List<BaseModel> itemsToFilter)
+#pragma warning restore CS0693 // Il parametro di tipo ha lo stesso nome del parametro del tipo outer
     {
         List<BaseModel> filteredItemsSource = new();
 
@@ -1532,7 +1536,7 @@ public class DbContextV2<T> where T : BaseModel
                         continue;
                     object[] parameters = { searchText, dependencyToFilter, dependencyToFilter };
                    
-                    MethodInfo method = this.GetType().GetMethod(nameof(this.FilterListParameter));
+                    MethodInfo method = GetType().GetMethod(nameof(FilterListParameter));
                     MethodInfo generic = method.MakeGenericMethod(property.PropertyType.GenericTypeArguments[0]);
 
                     IList? items = generic?.Invoke(this, parameters) as IList;
