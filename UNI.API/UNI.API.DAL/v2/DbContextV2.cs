@@ -1490,7 +1490,7 @@ public class DbContextV2<T> where T : BaseModel
     }
 
 #pragma warning disable CS0693 // Il parametro di tipo ha lo stesso nome del parametro del tipo outer
-    public List<T> FilterListParameter<T>(string searchText, List<BaseModel> itemsWithDependencies, List<BaseModel> itemsToFilter)
+    private List<T> FilterListParameter<T>(string searchText, List<BaseModel> itemsWithDependencies, List<BaseModel> itemsToFilter)
 #pragma warning restore CS0693 // Il parametro di tipo ha lo stesso nome del parametro del tipo outer
     {
         List<BaseModel> filteredItemsSource = new();
@@ -1536,7 +1536,7 @@ public class DbContextV2<T> where T : BaseModel
                         continue;
                     object[] parameters = { searchText, dependencyToFilter, dependencyToFilter };
                    
-                    MethodInfo method = GetType().GetMethod(nameof(FilterListParameter));
+                    MethodInfo method = GetType().GetMethod(nameof(FilterListParameter), BindingFlags.NonPublic | BindingFlags.Instance);
                     MethodInfo generic = method.MakeGenericMethod(property.PropertyType.GenericTypeArguments[0]);
 
                     IList? items = generic?.Invoke(this, parameters) as IList;
