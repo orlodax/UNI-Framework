@@ -33,18 +33,16 @@ public class UNIClient<T> where T : BaseModel
     /// Xamarin needs to pass configuration section
     /// </summary>
     /// <param name="configurationSection"></param>
-    public UNIClient(IConfigurationSection configurationSection)
+    public UNIClient(UNIClientConfiguration configuration)
     {
-        UniClientInitialization(configurationSection);
+        UniClientInitialization(configuration);
     }
 
-    private void UniClientInitialization(IConfigurationSection? configurationSection = null)
+    private void UniClientInitialization(UNIClientConfiguration? configuration = null)
     {
-        if (configurationSection != null)
+        if (configuration != null)
         {
-            configuration = configurationSection
-               .GetSection(nameof(UNIClientConfiguration))
-               .Get<UNIClientConfiguration>();
+            this.configuration = configuration;
         }
         else
         {
