@@ -9,7 +9,7 @@
 
   <PropertyGroup>
     <PackageId>UNI.API</PackageId>
-    <Version>2.2.7</Version>
+    <Version>2.2.9</Version>
     <Copyright>Copyright 2022</Copyright>
     <Description>Base package for UNI APIs</Description>
     <Authors>Dario Orlovich</Authors>
