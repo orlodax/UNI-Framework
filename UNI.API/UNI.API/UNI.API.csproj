@@ -9,13 +9,13 @@
 
   <PropertyGroup>
     <PackageId>UNI.API</PackageId>
-    <Version>2.2.6</Version>
+    <Version>2.2.9</Version>
     <Copyright>Copyright 2022</Copyright>
     <Description>Base package for UNI APIs</Description>
     <Authors>Dario Orlovich</Authors>
     <Company>Teksistemi</Company>
     <TargetFramework>net6.0</TargetFramework>
-    <PackageReleaseNotes>Delete viewonly models, refactor</PackageReleaseNotes>
+    <PackageReleaseNotes>Bugfix dal</PackageReleaseNotes>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <IncludeSymbols>true</IncludeSymbols>

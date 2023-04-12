@@ -43,7 +43,6 @@ public class UNIClient<T> where T : BaseModel
         if (configurationSection != null)
         {
             configuration = configurationSection
-               .GetSection(nameof(UNIClientConfiguration))
                .Get<UNIClientConfiguration>();
         }
         else
