@@ -63,6 +63,7 @@
     <file src="..\bin\x64\Debug\UNI.Core.UI\MainPage\TabView.xbf" target="ref\uap10.0\UNI.Core.UI\MainPage" />
 
     <file src="..\bin\x64\Debug\UNI.Core.UI\Menu\Settings\SettingsPage.xbf" target="ref\uap10.0\UNI.Core.UI\Menu\Settings" />
+    <file src="..\bin\x64\Debug\UNI.Core.UI\Menu\Settings\UserDialogs\CredentialsCreation.xbf" target="ref\uap10.0\UNI.Core.UI\Menu\Settings\UserDialogs" />
     
     <file src="..\bin\x64\Debug\UNI.Core.UI\Services\Privileges\LoginPage.xbf" target="ref\uap10.0\UNI.Core.UI\Services\Privileges" />
     <file src="..\bin\x64\Debug\UNI.Core.UI\Services\Printing\PrintedField.xbf" target="ref\uap10.0\UNI.Core.UI\Services\Printing" />

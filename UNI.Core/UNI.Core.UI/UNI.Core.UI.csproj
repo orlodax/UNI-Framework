@@ -290,6 +290,9 @@
     </Compile>
     <Compile Include="MainPage\TabViewVM.cs" />
     <Compile Include="Menu\MenuNode.cs" />
+    <Compile Include="Menu\Settings\UserDialogs\CredentialsCreation.xaml.cs">
+      <DependentUpon>CredentialsCreation.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Menu\Settings\UserManagerVM.cs" />
     <Compile Include="Misc\ChunkHelper.cs" />
     <Compile Include="Misc\IBaseSearch.cs" />
@@ -453,6 +456,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Menu\Settings\UserDialogs\CredentialsCreation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Services\Printing\PrintedField.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -503,6 +510,7 @@
     <PRIResource Include="Strings\it-IT\Resources.resw" />
     <PRIResource Include="Strings\en-US\Resources.resw" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
