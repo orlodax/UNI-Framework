@@ -826,6 +826,7 @@ public class DbContextV2<T> where T : BaseModel
             foreach (var filterExpression in filterExpressions)
             {
                 List<FilterExpression> convertedFilterExpressions = new();
+                if (filterExpression.PropertyName == null) continue;
                 if (filterExpression.PropertyName.Contains("."))
                 {
                     var propertyPath = filterExpression.PropertyName.Split('.');
