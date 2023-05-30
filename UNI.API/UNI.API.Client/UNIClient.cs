@@ -176,8 +176,8 @@ public class UNIClient<T> where T : BaseModel
 
     public async Task<ApiResponseModel<T>?> GetDataSet(GetDataSetRequestDTO requestDTO)
     {
-        try
-        {
+        //try
+        //{
             RestRequest request = configuration!.ApiVersion switch
             {
                 "v1" => GetRequestV1(requestDTO),
@@ -217,11 +217,12 @@ public class UNIClient<T> where T : BaseModel
                 Count = apiResponseModel.Count,
                 DataBlocks = apiResponseModel.DataBlocks
             };
-        }
-        catch (Exception)
-        {
-            return null;
-        }
+        //}
+        //catch (Exception ex)
+        //{
+        //    Console.WriteLine(ex.Message);
+        //    return null;
+        //}
     }
 
     public async Task<int> CreateItems(List<T> items)
@@ -571,24 +572,33 @@ public class UNIClient<T> where T : BaseModel
 
     private static void AssignDependenciesGenericUniDataSet(PropertyInfo pro, BaseModel obj)
     {
-        //create unidataset instance
-        var datasetType = typeof(UNIDataSet<>);
-        var constructedDatasetType = datasetType.MakeGenericType(pro.PropertyType.GenericTypeArguments[0]);
-        var instanceDataset = Activator.CreateInstance(constructedDatasetType);
+        //TODO fixare creazione uniclient in xamarin e altri framework
+        try
+        {
+            //create unidataset instance
+            var datasetType = typeof(UNIDataSet<>);
+            var constructedDatasetType = datasetType.MakeGenericType(pro.PropertyType.GenericTypeArguments[0]);
+            var instanceDataset = Activator.CreateInstance(constructedDatasetType);
 
-        //create baseclient instance
-        var baseclientType = typeof(UNIClient<>);
-        var constructedBaseClientType = baseclientType.MakeGenericType(pro.PropertyType.GenericTypeArguments[0]);
-        var instanceBaseClient = Activator.CreateInstance(constructedBaseClientType);
+            //create baseclient instance
+            var baseclientType = typeof(UNIClient<>);
+            var constructedBaseClientType = baseclientType.MakeGenericType(pro.PropertyType.GenericTypeArguments[0]);
+            var instanceBaseClient = Activator.CreateInstance(constructedBaseClientType);
 
-        if (instanceDataset == null)
-            return;
+            if (instanceDataset == null)
+                return;
 
-        foreach (var prop in instanceDataset.GetType().GetProperties().ToList())
-            if (prop.PropertyType.FullName != null && prop.PropertyType.FullName.Contains("BaseClient"))
-                prop.SetValue(instanceDataset, instanceBaseClient);
+            foreach (var prop in instanceDataset.GetType().GetProperties().ToList())
+                if (prop.PropertyType.FullName != null && prop.PropertyType.FullName.Contains("BaseClient"))
+                    prop.SetValue(instanceDataset, instanceBaseClient);
 
-        pro.SetValue(obj, instanceDataset);
+            pro.SetValue(obj, instanceDataset);
+        }
+        catch(Exception ex)
+        {
+
+        }
+
     }
 
     private void AssignDependenciesGeneric(PropertyInfo pro, List<Type> fatherPath, Dictionary<string, IList> allObjectsLists, List<PropertyInfo> objectProperties, BaseModel obj, ValueInfo valueInfo)

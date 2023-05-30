@@ -7,7 +7,7 @@
     <Nullable>enable</Nullable>
 
     <PackageId>UNI.API.Client</PackageId>
-    <Version>2.2.9</Version>
+    <Version>2.2.13</Version>
     <Copyright>Copyright 2022</Copyright>
     <Description>REST client for UNI.API</Description>
     <Authors>Dario Orlovich</Authors>

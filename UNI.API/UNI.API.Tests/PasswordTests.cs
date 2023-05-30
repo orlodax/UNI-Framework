@@ -25,8 +25,8 @@ public class PasswordTests
     [TestMethod]
     public void PBKDF2()
     {
-        string password = "@~Some;Password4!";
-        PasswordHelper.CreatePasswordHash(password);
+        string password = "SimTek2023.";
+        string hash = PasswordHelper.CreatePasswordHash(password);
     }
 
     [TestMethod]
