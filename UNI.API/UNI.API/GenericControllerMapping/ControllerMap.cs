@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using System.Reflection;
+using UNI.Core.Library;
 
 namespace UNI.API.GenericControllerMapping;
 
@@ -18,8 +19,15 @@ public class ControllerMap : IApplicationFeatureProvider<ControllerFeature>
 
             foreach (Type type in assembly.GetExportedTypes().Where(t => t.IsSubclassOf(typeof(UNI.Core.Library.BaseModel))))
             {
-                feature.Controllers.Add(typeof(Controllers.v1.GenericControllerV1<>).MakeGenericType(type).GetTypeInfo());
-                feature.Controllers.Add(typeof(Controllers.v2.GenericControllerV2<>).MakeGenericType(type).GetTypeInfo());
+                if (type.GetCustomAttribute(typeof(ClassInfo)) is ClassInfo info)
+                {
+                    if (info.CreateDefaultController)
+                    {
+                        feature.Controllers.Add(typeof(Controllers.v1.GenericControllerV1<>).MakeGenericType(type).GetTypeInfo());
+                        feature.Controllers.Add(typeof(Controllers.v2.GenericControllerV2<>).MakeGenericType(type).GetTypeInfo());
+                    }
+                }
+                
             }
         }
     }

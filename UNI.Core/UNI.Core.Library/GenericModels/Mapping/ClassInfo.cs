@@ -14,5 +14,10 @@ namespace UNI.Core.Library
         /// This is used to retrieve only one type of rows in a common table. For example Hypervisor in table Servers. To work the table must contain the column named classtype
         /// </summary>
         public string ClassType { get; set; } = string.Empty;
+
+        /// <summary>
+        /// This is used from th ControllerMap class to determine if it is necessary to create a standard controller for this class
+        /// </summary>
+        public bool CreateDefaultController { get; set; } = true;
     }
 }

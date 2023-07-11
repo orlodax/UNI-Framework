@@ -661,6 +661,7 @@ public class DbContextV2<T> where T : BaseModel
             if (requestDTO.FilterExpressions.Any())
             {
                 if (!query.Contains("WHERE")) query += " WHERE ";
+                else query += " AND ";
 
                 //TODO Convertire filterexpression riferite a dipendenze
                 requestDTO.FilterExpressions = await ConvertFilterExpressionDependencies(requestDTO.FilterExpressions);
@@ -1124,10 +1125,13 @@ public class DbContextV2<T> where T : BaseModel
 
         Dictionary<string, IList> listOfObjects = await GetDependenciesLists(objs, largeTables);
 
-        //assign items
-        foreach (var obj in objs)
-            if (obj is BaseModel bm)
-                AssignDependencies(bm, listOfObjects, new List<Type>() { type });
+        
+            //assign items
+            foreach (var obj in objs)
+                if (obj is BaseModel bm)
+                    AssignDependencies(bm, listOfObjects, new List<Type>() { type });
+       
+       
     }
 
     //TODO rinominare GetAllSubTypes perchè non li restituisce tutti
@@ -1205,6 +1209,7 @@ public class DbContextV2<T> where T : BaseModel
             if (!baseModelTypes.ContainsKey(keyname))
             {
                 baseModelTypes.Add(keyname, propertyType);
+                enumeratedTypes.Add(propertyType);
             }
 
             GetSubTypes(propertyType, baseModelTypes, enumeratedTypes);
@@ -1248,6 +1253,10 @@ public class DbContextV2<T> where T : BaseModel
 
             if (pro.GetCustomAttribute(typeof(ValueInfo)) is ValueInfo valueInfo && pro.PropertyType.IsGenericType)
             {
+                if (propertyType.Name == "Dipendente")
+                {
+
+                }
                 //deve entrare qui solamente nel caso di una lista
                 PropertyInfo? idChildProperty = null;
 
@@ -1303,9 +1312,18 @@ public class DbContextV2<T> where T : BaseModel
                 PropertyInfo? idItemProperty = obj.GetType().GetProperties().ToList().Find(i => i.Name == $"Id{pro.Name}");
                 if (idItemProperty != null)
                 {
+                    
                     int? idItem = (int?)idItemProperty.GetValue(obj);
                     var value = typeListBaseModel.Find(i => i.ID == idItem);
-                    pro.SetValue(obj, value);
+                    try
+                    {
+                        pro.SetValue(obj, value);
+
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
 
                     if (value != null)
                         AssignDependencies(value, allObjectsLists, mypath, enumeratedTypes);
