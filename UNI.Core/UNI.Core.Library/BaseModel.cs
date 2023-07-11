@@ -30,7 +30,6 @@ namespace UNI.Core.Library
         [ValueInfo(SQLName = "interfacereferid", IsVisible = false)]
         public string InterfaceReferId { get; set; }
 
-
         #endregion
 
         #region METADATA

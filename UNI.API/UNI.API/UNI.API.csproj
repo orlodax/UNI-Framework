@@ -53,7 +53,7 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.27.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.3" />
     <PackageReference Include="MySqlConnector" Version="2.2.5" />
-    <PackageReference Include="UNI.Core.Library" Version="2.2.3" /></ItemGroup>
+    <PackageReference Include="UNI.Core.Library" Version="2.2.5" /></ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\UNI.API.Client\UNI.API.Client.csproj">
