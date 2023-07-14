@@ -108,6 +108,16 @@ public class UNIClient<T> where T : BaseModel
         return response != null && response.StatusCode == HttpStatusCode.OK;
     }
 
+    public async Task<int> CreateCredential(Credentials credentials)
+    {
+        RestRequest request = PreparePostRequestWithBody(credentials);
+
+        var response = await ProcessRequest<RestResponse>(request, additionalRoute: "identity/admin/createCredential", isIdentityRequest: true);
+        if (response == null || response.Content == null || response.StatusCode != HttpStatusCode.OK)
+            return 0;
+        else return Convert.ToInt32(response.Content);
+    }
+
     #endregion
 
     #region Public CRUD methods

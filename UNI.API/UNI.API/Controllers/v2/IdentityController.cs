@@ -19,7 +19,6 @@ public class IdentityController : Controller
 {
     private readonly ILogger logger;
     private readonly IdentityService identityService;
-
     private const uint passwordLifetime = 30;
 
     public IdentityController(IConfiguration configuration)
@@ -28,7 +27,6 @@ public class IdentityController : Controller
                                                     .SetMinimumLevel(LogLevel.Trace)
                                                     .AddConsole());
         logger = loggerFactory.CreateLogger<IdentityController>();
-
         identityService = new(configuration);
     }
 
@@ -86,6 +84,21 @@ public class IdentityController : Controller
         logger.Log(LogLevel.Information, "{controllerName}: Admin '{adminName}' reset the password of user '{userName}'.", nameof(IdentityController), HttpContext.User.Identities.First().Name, newCredentials.Username);
 
         return Ok();
+    }
+
+
+    [HttpPost("admin/createCredential")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+    public async Task<ActionResult<int>> CreateCredential([FromBody] Credentials newCredentials)
+    {
+        int idCredential = await identityService.CreateCredentials(newCredentials.Username, newCredentials.Password);
+        if (idCredential == 0)
+            return BadRequest();
+
+
+        logger.Log(LogLevel.Information, "{controllerName}: Admin '{adminName}' create user '{userName}'.", nameof(IdentityController), HttpContext.User.Identities.First().Name, newCredentials.Username);
+
+        return idCredential;
     }
     #endregion
 }

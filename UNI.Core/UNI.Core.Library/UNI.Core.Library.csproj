@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>UNI.Core.Library</PackageId>
-    <Version>2.2.5</Version>
+    <Version>2.2.6</Version>
     <Authors>Dario Orlovich, Simone Andreoli</Authors>
     <Company>Teksistemi</Company>
     <Product>UNI.Core.Library</Product>
