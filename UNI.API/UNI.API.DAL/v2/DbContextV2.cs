@@ -826,6 +826,9 @@ public class DbContextV2<T> where T : BaseModel
 
             foreach (var filterExpression in filterExpressions)
             {
+                if (filterExpression.FilterExpressions.Any())
+                    filterExpression.FilterExpressions = await ConvertFilterExpressionDependencies(filterExpression.FilterExpressions);
+
                 List<FilterExpression> convertedFilterExpressions = new();
                 if (filterExpression.PropertyName == null) continue;
                 if (filterExpression.PropertyName.Contains("."))
@@ -961,6 +964,9 @@ public class DbContextV2<T> where T : BaseModel
                         filterExpression.ComparisonType = "OR";
                     }
                 }
+
+              
+              
             }
 
             return filterExpressions;
