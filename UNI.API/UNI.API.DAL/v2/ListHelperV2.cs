@@ -24,7 +24,7 @@ public class ListHelperV2<T> where T : BaseModel
 
         using MySqlConnection conn = new(connectionString);
         using MySqlCommand cmd = new(query, conn);
-
+        cmd.CommandTimeout = 120;
         try
         {
             conn.Open();
