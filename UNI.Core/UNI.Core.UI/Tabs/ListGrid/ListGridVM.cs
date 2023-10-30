@@ -11,6 +11,7 @@ using UNI.Core.UI.Misc;
 using UNI.Core.UI.Tabs.DetailItem;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace UNI.Core.UI.Tabs.ListGrid
 {
@@ -148,7 +149,7 @@ namespace UNI.Core.UI.Tabs.ListGrid
                         viewModelType: DetailItemVMType,
                         args: new object[] { SelectedItem });
 
-                    var detailItemTab = newDetailItemTab.Content as DetailItem.DetailItem;
+                    var detailItemTab = newDetailItemTab.Content as UserControl;
                     (detailItemTab.DataContext as DetailItemVM<T>).DetailItemChanged += ListGridVM_DetailItemChanged;
                 }
             });
