@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>UNI.Core.Library</PackageId>
-    <Version>2.2.2</Version>
+    <Version>2.2.6</Version>
     <Authors>Dario Orlovich, Simone Andreoli</Authors>
     <Company>Teksistemi</Company>
     <Product>UNI.Core.Library</Product>
@@ -11,12 +11,12 @@
     <Copyright>Copyright 2020</Copyright>
     <PackageTags>models; poco; objects; library; entities;</PackageTags>
     <PackageReleaseNotes>Adding basemodel metadata</PackageReleaseNotes>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <!--<PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <IncludeSymbols>true</IncludeSymbols>
     <DebugType>embedded</DebugType>
 
-    <!-- <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>-->
   </PropertyGroup>

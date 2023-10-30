@@ -33,16 +33,22 @@ public class IdentityRepo
         return res?.ResponseBaseModels ?? new List<User>();
     }
 
-    public void CreateUser(string username, string password)
+    public async Task<int> CreateCredential(string username, string password)
     {
         string query = "INSERT INTO credentials (username, password) VALUES (@username, @password)";
         var parameters = new MySqlParameter[]
         {
-            new MySqlParameter("@username", MySqlDbType.String) { Value = username },
-            new MySqlParameter("@password", MySqlDbType.String) { Value = password }
+            new MySqlParameter("@username", MySqlDbType.String) { Value = MySqlHelper.EscapeString(username) },
+            new MySqlParameter("@password", MySqlDbType.String) { Value = MySqlHelper.EscapeString(password) }
         };
 
         _ = dbCredentials.SetDataParametrized(query, parameters);
+
+        query = $"SELECT id FROM credentials WHERE username = '{MySqlHelper.EscapeString(username)}'";
+        var credential = await dbCredentials.GetData(query);
+        if(credential == null || credential.Count == 0)
+            return 0;
+        return credential[0].ID;
     }
 
     public void DeleteUser(string username)

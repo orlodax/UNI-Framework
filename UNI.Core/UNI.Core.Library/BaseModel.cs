@@ -30,7 +30,6 @@ namespace UNI.Core.Library
         [ValueInfo(SQLName = "interfacereferid", IsVisible = false)]
         public string InterfaceReferId { get; set; }
 
-
         #endregion
 
         #region METADATA
@@ -80,7 +79,7 @@ namespace UNI.Core.Library
         /// Called when a base model is updated in a view, the main function is to reset the object
         /// </summary>
         /// <param name="parentItem"></param>
-        public void Updated(BaseModel parentItem = null)
+        public virtual void Updated(BaseModel parentItem = null)
         {
             Reset();
             Loaded(parentItem);

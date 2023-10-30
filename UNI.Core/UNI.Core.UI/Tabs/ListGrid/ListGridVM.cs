@@ -124,7 +124,7 @@ namespace UNI.Core.UI.Tabs.ListGrid
 
         protected async override Task LoadData(List<FilterExpression> filterExpressions = null, object parameter = null)
         {
-            if (parameter == null || parameter.ToString() != "universalSearch")
+            if (parameter == null || parameter.ToString() == "universalSearch")
             {
                 FilterDateFormat = SearchFiltersVM.FilterDateFormat;
 

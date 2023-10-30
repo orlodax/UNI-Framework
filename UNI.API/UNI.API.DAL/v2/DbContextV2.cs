@@ -661,6 +661,7 @@ public class DbContextV2<T> where T : BaseModel
             if (requestDTO.FilterExpressions.Any())
             {
                 if (!query.Contains("WHERE")) query += " WHERE ";
+                else query += " AND ";
 
                 //TODO Convertire filterexpression riferite a dipendenze
                 requestDTO.FilterExpressions = await ConvertFilterExpressionDependencies(requestDTO.FilterExpressions);
@@ -825,7 +826,11 @@ public class DbContextV2<T> where T : BaseModel
 
             foreach (var filterExpression in filterExpressions)
             {
+                if (filterExpression.FilterExpressions.Any())
+                    filterExpression.FilterExpressions = await ConvertFilterExpressionDependencies(filterExpression.FilterExpressions);
+
                 List<FilterExpression> convertedFilterExpressions = new();
+                if (filterExpression.PropertyName == null) continue;
                 if (filterExpression.PropertyName.Contains("."))
                 {
                     var propertyPath = filterExpression.PropertyName.Split('.');
@@ -959,6 +964,9 @@ public class DbContextV2<T> where T : BaseModel
                         filterExpression.ComparisonType = "OR";
                     }
                 }
+
+              
+              
             }
 
             return filterExpressions;
@@ -1123,10 +1131,13 @@ public class DbContextV2<T> where T : BaseModel
 
         Dictionary<string, IList> listOfObjects = await GetDependenciesLists(objs, largeTables);
 
-        //assign items
-        foreach (var obj in objs)
-            if (obj is BaseModel bm)
-                AssignDependencies(bm, listOfObjects, new List<Type>() { type });
+        
+            //assign items
+            foreach (var obj in objs)
+                if (obj is BaseModel bm)
+                    AssignDependencies(bm, listOfObjects, new List<Type>() { type });
+       
+       
     }
 
     //TODO rinominare GetAllSubTypes perchè non li restituisce tutti
@@ -1204,6 +1215,7 @@ public class DbContextV2<T> where T : BaseModel
             if (!baseModelTypes.ContainsKey(keyname))
             {
                 baseModelTypes.Add(keyname, propertyType);
+                enumeratedTypes.Add(propertyType);
             }
 
             GetSubTypes(propertyType, baseModelTypes, enumeratedTypes);
@@ -1214,103 +1226,115 @@ public class DbContextV2<T> where T : BaseModel
 
     private void AssignDependencies(BaseModel obj, Dictionary<string, IList> allObjectsLists, List<Type> fatherPath, List<Type>? enumeratedTypes = null)
     {
-        if (obj == null)
-            return;
+      
+            if (obj == null)
+                return;
 
-        enumeratedTypes ??= new List<Type>();
-        enumeratedTypes.Add(obj.GetType());
+            enumeratedTypes ??= new List<Type>();
+            enumeratedTypes.Add(obj.GetType());
 
-        foreach (var pro in obj.GetType().GetProperties())
-        {
-            if (pro.PropertyType.FullName != null && pro.PropertyType.FullName.Contains("UniDataSet"))
-                continue;
-
-            Type propertyType = pro.PropertyType;
-            if (pro.PropertyType.IsGenericType)
-                propertyType = pro.PropertyType.GenericTypeArguments[0];
-
-            if (!propertyType.IsSubclassOf(typeof(BaseModel)))
-                continue;
-
-            if (pro.PropertyType == typeof(UniImage))
-                continue;
-
-            if (fatherPath.Contains(propertyType))
-                continue;
-
-            List<Type> mypath = DALHelper.GetMyPath(fatherPath, propertyType);
-
-            Type listType = typeof(List<>);
-            Type constructedListType = listType.MakeGenericType(propertyType);
-            object? instanceList = Activator.CreateInstance(constructedListType);
-            string keyname = constructedListType.GenericTypeArguments[0].Name;
-
-            if (pro.GetCustomAttribute(typeof(ValueInfo)) is ValueInfo valueInfo && pro.PropertyType.IsGenericType)
+            foreach (var pro in obj.GetType().GetProperties())
             {
-                //deve entrare qui solamente nel caso di una lista
-                PropertyInfo? idChildProperty = null;
-
-                if (!string.IsNullOrWhiteSpace(valueInfo.ManyToManySQLName))
-                    keyname = $"mtm_{valueInfo.ManyToManySQLName}_{propertyType.Name}";
-
-                if (!allObjectsLists.TryGetValue(keyname, out IList? typeList))
+                if (pro.PropertyType.FullName != null && pro.PropertyType.FullName.Contains("UniDataSet"))
                     continue;
 
-                List<BaseModel> typeListBaseModel = typeList.Cast<BaseModel>().ToList();
+                Type propertyType = pro.PropertyType;
+                if (pro.PropertyType.IsGenericType)
+                    propertyType = pro.PropertyType.GenericTypeArguments[0];
 
-                if (string.IsNullOrWhiteSpace(valueInfo.ManyToManySQLName))
-                {
-                    List<Type> extendedTypes = UtilityMethods.FindAllParentsTypes(obj.GetType());
-                    extendedTypes.Add(obj.GetType());
-                    foreach (var type in extendedTypes)
+                if (!propertyType.IsSubclassOf(typeof(BaseModel)))
+                    continue;
+
+                if (pro.PropertyType == typeof(UniImage))
+                    continue;
+
+                if (fatherPath.Contains(propertyType))
+                    continue;
+
+                List<Type> mypath = DALHelper.GetMyPath(fatherPath, propertyType);
+
+                Type listType = typeof(List<>);
+                Type constructedListType = listType.MakeGenericType(propertyType);
+                object? instanceList = Activator.CreateInstance(constructedListType);
+                string keyname = constructedListType.GenericTypeArguments[0].Name;
+
+                if (pro.GetCustomAttribute(typeof(ValueInfo)) is ValueInfo valueInfo && pro.PropertyType.IsGenericType)
+                {                  
+                    //deve entrare qui solamente nel caso di una lista
+                    PropertyInfo? idChildProperty = null;
+
+                    if (!string.IsNullOrWhiteSpace(valueInfo.ManyToManySQLName))
+                        keyname = $"mtm_{valueInfo.ManyToManySQLName}_{propertyType.Name}";
+
+                    if (!allObjectsLists.TryGetValue(keyname, out IList? typeList))
+                        continue;
+
+                    List<BaseModel> typeListBaseModel = typeList.Cast<BaseModel>().ToList();
+
+                    if (string.IsNullOrWhiteSpace(valueInfo.ManyToManySQLName))
                     {
-                        idChildProperty = propertyType.GetProperties().ToList().Find(i => i.Name == $"Id{type.Name}");
-                        if (idChildProperty != null)
-                            break;
+                        List<Type> extendedTypes = UtilityMethods.FindAllParentsTypes(obj.GetType());
+                        extendedTypes.Add(obj.GetType());
+                        foreach (var type in extendedTypes)
+                        {
+                            idChildProperty = propertyType.GetProperties().ToList().Find(i => i.Name == $"Id{type.Name}");
+                            if (idChildProperty != null)
+                                break;
+                        }
                     }
+                    else
+                        idChildProperty = propertyType.GetProperties().ToList().Find(i => i.Name == "IdMtm");
+
+                    if (idChildProperty == null)
+                        continue;
+
+                    foreach (var item in typeListBaseModel)
+                    {
+                        PropertyInfo? idProperty = obj.GetType().GetProperties().ToList().Find(i => i.Name == "ID");
+                        int? id = (int?)idProperty?.GetValue(obj);
+                        int? idChild = (int?)idChildProperty.GetValue(item);
+                        if (idChild == id && id != null)
+                            if (instanceList != null)
+                                ((IList)instanceList).Add(item);
+                    }
+
+                    pro.SetValue(obj, instanceList);
+
+                    if (instanceList != null)
+                        foreach (var item in (IList)instanceList)
+                            if (item is BaseModel bm)
+                                AssignDependencies(bm, allObjectsLists, mypath, enumeratedTypes);
                 }
                 else
-                    idChildProperty = propertyType.GetProperties().ToList().Find(i => i.Name == "IdMtm");
-
-                if (idChildProperty == null)
-                    continue;
-
-                foreach (var item in typeListBaseModel)
                 {
-                    PropertyInfo? idProperty = obj.GetType().GetProperties().ToList().Find(i => i.Name == "ID");
-                    int? id = (int?)idProperty?.GetValue(obj);
-                    int? idChild = (int?)idChildProperty.GetValue(item);
-                    if (idChild == id && id != null)
-                        if (instanceList != null)
-                            ((IList)instanceList).Add(item);
-                }
+                    if (!allObjectsLists.TryGetValue(keyname, out IList? typeList))
+                        continue;
 
-                pro.SetValue(obj, instanceList);
+                    List<BaseModel> typeListBaseModel = typeList.Cast<BaseModel>().ToList();
 
-                if (instanceList != null)
-                    foreach (var item in (IList)instanceList)
-                        if (item is BaseModel bm)
-                            AssignDependencies(bm, allObjectsLists, mypath, enumeratedTypes);
-            }
-            else
-            {
-                if (!allObjectsLists.TryGetValue(keyname, out IList? typeList))
-                    continue;
+                    PropertyInfo? idItemProperty = obj.GetType().GetProperties().ToList().Find(i => i.Name == $"Id{pro.Name}");
+                    if (idItemProperty != null)
+                    {
 
-                List<BaseModel> typeListBaseModel = typeList.Cast<BaseModel>().ToList();
+                        int? idItem = (int?)idItemProperty.GetValue(obj);
+                        var value = typeListBaseModel.Find(i => i.ID == idItem);
+                        try
+                        {
+                            pro.SetValue(obj, value);
 
-                PropertyInfo? idItemProperty = obj.GetType().GetProperties().ToList().Find(i => i.Name == $"Id{pro.Name}");
-                if (idItemProperty != null)
-                {
-                    int? idItem = (int?)idItemProperty.GetValue(obj);
-                    var value = typeListBaseModel.Find(i => i.ID == idItem);
-                    pro.SetValue(obj, value);
+                        }
+                        catch (Exception e)
+                        {
 
-                    if (value != null)
-                        AssignDependencies(value, allObjectsLists, mypath, enumeratedTypes);
+                        }
+
+                        if (value != null)
+                            AssignDependencies(value, allObjectsLists, mypath, enumeratedTypes);
+                    }
                 }
             }
-        }
+  
+       
     }
 
     private async Task<Dictionary<string, IList>> GetObjectsListsLargeTables(IList objs, Dictionary<string, IList>? listOfObjects = null, Dictionary<string, List<int>>? baseModelsIndexes = null, Dictionary<string, Type>? baseModelsTypes = null, List<Type>? enumeratedTypes = null)

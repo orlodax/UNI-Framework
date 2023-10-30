@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>UNI.Core.UI</id>
-    <version>2.2.14</version>
+    <version>2.2.17</version>
     <authors>Dario Orlovich</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Libreria UWP per applicazioni UNI</description>
@@ -21,8 +21,8 @@
         <dependency id="Microsoft.Xaml.Behaviors.Uwp.Managed" version="2.0.1"/>
         <dependency id="NuGet.Build.Tasks.Pack" version="6.5.0"/>
         <dependency id="System.IdentityModel.Tokens.Jwt" version="6.27.0"/>
-        <dependency id="UNI.API.Contracts" version="2.2.0"/>
-        <dependency id="UNI.API.Client" version="2.2.7"/>
+        <dependency id="UNI.API.Contracts" version="2.2.1"/>
+        <dependency id="UNI.API.Client" version="2.2.15"/>
       </group>
     </dependencies>
   </metadata>

@@ -242,24 +242,21 @@ namespace UNI.Core.UI.CustomControls.GridBox
         {
             var notSuccessfulItems = new List<T>();
             try
-            {
-                foreach (T item in itemsToCommit)
+            {     
+                int statusCode = await BaseClient.UpdateItems(itemsToCommit);
+                if (statusCode >= 400)
                 {
-                    int statusCode = await BaseClient.UpdateItem(item);
-                    if (statusCode >= 400)
+                    _ = new TeachingTip()
                     {
-                        notSuccessfulItems.Add(item);
-                        _ = new TeachingTip()
-                        {
-                            Title = ResourceLoader.GetForCurrentView().GetString("error"),
-                            Subtitle = $"error n. {statusCode}",
-                            IsLightDismissEnabled = true,
-                            IsOpen = true
-                        };
-                    }
-                    else
-                        OnItemUpdated(this, new ItemUpdatedEventArgs(item));
+                        Title = ResourceLoader.GetForCurrentView().GetString("error"),
+                        Subtitle = $"error n. {statusCode}",
+                        IsLightDismissEnabled = true,
+                        IsOpen = true
+                    };
                 }
+                else
+                    OnItemUpdated(this, new ItemUpdatedEventArgs(SelectedItem));
+ 
                 itemsToCommit.RemoveAll(i => !notSuccessfulItems.Contains(i));
             }
             catch (Exception)

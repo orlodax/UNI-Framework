@@ -76,4 +76,10 @@ public class IdentityService
         string hashPassword = PasswordHelper.CreatePasswordHash(newPassword);
         identityRepo.ChangePassword(username, hashPassword);
     }
+
+    public async Task<int> CreateCredentials(string username, string newPassword)
+    {
+        string hashPassword = PasswordHelper.CreatePasswordHash(newPassword);
+        return await identityRepo.CreateCredential(username, hashPassword);
+    }
 }

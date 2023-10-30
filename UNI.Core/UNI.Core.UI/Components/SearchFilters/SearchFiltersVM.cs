@@ -209,6 +209,8 @@ namespace UNI.Core.UI.Components.SearchFilters
             else
                 searchExpression = StringInputToSearch;
 
+            if(FilterExpressions.Count > 0) FilterExpressions.Clear();
+            if(SearchTags.Count > 0) SearchTags.Clear();
 
             if (!String.IsNullOrWhiteSpace(searchExpression) && selectedProperty != null)
             {
@@ -221,10 +223,8 @@ namespace UNI.Core.UI.Components.SearchFilters
 
                 AddTagBox(filterExpression);
             }
-            FilterExpressions.Clear();
-            SearchTags.Clear();
-
-
+            //FilterExpressions.Clear();
+            //SearchTags.Clear();
         }
 
         private bool SetUIAccordingToType()
@@ -263,7 +263,7 @@ namespace UNI.Core.UI.Components.SearchFilters
             }
         }
 
-        private void AddTagBox(FilterExpression filterExpression)
+        public void AddTagBox(FilterExpression filterExpression)
         {
             FilterExpressions.Add(filterExpression);
             var searchTag = new SearchTag(filterExpression);
