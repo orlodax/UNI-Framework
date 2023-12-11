@@ -13,7 +13,7 @@ using UNI.Core.Library.GenericModels;
 
 namespace UNI.API.Client;
 
-public class UNIClient<T> where T : BaseModel
+public class UNIBlazorClient<T> where T : BaseModel
 {
     #region CTOR
 
@@ -23,19 +23,22 @@ public class UNIClient<T> where T : BaseModel
     private static readonly List<string> baseEndpoints = new();
 
     private UNIClientConfiguration? configuration;
+    public UNIBlazorUser UNIBlazorUser { get; set; }
 
-    public UNIClient()
+    public UNIBlazorClient(UNIBlazorUser user)
     {
         UniClientInitialization();
+        UNIBlazorUser = user;
     }
 
     /// <summary>
     /// Xamarin needs to pass configuration section
     /// </summary>
     /// <param name="configurationSection"></param>
-    public UNIClient(IConfigurationSection configurationSection)
+    public UNIBlazorClient(IConfigurationSection configurationSection, UNIBlazorUser user)
     {
         UniClientInitialization(configurationSection);
+        UNIBlazorUser = user;
     }
 
     private void UniClientInitialization(IConfigurationSection? configurationSection = null)
@@ -321,16 +324,14 @@ public class UNIClient<T> where T : BaseModel
 
     private async Task<RestResponse<K>?> ProcessRequest<K>(RestRequest request, string? additionalRoute = null, bool isTokenRequest = false, bool isIdentityRequest = false)
     {
-        try
+        // refresh token if expired
+        if (configuration!.IsTokenAutoRefreshable)
         {
-            // refresh token if expired
-            if (configuration!.IsTokenAutoRefreshable)
-        {
-            if (!isTokenRequest && UNIUser.Token != null)
+            if (!isTokenRequest && UNIBlazorUser.Token != null)
             {
-                JwtSecurityToken jwtSecurityToken = new JwtSecurityTokenHandler().ReadJwtToken(UNIUser.Token.Value);
+                JwtSecurityToken jwtSecurityToken = new JwtSecurityTokenHandler().ReadJwtToken(UNIBlazorUser.Token.Value);
                 if (jwtSecurityToken.ValidTo <= DateTime.UtcNow)
-                    UNIUser.Token = await Authenticate(UNIUser.Username!, UNIUser.Password!);
+                    UNIBlazorUser.Token = await Authenticate(UNIBlazorUser.Username!, UNIBlazorUser.Password!);
             }
         }
 
@@ -344,45 +345,35 @@ public class UNIClient<T> where T : BaseModel
 
             if (!isTokenRequest)
             {
-                if (UNIUser.Token == null)
+                if (UNIBlazorUser.Token == null)
                 {
                     if (configuration!.IsTokenAutoRefreshable)
-                        UNIUser.Token = await Authenticate(UNIUser.Username!, UNIUser.Password!);
+                        UNIBlazorUser.Token = await Authenticate(UNIBlazorUser.Username!, UNIBlazorUser.Password!);
                     else
                         throw new Exception("Need to authenticate and obtain token.");
                 }
 
-                client.AddDefaultHeader("Authorization", $"Bearer {UNIUser.Token!.Value}");
+                client.AddDefaultHeader("Authorization", $"Bearer {UNIBlazorUser.Token!.Value}");
             }
 
-           
+            response = await client.ExecuteAsync<K>(request);
 
-
-                response = await client.ExecuteAsync<K>(request); 
-                if (response.StatusCode == HttpStatusCode.OK)
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                if (attempt > 0)
                 {
-                    if (attempt > 0)
-                    {
-                        string workingEndpoint = baseEndpoints[attempt];
-                        baseEndpoints.RemoveAt(attempt);
-                        baseEndpoints.Insert(0, workingEndpoint);
-                    }
-                    break;
+                    string workingEndpoint = baseEndpoints[attempt];
+                    baseEndpoints.RemoveAt(attempt);
+                    baseEndpoints.Insert(0, workingEndpoint);
                 }
-          
-           
+                break;
+            }
 
             attempt++;
         }
         while (attempt < baseEndpoints.Count);
 
         return response;
-        }
-
-        catch (Exception e)
-        {
-            return null;
-        }
     }
 
     private static RestClient GetRestClient(int attempt, string typeName, string? additionalRoute = null)
@@ -443,7 +434,7 @@ public class UNIClient<T> where T : BaseModel
         // reflection on generic method with run-time determined types
         foreach (Type type in types)
         {
-            Type myClassType = typeof(UNIClient<>);
+            Type myClassType = typeof(UNIBlazorClient<>);
             Type[] typeArgs = { type };
             Type constructed = myClassType.MakeGenericType(typeArgs);
 
@@ -594,7 +585,7 @@ public class UNIClient<T> where T : BaseModel
 
     private static void AssignDependenciesGenericUniDataSet(PropertyInfo pro, BaseModel obj)
     {
-        //TODO fixare creazione uniclient in xamarin e altri framework
+        //TODO fixare creazione UNIBlazorClient in xamarin e altri framework
         try
         {
             //create unidataset instance
@@ -603,7 +594,7 @@ public class UNIClient<T> where T : BaseModel
             var instanceDataset = Activator.CreateInstance(constructedDatasetType);
 
             //create baseclient instance
-            var baseclientType = typeof(UNIClient<>);
+            var baseclientType = typeof(UNIBlazorClient<>);
             var constructedBaseClientType = baseclientType.MakeGenericType(pro.PropertyType.GenericTypeArguments[0]);
             var instanceBaseClient = Activator.CreateInstance(constructedBaseClientType);
 

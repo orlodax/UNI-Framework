@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿using Gioiaspa.EPoCA.Library;
+using System.Collections;
 using System.Diagnostics;
 using System.Reflection;
 using UNI.API.Contracts.Models;
+using UNI.API.DAL.v2;
 using UNI.Core.Library;
 using UNI.Core.Library.AttributesMetadata;
 namespace UNI.API.Tests;
@@ -31,6 +33,12 @@ public class VariousTests
         }
     }
 
+    [TestMethod]
+    public async Task TestTimeout()
+    {
+        var dbContext = new DAL.v2.DbContextV2<Record>("Server = uni003.vegacloud.it; Port = 3306; Database = unigioiaepoca; SslMode = none; Uid = teksistemi; Pwd = Ch1v32020; Convert Zero Datetime=True; Connection Timeout = 120");
+        var records = await dbContext.GetData("SELECT * FROM  records r where iddispositivo = 303 AND `data` >= '2023-10-26' AND `data` <= '2023-10-27' ");
+    }
     //[TestMethod]
     //public void IListTypePopulation()
     //{

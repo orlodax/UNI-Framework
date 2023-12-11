@@ -11,3 +11,11 @@ public class UNIUser : BaseModel
     public static UNIToken? Token { get; set; }
 }
 
+public class UNIBlazorUser : BaseModel
+{
+    public string? Username { get; set; }
+
+    public string? Password { get; set; }
+
+    public UNIToken? Token { get; set; }
+}
