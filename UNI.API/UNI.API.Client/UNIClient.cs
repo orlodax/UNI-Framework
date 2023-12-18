@@ -200,7 +200,7 @@ public class UNIClient<T> where T : BaseModel
             if (response == null || response.Content == null || response.StatusCode != HttpStatusCode.OK)
                 return null;
 
-            ApiResponseModel<T>? apiResponseModel = JsonConvert.DeserializeObject<ApiResponseModel<T>>(response.Content.ToString());
+            ApiResponseModel<T>? apiResponseModel = JsonConvert.DeserializeObject<ApiResponseModel<T>>(response.Content.ToString(), new JsonSerializerSettings() { ObjectCreationHandling = ObjectCreationHandling.Replace});
 
             if (apiResponseModel == null)
                 return null;
