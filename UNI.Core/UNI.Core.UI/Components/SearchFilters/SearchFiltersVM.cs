@@ -214,7 +214,7 @@ namespace UNI.Core.UI.Components.SearchFilters
 
             if (!String.IsNullOrWhiteSpace(searchExpression) && selectedProperty != null)
             {
-                var filterExpression = new FilterExpression() { PropertyName = SelectedProperty.Name, PropertyValue = searchExpression };
+                var filterExpression = new FilterExpression() { PropertyName = SelectedProperty.Name, ComparisonType = "LIKE", PropertyValue = searchExpression };
 
                 // TODO un domani ci possono essere più filtri contemporaneamente
                 //var existingExpression = FilterExpressions.FirstOrDefault(f => f.PropertyName == SelectedProperty.Name);

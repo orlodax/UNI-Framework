@@ -127,6 +127,7 @@ namespace UNI.Core.UI.Tabs.ListGrid
             if (parameter == null || parameter.ToString() == "universalSearch")
             {
                 FilterDateFormat = SearchFiltersVM.FilterDateFormat;
+                
 
                 if (filterExpressions == null)
                     filterExpressions = new List<FilterExpression>();
