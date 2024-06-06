@@ -661,7 +661,6 @@ public class DbContextV2<T> where T : BaseModel
             if (requestDTO.FilterExpressions.Any())
             {
                 if (!query.Contains("WHERE")) query += " WHERE ";
-                else query += " AND ";
 
                 //TODO Convertire filterexpression riferite a dipendenze
                 requestDTO.FilterExpressions = await ConvertFilterExpressionDependencies(requestDTO.FilterExpressions);
@@ -795,7 +794,7 @@ public class DbContextV2<T> where T : BaseModel
 
             return response;
         }
-        catch
+        catch(Exception e)
         {
             return null;
         }

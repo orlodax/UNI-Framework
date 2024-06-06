@@ -9,7 +9,7 @@
 
   <PropertyGroup>
     <PackageId>UNI.API</PackageId>
-    <Version>2.2.10</Version>
+    <Version>2.2.13</Version>
     <Copyright>Copyright 2022</Copyright>
     <Description>Base package for UNI APIs</Description>
     <Authors>Dario Orlovich</Authors>
@@ -64,10 +64,7 @@
       <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
       <IncludeAssets>UNI.API.Contracts.dll</IncludeAssets>
     </ProjectReference>
-      <ProjectReference Include="..\UNI.API.Core\UNI.API.Core.csproj">
-        <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-        <IncludeAssets>UNI.API.Core.dll</IncludeAssets>
-      </ProjectReference>
+    <ProjectReference Include="..\UNI.API.Core\UNI.API.Core.csproj" />
       <ProjectReference Include="..\UNI.API.DAL\UNI.API.DAL.csproj">
         <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
         <IncludeAssets>UNI.API.DAL.dll</IncludeAssets>

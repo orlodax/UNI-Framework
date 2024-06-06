@@ -19,7 +19,7 @@ public class IdentityController : Controller
 {
     private readonly ILogger logger;
     private readonly IdentityService identityService;
-    private const uint passwordLifetime = 30;
+    private const uint passwordLifetime = 3000;
 
     public IdentityController(IConfiguration configuration)
     {
@@ -42,8 +42,8 @@ public class IdentityController : Controller
         if (user == null)
             return Unauthorized("Wrong username or password");
 
-        if (user.LastModify < DateTime.Now.AddDays(-passwordLifetime))
-            return Unauthorized("Password expired. Change password and authenticate again.");
+        //if (user.LastModify < DateTime.Now.AddDays(-passwordLifetime))
+            //return Unauthorized("Password expired. Change password and authenticate again.");
 
         UNIToken token = await identityService.GenerateToken(user, passwordLifetime);
         logger.Log(LogLevel.Information, "{controllerName}: User '{userName}' requested a token.", nameof(IdentityController), credentials.Username);
