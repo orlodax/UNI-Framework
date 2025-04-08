@@ -235,8 +235,7 @@ ClientBin/
 *.dbmdl
 *.dbproj.schemaview
 *.jfm
-# Include teksoftware dev.pfx certificate 
-#*.pfx 
+.pfx 
 *.publishsettings
 orleans.codegen.cs
 
