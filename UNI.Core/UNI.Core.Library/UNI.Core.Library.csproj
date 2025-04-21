@@ -3,9 +3,11 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>UNI.Core.Library</PackageId>
-    <Version>2.2.6</Version>
+    <Version>2.2.7</Version>
     <Authors>Dario Orlovich, Simone Andreoli</Authors>
     <Company>Teksistemi</Company>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <Product>UNI.Core.Library</Product>
     <Description>Base UNI Entities</Description>
     <Copyright>Copyright 2020</Copyright>
@@ -23,7 +25,7 @@
   
   <!-- Source link -->
   <PropertyGroup>
-    <RepositoryUrl>https://teksoftware@dev.azure.com/teksoftware/UNI%20Framework/_git/UNI.Framework</RepositoryUrl>
+    <RepositoryUrl>https://github.com/orlodax/UNI-Framework</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
   
@@ -32,12 +34,15 @@
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
-	
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="1.1.1">
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>

@@ -341,8 +341,8 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.SourceLink.AzureRepos.Git">
-      <Version>1.1.1</Version>
+    <PackageReference Include="Microsoft.SourceLink.GitHub">
+      <Version>8.0.0</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -370,7 +370,13 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="System.IdentityModel.Tokens.Jwt">
-      <Version>6.27.0</Version>
+      <Version>6.34.0</Version>
+    </PackageReference>
+    <PackageReference Include="UNI.API.Client">
+      <Version>2.2.17</Version>
+    </PackageReference>
+    <PackageReference Include="UNI.API.Contracts">
+      <Version>2.2.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
@@ -495,16 +501,6 @@
     <None Include="Nuget\UNI.Core.UI.nuspec" />
     <PRIResource Include="Strings\it-IT\Resources.resw" />
     <PRIResource Include="Strings\en-US\Resources.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\UNI.API\UNI.API.Client\UNI.API.Client.csproj">
-      <Project>{8e062bde-8cbb-4a15-ad96-130934e5b064}</Project>
-      <Name>UNI.API.Client</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\UNI.API\UNI.API.Contracts\UNI.API.Contracts.csproj">
-      <Project>{262be6f6-cd97-44d0-a1cc-f81bb9ddbb5e}</Project>
-      <Name>UNI.API.Contracts</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
