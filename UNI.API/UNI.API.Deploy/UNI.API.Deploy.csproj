@@ -27,7 +27,7 @@
 
   <!-- Source link -->
   <PropertyGroup>
-    <RepositoryUrl>https://teksoftware@dev.azure.com/teksoftware/UNI%20Framework/_git/UNI.Framework</RepositoryUrl>
+    <RepositoryUrl>https://github.com/orlodax/UNI-Framework</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
@@ -38,7 +38,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="1.1.1">
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

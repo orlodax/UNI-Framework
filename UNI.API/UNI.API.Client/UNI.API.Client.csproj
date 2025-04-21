@@ -7,11 +7,13 @@
     <Nullable>enable</Nullable>
 
     <PackageId>UNI.API.Client</PackageId>
-    <Version>2.2.17</Version>
+    <Version>2.2.18</Version>
     <Copyright>Copyright 2022</Copyright>
     <Description>REST client for UNI.API</Description>
     <Authors>Dario Orlovich</Authors>
     <Company>Teksistemi</Company>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageReleaseNotes>Get da get a post. Refactor minimo</PackageReleaseNotes>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -23,7 +25,7 @@
 
   <!-- Source link -->
   <PropertyGroup>
-    <RepositoryUrl>https://teksoftware@dev.azure.com/teksoftware/UNI%20Framework/_git/UNI.Framework</RepositoryUrl>
+    <RepositoryUrl>https://github.com/orlodax/UNI-Framework</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
@@ -38,7 +40,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.3" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
-    <PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="1.1.1">
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -47,9 +49,9 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="RestSharp" Version="110.2.0" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.27.0" />
-    <PackageReference Include="UNI.Core.Library" Version="2.2.5" />
+    <PackageReference Include="RestSharp" Version="112.0.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.34.0" />
+    <PackageReference Include="UNI.Core.Library" Version="2.2.6" />
   </ItemGroup>
 
   <ItemGroup>
@@ -61,6 +63,10 @@
       <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
       <IncludeAssets>UNI.API.DAL.dll</IncludeAssets>
     </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">

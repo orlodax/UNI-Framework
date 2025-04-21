@@ -1,0 +1,26 @@
+# Global owners
+*       @orlodax
+*       @teksistemi-software
+
+# API solution owners
+/UNI.API/                           @orlodax
+/UNI.API/UNI.API.Client/            @orlodax
+/UNI.API/UNI.API.Contracts/         @orlodax
+/UNI.API/UNI.API.Core/              @orlodax
+/UNI.API/UNI.API.DAL/               @orlodax
+/UNI.API/UNI.API.Deploy/            @orlodax
+/UNI.API/UNI.API.TestInstance/      @orlodax
+
+# Core solution owners
+/UNI.Core/                          @orlodax
+/UNI.Core/UNI.Core.Library/         @orlodax
+/UNI.Core/UNI.Core.UI/              @orlodax
+/UNI.Core/UNI.Core.Explorer/        @orlodax
+
+# Documentation
+*.md                        @orlodax
+/docs/                      @orlodax
+
+# Build and deployment
+*.yml                       @orlodax
+*.sln                       @orlodax

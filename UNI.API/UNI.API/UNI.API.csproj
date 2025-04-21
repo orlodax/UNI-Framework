@@ -1,80 +1,81 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+ <PropertyGroup>
+   <TargetFramework>net6.0</TargetFramework>
+   <Nullable>enable</Nullable>
+   <ImplicitUsings>enable</ImplicitUsings>
+ </PropertyGroup>
 
+ <PropertyGroup>
+   <PackageId>UNI.API</PackageId>
+   <Version>2.2.13</Version>
+   <Copyright>Copyright 2022</Copyright>
+   <Description>Base package for UNI APIs</Description>
+   <Authors>Dario Orlovich</Authors>
+   <Company>Teksistemi</Company>
+   <PackageLicenseExpression>MIT</PackageLicenseExpression>
+   <AppxBundleMainPackageFileMapIntermediatePath>$(BaseIntermediateOutputPath)$(TargetFramework)\appxbundlemap.xml</AppxBundleMainPackageFileMapIntermediatePath>
+   <TargetFramework>net6.0</TargetFramework>
+   <PackageReleaseNotes>Bugfix dal</PackageReleaseNotes>
+   <PublishRepositoryUrl>true</PublishRepositoryUrl>
+   <EmbedUntrackedSources>true</EmbedUntrackedSources>
+   <IncludeSymbols>true</IncludeSymbols>
+   <DebugType>embedded</DebugType>
+   <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+ </PropertyGroup>
 
-  <PropertyGroup>
-    <PackageId>UNI.API</PackageId>
-    <Version>2.2.13</Version>
-    <Copyright>Copyright 2022</Copyright>
-    <Description>Base package for UNI APIs</Description>
-    <Authors>Dario Orlovich</Authors>
-    <Company>Teksistemi</Company>
-    <TargetFramework>net6.0</TargetFramework>
-    <PackageReleaseNotes>Bugfix dal</PackageReleaseNotes>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <IncludeSymbols>true</IncludeSymbols>
-    <DebugType>embedded</DebugType>
-    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
-  </PropertyGroup>
+ <!-- Source link -->
+ <PropertyGroup>
+   <RepositoryUrl>https://github.com/orlodax/UNI-Framework</RepositoryUrl>
+   <RepositoryType>git</RepositoryType>
+ </PropertyGroup>
+ 
+ <!-- Deterministic build -->
+ <PropertyGroup>
+   <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+   <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+ </PropertyGroup>
 
-  <!-- Source link -->
-  <PropertyGroup>
-    <RepositoryUrl>https://teksoftware@dev.azure.com/teksoftware/UNI%20Framework/_git/UNI.Framework</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-  </PropertyGroup>
-  
-  <!-- Deterministic build -->
-  <PropertyGroup>
-    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-  </PropertyGroup>
+ <ItemGroup>
+   <!-- This package does not support net 6 after version 6.0.14, therefore for now it is locked to this version by adding square brackets -->
+   <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="[6.0.14]" />
 
-  <ItemGroup>
-    <!-- This package does not support net 6 after version 6.0.14, therefore for now it is locked to this version by adding square brackets -->
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="[6.0.14]" />
+   <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
+   <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
+   <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
+   <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
+   <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
+   <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
+     <PrivateAssets>all</PrivateAssets>
+     <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+   </PackageReference>
+   <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+   <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.5.0" />
+   <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.34.0" />
+   <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.3" />
+   <PackageReference Include="MySqlConnector" Version="2.2.5" />
+   <PackageReference Include="UNI.Core.Library" Version="2.2.6" /></ItemGroup>
 
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
-    <PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="1.1.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.5.0" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.27.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.3" />
-    <PackageReference Include="MySqlConnector" Version="2.2.5" />
-    <PackageReference Include="UNI.Core.Library" Version="2.2.5" /></ItemGroup>
+ <ItemGroup>
+   <ProjectReference Include="..\UNI.API.Client\UNI.API.Client.csproj">
+     <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+     <IncludeAssets>UNI.API.Client.dll</IncludeAssets>
+   </ProjectReference>
+   <ProjectReference Include="..\UNI.API.Contracts\UNI.API.Contracts.csproj">
+     <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+     <IncludeAssets>UNI.API.Contracts.dll</IncludeAssets>
+   </ProjectReference>
+   <ProjectReference Include="..\UNI.API.Core\UNI.API.Core.csproj" />
+     <ProjectReference Include="..\UNI.API.DAL\UNI.API.DAL.csproj">
+       <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+       <IncludeAssets>UNI.API.DAL.dll</IncludeAssets>
+     </ProjectReference>
+ </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\UNI.API.Client\UNI.API.Client.csproj">
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-      <IncludeAssets>UNI.API.Client.dll</IncludeAssets>
-    </ProjectReference>
-    <ProjectReference Include="..\UNI.API.Contracts\UNI.API.Contracts.csproj">
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-      <IncludeAssets>UNI.API.Contracts.dll</IncludeAssets>
-    </ProjectReference>
-    <ProjectReference Include="..\UNI.API.Core\UNI.API.Core.csproj" />
-      <ProjectReference Include="..\UNI.API.DAL\UNI.API.DAL.csproj">
-        <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-        <IncludeAssets>UNI.API.DAL.dll</IncludeAssets>
-      </ProjectReference>
-  </ItemGroup>
-
-  <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
-    <ItemGroup>
-      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />
-    </ItemGroup>
-  </Target>
+ <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
+   <ItemGroup>
+     <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />
+   </ItemGroup>
+ </Target>
 
 </Project>
