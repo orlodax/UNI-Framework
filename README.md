@@ -69,6 +69,7 @@ MIT License - see LICENSE file
 - [Documentation](https://github.com/orlodax/UNI-Framework/wiki)
 - [Issue Tracker](https://github.com/orlodax/UNI-Framework/issues)
 - [Discussions](https://github.com/orlodax/UNI-Framework/discussions)
+- [Code of Conduct](CODE_OF_CONDUCT.md)
 
 ## Authors
 
